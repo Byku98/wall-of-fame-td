@@ -29,12 +29,10 @@ def get_td_kirek_data(url):
 
 def get_td_me_data(url):
     
-    # extract trackday full info from name
     html = get_page_content(url)
     soup = BeautifulSoup(html, "html.parser")
     title = soup.get_text(strip=True)
 
-    # Regex: group 1 - organiser, group 2 - date, group 3 - hour, group 4 - additional info
     title = soup.find("h2", {"itemprop": "name", "class": "mkdf-single-product-title"})
     text = title.get_text(strip=True)
     
@@ -138,7 +136,7 @@ def extract_motoekipa_events():
     start = "https://www.motoekipa.pl/torowanie/"
     
     print("\nCollecing links from MotoEkipa:")
-    all_links = crawl(start, "motoekipa", depth=1)  # depth=1 → follow 1 layer of links
+    all_links = crawl(start, "motoekipa", depth=1)
     
     local_events = []
     for link in all_links:
@@ -154,7 +152,7 @@ def extract_kirek_events():
     start = "https://trackspace.pl/events-home/"
     
     print("\nCollecting links from Kirek:")
-    all_links = crawl(start, "kirek", depth=1)  # depth=1 → follow 1 layer of links
+    all_links = crawl(start, "kirek", depth=1)
     
     local_events = []
     for link in all_links:
@@ -170,19 +168,18 @@ def extract_3mm_events():
     start = "https://3mmracingacademy.pl/track-days/"
     
     print("\nCollecting links from 3MM Racing Academy:")
-    all_links = crawl(start, "3mm", depth=1)  # depth=1 → follow 1 layer of links
+    all_links = crawl(start, "3mm", depth=1)
     
     local_events = []
     for link in all_links:
         # print(f"Checking: {link}")
         if "/produkt/" not in link:
-            continue
+            continue 
         new_data = get_td_3mm_data(link)
         if new_data:
             local_events.append(new_data)
     return local_events
 
-# Example usage:
 if __name__ == "__main__":
         
     events_nested = [

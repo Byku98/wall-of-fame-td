@@ -1,0 +1,7 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/srv90802/domains/dev1.pszczolki.com.pl"
+PassengerBaseURI "/"
+PassengerNodejs "/home/srv90802/nodevenv/domains/dev1.pszczolki.com.pl/22/bin/node"
+PassengerAppType node
+PassengerStartupFile src/index.ts
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END

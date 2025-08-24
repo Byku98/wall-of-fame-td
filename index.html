@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9C61Q3QC6Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9C61Q3QC6Q');
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta property="og:title" content="Wall of Fame Pszczółki">
+	<meta property="og:description" content="Ranking motocyklowy, najlepsze czasy, Tor Pszczółki - Wall of Fame Pszczółki">
+	<meta property="og:url" content="https://wof.pszczolki.com.pl/">
+	<meta property="og:type" content="website">
+    <title>Wall of Fame Pszczółki</title>
+	<!-- <link rel="icon" href="images/favicon.ico> -->
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+	<link rel="apple-touch-icon" href="images/favicon.png">
+	<link rel="share icon" href="images/favicon.png" type="image/x-icon">
+	<meta property="og:image" content="images/favicon.png">
+	<style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #000; color: #fff; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px; background-color: #000; border-bottom: 1px solid #444; }
+        .topbar .side { display: flex; gap: 15px; }
+        .topbar a { text-align: center; text-decoration: none; color: white; font-size: 12px; }
+        .topbar img { height: 35px; display: block; margin: 0 auto 5px; }
+        .title { font-size: 16px; font-weight: bold; text-align: center; }
+        .table-container { overflow-x: auto; background-image: url('images/IMG_20250724_212205_PNG.jpg'); background-size: cover; background-position: center; padding: 10px; border: 2px solid #444; margin: 20px auto; max-width: 95%; }
+        table { width: 100%; border-collapse: collapse; background-color: rgba(0,0,0,0.75); }
+        th, td { border: 1px solid #555; padding: 6px; font-size: 12px; color: white; }
+        th { background-color: rgba(255, 204, 0, 0.85); color: black; }
+        tr:nth-child(even) { background-color: rgba(255,255,255,0.05); }
+        .three-sections { display: flex; text-align: center; border-bottom: 1px solid #444; }
+        .three-sections .section { flex: 1; padding: 15px; border-right: 1px solid #444; }
+        .three-sections .section:last-child { border-right: none; }
+        .three-sections h3 { margin-top: 0; color: #ffcc00; }
+        .videos { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 10px; }
+        .videos iframe { width: 48%; height: 200px; margin-bottom: 10px; border: none; }
+        footer { display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #444; background-color: #000; }
+        footer a { text-align: center; text-decoration: none; color: white; font-size: 14px; }
+        footer img { height: 40px; display: block; margin: 0 auto 5px; }
+		table td:nth-child(4) { /* Profile column */
+		text-align: center;
+		}
+		table td:nth-child(11) { /* Event column */
+			text-align: center;
+			vertical-align: middle;
+		}
+        @media (max-width: 500px) {
+            .videos iframe { width: 100%; }
+            .three-sections { flex-direction: column; }
+            .three-sections .section { border-right: none; border-bottom: 1px solid #444; }
+            .three-sections .section:last-child { border-bottom: none; }
+        }
+        .tab-btn { background-color: #444; color: white; border: none; padding: 8px 16px; margin: 2px; cursor: pointer; font-size: 14px; border-radius: 4px; }
+        .tab-btn:hover { background-color: #666; }
+		a.event-link { color: #ffcc00; text-decoration: none; }
+		a.event-link:hover { text-decoration: underline; }
+		.event-link img {
+    transition: opacity 0.3s ease;
+}
+
+.event-link:hover img {
+    opacity: 0.8;
+}
+table td:nth-child(4) { /* Profile column */
+    text-align: center;
+}
+    
+/* --- Hide only the *displayed* Gender column; keep DOM & JS indices intact --- */
+table th:nth-child(12), table td:nth-child(12) { display: none; }
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="side">
+        <a href="https://www.instagram.com/wof.pszczolki.com.pl"><img src="images/logo-instagram.png" alt="Instagram">Instagram</a>
+        <a href="https://www.facebook.com/groups/walloffamepszczolki"><img src="images/fb-logo.png" alt="facebook">Facebook</a>
+        <a href="https://discord.gg/2dk3r6vMJC"><img src="images/discord_PNG3.png" alt="Discord">Discord</a>
+    </div>
+    <div class="title">Witaj 👋<a href="https://www.instagram.com/explore/search/keyword/?q=%23jakiczaswariacie" style="color:#F9D100;">#jakiczaswariacie</a></a> </div> 
+    <div class="side">
+		<a href="mailto:walloffamepszczolki@gmail.com?subject=New%20Time%20(PB)&body=Hej!%20%0A%0APrzesy%C5%82am%20moje%20wyniki!%0A%0AName%20(nazwa%20kierowcy%2Fnick%20name)%0ATime%20(Czas%20do%20dwoch%20miejscach%20po%20przecinku)%0ADate%20(Data%20w%20kt%C3%B3rej%20czas%20zosta%C5%82%20osiagniety)%0ARecording%20Device%20(Urzadzenie%20rejestrujace%20RaceBox%2FLapTimer%2FLapThrophy%2FRaceChrono)%0AVisits%20(%20Ile%20wizyt%20na%20torze%20do%20tej%20pory%2C%20moze%20byc%20przyblizona%20liczba)%0ACrash%20(Ile%20bylo%20wypadkow%20do%20tej%20pory)%0AMotorcycle%20(Jakim%20motocyklem)%0AType%20(Jakiego%20typu%20sport%2Fnaked%2Fpitbike)%0ATyres%20(Jakie%20opony%20miales)%0AFB%2FIG%20(link%20do%20profilu)%0AGroup%20(%20W%20jakieg%20grupie%20smigasz%20MotoEkipa%2FHHB%2FInna)%0AEvent%20(U%20kogo%20jezdziles%2Fas)%0AYT%20%20(link%20do%20nagrania)%0A%0ANie%20zapomnij%20dodac%20zdjecia%20w%20za%C5%82aczniku!%0A%0ADzieki Team Wall of Fame - Pszczolki%0A%0A%0AUWAGA: Pamietaj te informacje zostaną opublikowane na stronie www.wof.pszczolki.com oraz profilach IG/FB%0A%0A"><img src="images/Pszczolki.png" alt="Contact">Prześlij wynik!</a>
+    </div>
+</div>
+
+<div class="three-sections">
+    <div class="section">
+        <h3>Jestem Nowy</h3>
+        <p>Informacje dla nowych osób <br> w świecie Wall of Fame Pszczółki<br><br> Dział w budowie 🏗️</p>
+    </div>
+    <div class="section">
+        <h3>Social Media</h3>
+        <p>Udostepnij nas znajomym, <br> aby byli na bieżąco</p>
+		<a href="#" onclick="sharePage()" style="display: inline-block; margin: 10px;">
+  <img src="images/favicon.png" alt="Share" width="32" height="32" title="Udostępnij stronę">
+</a>
+
+<script>
+function sharePage() {
+  if (navigator.share) {
+    navigator.share({
+      title: document.title,
+      url: window.location.href
+    }).catch(err => {
+      console.log('Błąd udostępniania:', err);
+    });
+  } else {
+    // Fallback dla przeglądarek bez wsparcia Web Share API
+    alert('Funkcja udostępniania nie jest dostępna w Twojej przeglądarce. Skopiuj link ręcznie: ' + window.location.href);
+  }
+}
+</script>
+    </div>
+    <div class="section">
+        <h3>Organizatorzy</h3>
+        <p>Sprawdz interaktywny kalendarz<br>wolnych terminów na torze 🐝🐝<br> <br>Dział w budowie by 🐂</p>
+    </div>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <button class="tab-btn" onclick="openTab('wszyscy')">Wszyscy</button>
+    <button class="tab-btn" onclick="openTab('naked')">Naked</button>
+    <button class="tab-btn" onclick="openTab('SuperMoto')">SuperMoto</button>
+    <button class="tab-btn" onclick="openTab('sport')">Sport</button>
+	<button class="tab-btn" onclick="openTab('pitbike')">PitBike</button>
+    <button class="tab-btn" onclick="openTab('kobiety')">👿👩‍🦰👩🧔‍♀️👱‍♀️</button>
+</div>
+
+<div id="wszyscy" class="tab-content table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>M</th><th>Rider</th><th>Time</th><th>Profile</th><th>Add. Info</th><th>Recording Device</th><th>Motorcycle</th><th>Type</th><th>Tyres (front & back)</th><th>Date</th><th>Event</th><th>Gender</th>
+            </tr>
+        </thead>	
+        <tbody>
+  <tr><td>1</td><td>Robak#66_Grzegorz Hanuszewicz</td><td>41,76</td><td>robak66rr</td><td>DVSyvmzuBZY</td><td>LapTimer AIM Solo</td><td>Husqvarna FS 450</td><td>SuperMoto</td><td>Metzeler Racetec SM</td><td>20.08.2020</td><td>TrackAttack.pl</td><td>M</td></tr>
+  <tr><td>2</td><td>Piotr Zuchniarz</td><td>42,05</td><td>FBprofile.php?id=100009970063162</td><td>HNgAaSlXTa0</td><td>LapTimer</td><td>Yamaha R6 2003</td><td>Sport</td><td>Dunlop Sportmax D211+ K2</td><td>14.08.2017</td><td></td><td>M</td></tr>
+  <tr><td>3</td><td>Przemysław Różyński</td><td>42,12</td><td>FBprzemzrr</td><td></td><td>LapTimer</td><td>Suzuki GSX-R 600 K6</td><td>Sport</td><td>Pirelli Supercorsa SC1 + SC2</td><td>2017</td><td></td><td>M</td></tr>
+  <tr><td>4</td><td>Dawid Ustarbowski</td><td>42,45</td><td>FBdawid.ustarbowski</td><td></td><td>LapTimer</td><td>Suzuki GSX-R 600 K1</td><td>Sport</td><td>Dunlop D211 s, Metzeler Racetec K3</td><td>18.07.2017</td><td></td><td>M</td></tr>
+  <tr><td>5</td><td>Adam Jaszczak</td><td>42,46</td><td>848.braaaap</td><td></td><td>LapTimer AIM Solo</td><td>Husqvarna FS 450</td><td>SuperMoto</td><td>Metzeler Racetec RR Slick K2</td><td>02.08.2025</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>6</td><td>Jan Dumara</td><td>42,77</td><td>janekdumara</td><td>UG2P0IQbdBs</td><td>LapTimer</td><td>Honda CBR 600 RR 2005</td><td>Sport</td><td></td><td>08.09.2020</td><td></td><td>M</td></tr>
+  <tr><td>7</td><td>Piotr Stachlewski</td><td>43,38</td><td>FBprofile.php?id=100091883270238</td><td></td><td>64a1679954a76481131b423c</td><td>Honda CBR 600 RR</td><td>Sport</td><td>Metzeler Racetec TD</td><td>02.07.2023</td><td></td><td>M</td></tr>
+  <tr><td>8</td><td>Krzysztof Komornicki</td><td>43,42</td><td>komornicki_888</td><td></td><td>GPS - PZRacing</td><td>Husqvarna FS 450</td><td>SuperMoto</td><td>Metzeler Racetec SM</td><td>09.08.2025</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>9</td><td>Milosz Kurkul</td><td>43,48</td><td></td><td>ugJNTPsMuMY</td><td>RaceBox</td><td>Ducati Panigale</td><td>Sport</td><td></td><td>13.05.2018</td><td></td><td>M</td></tr>
+  <tr><td>10</td><td>Robert Robson</td><td>43,55</td><td>robson1000rr</td><td></td><td>LapTimer AIM Solo</td><td>Honda CRF 450 R</td><td>SuperMoto</td><td>Michelin Power Supermoto B, Metzeler K1</td><td>09.08.2025</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>10</td><td>Michał Rainbow</td><td>43,55</td><td>rainbowmichal</td><td></td><td>GPS - PZRacing</td><td>Bmw 1000RR hp4 2k14</td><td>Sport</td><td>Dunlop KR</td><td>24.08.2024</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>11</td><td>Piotr Stachlewski</td><td>43,60</td><td>FBprofile.php?id=100091883270238</td><td></td><td>64d3c73a75a0a6cdcf1b423c</td><td>Kawasaki Ninja 400</td><td>Sport</td><td>Dunlop d213</td><td>09.08.2023</td><td></td><td>M</td></tr>
+  <tr><td>12</td><td>Mirek Mordecki</td><td>43,65</td><td>mirekmordecki</td><td></td><td>RaceBox</td><td>CBR600RR  PC 40</td><td>Sport</td><td>Pirelli SuperCorsa 2 &amp; 1</td><td>22.09.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>13</td><td>Wesy#84</td><td>43,69</td><td></td><td>zTMPzs5I0Og</td><td>LapTimer</td><td>Honda CBR1000 RR</td><td>Sport</td><td></td><td>01.05.2019</td><td></td><td>M</td></tr>
+  <tr><td>14</td><td>Lukasz Knapik</td><td>43,78</td><td>FBloki.balboa.3</td><td></td><td>683eca43313c4befcf0b0cd3</td><td>Yamaha R6 RJ095</td><td>Sport</td><td>Pirelli SuperCorsa 2</td><td>03.06.2025</td><td>NaKolanie</td><td>M</td></tr>
+  <tr><td>15</td><td>Cnk</td><td>43,96</td><td>cnk.moto</td><td>dKhD-9K65kI</td><td>DragyLap</td><td>Yamaha R3</td><td>Sport</td><td>Pirelli SuperCorsa 1 &amp; 3</td><td>27.08.2014</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>16</td><td>Rut (Tomek Rutecki)</td><td>44,05</td><td>FBtomek.rutecki.7</td><td></td><td>RaceBox</td><td>Triumph Street Triple 1200RS</td><td>Naked</td><td>Metzeler Racetec K3</td><td>25.08.2014</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>17</td><td>Tomasz Byczek - HHB</td><td>44,21</td><td>byku_98</td><td>9RfWD7viUCc</td><td>LapTimer</td><td>Suzuki GSX-R 750</td><td>Sport</td><td>Metzeller Racetec TD slick &amp; Bridgestone V02 soft</td><td>29.09.2025</td><td></td><td>M</td></tr>
+  <tr><td>18</td><td>Arek Mierzejewski</td><td>44,35</td><td>FBarek.mierzejewski.77</td><td></td><td>LapTimer</td><td>Suzuki GSX-R 600 K9</td><td>Sport</td><td>Pirelli SuperCorsa SC1, Metzeler K2</td><td>24.08.2024</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>19</td><td>Piotr Stachlewski</td><td>44,48</td><td></td><td>pFAJ_RTTp4k</td><td>6829fe06c264e95f5c423d89</td><td>Kawasaki Ninja 400</td><td>Sport</td><td></td><td>19.05.2025</td><td></td><td>M</td></tr>
+  <tr><td>20</td><td>Maciej Markowski</td><td>44,41</td><td>FBprofile.php?id=100078002145158</td><td></td><td>68a1fb98c628329ebf270ae7</td><td>Ducati Panigale V4 S</td><td>Sport</td><td>Pirelli Supercorsa SP V4</td><td>17.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>21</td><td>Karol Brzoskowski</td><td>44,75</td><td></td><td></td><td>RaceBox</td><td>Ducati 899 Panigale</td><td>Sport</td><td>Pirelli SuperCorsa sc3 tyl sc2</td><td>09.08.2025</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>22</td><td>Lemur [SD990]Gdynia</td><td>44,80</td><td>FBmateusz.parchem</td><td></td><td>LapThrophy</td><td>KTM SD 990</td><td>Naked</td><td>Pirelli SuperCorsa SP</td><td>25.08.2024</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>23</td><td>Radek Witkowski</td><td>44,83</td><td>FBradek.witkowski.90</td><td></td><td>RaceChrono</td><td>Yamaha Thunderace - 1996 "babcia"</td><td>Sport</td><td>Pirelli Diablo SuperCorsa v2</td><td>17.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>23</td><td>Wesy#84</td><td>44,89</td><td></td><td>kKTiMn7LqJ8</td><td>LapTimer</td><td>Suzuki GSXR 600 K9</td><td>Sport</td><td></td><td>16.09.2018</td><td></td><td>M</td></tr>
+  <tr><td>24</td><td>Przemo84Pila</td><td>44,91</td><td>przemo84pila</td><td></td><td>LapTimer (GPS)</td><td>Suzuki GSXR 600</td><td>Sport</td><td>Pirreli SuperBike SC2, Metzeler TD Slick</td><td>02.08.2025</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>25</td><td>PiotrSy</td><td>44,94</td><td>FBpiotrsyy</td><td></td><td>RaceChrono</td><td>Kawasaki Ninja 300</td><td>Sport</td><td>Pirelli SuperCorsa</td><td>08.09.2024</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>26</td><td>Cnk</td><td>45,09</td><td>cnk.moto</td><td>zdm_jxXtNu0</td><td>LapTimer (Dragy)</td><td>Triumph Street Triple 765 RS</td><td>Naked</td><td></td><td>2023</td><td></td><td>M</td></tr>
+  <tr><td>27</td><td>Leszek Marek Grzybek</td><td>45,44</td><td>szybkii93</td><td></td><td>RaceChrono</td><td>Suzuki SV 650</td><td>Naked</td><td>D212 GP Pro + SuperCorsa SC2</td><td>2023</td><td></td><td>M</td></tr>
+  <tr><td>27</td><td>MATRII</td><td>45,50</td><td></td><td>N-f5eo0UgVc</td><td>YT</td><td>Suzuki GSXR 600 K4</td><td>Sport</td><td>Dunlop Sportsmart TT</td><td>15.09.2024</td><td></td><td>M</td></tr>
+  <tr><td>28</td><td>Michał „Machu” Mach</td><td>45,72</td><td>mikemachu</td><td></td><td>RaceBox</td><td>Triumph Street Triple 1200 RS</td><td>Naked</td><td>Pirelli Rosso IV Corsa</td><td>06.09.2024</td><td></td><td>M</td></tr>
+  <tr><td>29</td><td>Daniele - HHB</td><td>45,82</td><td>dparodi72</td><td></td><td>LapTimer</td><td>Kawasaki ZX10R 2006</td><td>Sport</td><td>Dunlop 212 &amp; RaceTrack K3</td><td>2023</td><td></td><td>M</td></tr>
+  <tr><td>30</td><td>Womer - HHB</td><td>45,86</td><td>womer_1k</td><td></td><td>LapTimer</td><td>Honda CBR 1000 RR-SP</td><td>Sport</td><td>Diablo Rosso Corsa 4</td><td>04.09.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>30</td><td>Womer - HHB</td><td>47,97</td><td>womer_1k</td><td></td><td>LapTimer</td><td>Honda Fireblade SC59</td><td>Sport</td><td>S22</td><td>2022</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>31</td><td>Lukasz Wieczorek</td><td>45,96</td><td>FBhondaplaza</td><td>TG_MpTk0tcI</td><td>LapTimer (GPS)</td><td>Honda CBR 250R 2016</td><td>Sport</td><td></td><td>23.07.2016</td><td></td><td>M</td></tr>
+  <tr><td>32</td><td>Imax_s3</td><td>45,67</td><td>imax_s3</td><td></td><td>RaceChrono</td><td>Aprilia tuono v4 1100</td><td>Naked</td><td>Pirelli Diablo Rosso IV</td><td>17.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>33</td><td>Desmomati - HHB</td><td>46,12</td><td>desmomati</td><td></td><td>LapTimer</td><td>Ducati Panigale V4R</td><td>Sport</td><td>Pirelli SuperCorsa SP</td><td>2023</td><td></td><td>M</td></tr>
+  <tr><td>34</td><td>Adam - HHB</td><td>46,18</td><td>adas_r1</td><td></td><td>LapTimer</td><td>Yamaha R1 RN32 - 2016</td><td>Sport</td><td>S22</td><td>2022</td><td></td><td>M</td></tr>
+  <tr><td>35</td><td>Mateusz Karpiński</td><td>46,41</td><td>motogyver</td><td>Rk9mtODkO1Y</td><td>RaceChrono</td><td>Honda Hornet cb 600f pc36</td><td>Naked</td><td>Michelin Power Cup 2</td><td>17.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>35</td><td>Lejdi_kuki - HHB</td><td>46,43</td><td>lejdi.kuki</td><td></td><td>LapTimer</td><td>Kawasaki ZX6R</td><td>Sport</td><td>Dunlop d212</td><td>24.08.2022</td><td>TrackSpace</td><td>F</td></tr>
+  <tr><td>36</td><td>Paweł FZ125 GD</td><td>46,56</td><td>elodylu</td><td></td><td>LapThrophy</td><td>Yamaha FZ1</td><td>Naked</td><td>S22</td><td>03.07.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>37</td><td>Kamil_Mal</td><td>46,62</td><td>maliniak_765rs</td><td></td><td>RaceChrono</td><td>Yamaha R6 RJ05 2003</td><td>Sport</td><td>S22</td><td>04.06.2024</td><td></td><td>M</td></tr>
+  <tr><td>38</td><td>Marek Marcinski</td><td>46,73</td><td>FBmarek.marcinski1</td><td>0_K1jzgGZp4</td><td>YT</td><td>Triumph Street Triple 765 R</td><td>Naked</td><td>Pirelli Diablo Rosso Corsa IV</td><td>31.05.2025</td><td></td><td>M</td></tr>
+  <tr><td>39</td><td>Veloce_Sig  - HHB</td><td>46,75</td><td>FBtuurboos</td><td></td><td>RaceChrono</td><td>Suzuki GSXR 750 K6 2k06</td><td>Sport</td><td>Pirelli SP + Bridgestone rs 10</td><td>14.08.2024</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>40</td><td>Arek</td><td>46,78</td><td></td><td></td><td>LapThrophy</td><td>KTM 790</td><td>Naked</td><td>S22+S23</td><td>08.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>40</td><td>Trenergranat</td><td>46,78</td><td>monster_sp_ducati</td><td></td><td>LapThrophy</td><td>Ducati Monster 937 SP</td><td>Naked</td><td>PIRELLI DIABLO SUPERCORSA V4 SP</td><td>13.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>41</td><td>Maciej Furious</td><td>46,90</td><td></td><td></td><td>RaceBox</td><td>Kawasaki Ninja 300</td><td>Sport</td><td>S22</td><td>2023</td><td></td><td>M</td></tr>
+  <tr><td>42</td><td>Daniel Raczyło</td><td>47,17</td><td>FBprofile.php?id=100029542363311</td><td></td><td>Start Micro - GPS - PZRacing</td><td>Yamaha R3</td><td>Sport</td><td>S22</td><td>08.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>43</td><td>Tina_Mloda_1000RR  - HHB</td><td>47,47</td><td>toskawka93</td><td></td><td>LapTimer</td><td>Bmw 1000RR 2024</td><td>Sport</td><td>S22</td><td>21.07.2024</td><td>MotoEkipa TD</td><td>F</td></tr>
+  <tr><td>44</td><td>Wojtek  - HHB</td><td>47,49</td><td>superbikebtc</td><td></td><td>683eca43313c4befcf0b0cd3</td><td>Suzuki GSX-R 600</td><td>Sport</td><td>S22</td><td>25.07.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>45</td><td>Tomasz Byczek - HHB</td><td>47,50</td><td>byku_98</td><td>GPy7wa6-2rc</td><td>RaceChrono</td><td>Triumph Street Triple 1050</td><td>Naked</td><td>S22</td><td>18.08.2024</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>45</td><td>Wojtek #251</td><td>47,51</td><td>nixtend_</td><td></td><td>68a5ee848762225130e40d8d</td><td>YCF 150 SM</td><td>PitBike</td><td>PMT SOFT</td><td>20.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>46</td><td>Dawid Roda</td><td>47,80</td><td></td><td>etejhe2I4OQ</td><td>RaceChrono</td><td></td><td>PitBike</td><td></td><td>23.05.2022</td><td></td><td>M</td></tr>
+  <tr><td>47</td><td>PiratJerry(954 Fireblade)GA</td><td>46,84</td><td>jerry.fireblade</td><td></td><td>LapThrophy</td><td>Honda CBR 1000 sc57 2005</td><td>Sport</td><td>S22</td><td>13.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>47</td><td>Piotr Woronowicz</td><td>47,91</td><td>woronowicz.p</td><td>j-Dms7XyWuA</td><td>RaceBox</td><td>YCF K150 SM</td><td>PitBike</td><td>PMT Soft</td><td>20.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>98</td><td>Ladydriver_gsxr</td><td>47,95</td><td>ladydriver_gsxr</td><td></td><td>LapThrophy</td><td>Suzuki GSXR 750</td><td>Sport</td><td>Pirelli Diablo Rosso IV Corsa</td><td>13.08.2025</td><td>TrackSpace</td><td>F</td></tr>
+  <tr><td>49</td><td>Szymon Schewe</td><td>48,04</td><td>FBszymon.schewe</td><td></td><td>LapThrophy</td><td>Yamaha R1</td><td>Sport</td><td>S22</td><td>22.09.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>50</td><td>Michał /Dziadek Z 750 Gdańsk</td><td>48,28</td><td>FBmichal.starosz</td><td></td><td>LapThrophy</td><td>Kawasaki Z750</td><td>Naked</td><td>S22</td><td>22.07.2025</td><td></td><td>M</td></tr>
+  <tr><td>51</td><td>Marek Janikowski</td><td>48,30</td><td></td><td>R6DwZpXyc0c</td><td>YT</td><td>MRF 13HP</td><td>PitBike</td><td></td><td>01.07.2019</td><td></td><td>M</td></tr>
+  <tr><td>52</td><td>Mateusz Muchlado</td><td>48,49</td><td>FBmateusz.muchlado.5</td><td></td><td>68962592365a59e829aee2e1</td><td>Triumph Street Triple 765 RS</td><td>Naked</td><td>S23</td><td>08.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>53</td><td>Pati [MT07] Rumia</td><td>48,52</td><td>moto_angry_girl</td><td></td><td>LapThrophy</td><td>Yamaha MT07</td><td>Naked</td><td>Metzeler Sportec M9 RR</td><td>20.07.2025</td><td></td><td>F</td></tr>
+  <tr><td>54</td><td>Marcin Sleziak</td><td>48,55</td><td></td><td>mtZYhxPiyCU</td><td>RaceChrono</td><td>MRF 130 SM</td><td>PitBike</td><td>Mitas, soft, tyl medium</td><td>31.05.2020</td><td></td><td>M</td></tr>
+  <tr><td>55</td><td>Tredzio</td><td>48,01</td><td>tredziu_01</td><td></td><td>LapThrophy</td><td>MRF 140 SM</td><td>PitBike</td><td></td><td>14.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>56</td><td>OCZKO|CB650R|GA  - HHB</td><td>48,77</td><td>FBG0OCZKO</td><td>JJBhTNXK2pM</td><td>LapThrophy</td><td>CB650R</td><td>Naked</td><td>S23</td><td>09.08.2024</td><td>NaKolanie</td><td>M</td></tr>
+  <tr><td>57</td><td>Mateusz Wrona</td><td>48,85</td><td>maxiorsky</td><td></td><td>RaceChrono</td><td>SuperDuke 1290 GT</td><td>Touring</td><td>Pirelli Diablo Corsa IV</td><td>09.08.2025</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>58</td><td>Inmatefrompl</td><td>49,00</td><td></td><td>YyVmTd5NrWU</td><td>YT</td><td>Honda Hornet 600</td><td>Naked</td><td></td><td>18.09.2020</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>59</td><td>Marek Marco Orłowski</td><td>49,08</td><td>FBprofile.php?id=100001135339340</td><td></td><td>RaceChrono</td><td>Suzuki GSXR 600</td><td>Sport</td><td>Metzeler M9RR</td><td>18.08.2024</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>60</td><td>Bartoszbeny_</td><td>49,37</td><td>bartoszbeny_</td><td></td><td>LapThrophy</td><td></td><td></td><td></td><td>08.09.2024</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>61</td><td>Konrad Bocian</td><td>49,43</td><td>thunder_stork</td><td></td><td>LapThrophy</td><td>Yamaha R6</td><td>Sport</td><td>Metzeler Sportec M9 RR</td><td>08.09.2024</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>62</td><td>Mateusz GSR750 GD</td><td>49,74</td><td></td><td></td><td>LapThrophy</td><td>Suzuki GSR 750</td><td>Naked</td><td>Dunlop gpr300</td><td>29.06.2024</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>63</td><td>BarKop</td><td>49,98</td><td>FBbartek.kopczynski.3</td><td></td><td>LapThrophy</td><td>Triumph Street Triple 675</td><td>Naked</td><td>S21</td><td>09.08.2024</td><td>NaKolanie</td><td>M</td></tr>
+  <tr><td>64</td><td>StasienK0</td><td>50,00</td><td></td><td>zlr0jZPrAj0</td><td>YT</td><td></td><td>Sport</td><td></td><td>24.04.2022</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>65</td><td>Seba - HHB</td><td>50,00</td><td>FBsebastian.gajda.92775</td><td></td><td>YT</td><td>Honda CBR 1000 - 954</td><td>Sport</td><td>S21</td><td>05.06.2023</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>66</td><td>Majkel - Michał Dembowski</td><td>50,10</td><td>FBprofile.php?id=100001361930125</td><td></td><td>LapThrophy</td><td>Suzuki GSX-8R</td><td>Sport</td><td>DUNLOP SPORTMAX ROADSPORT 2</td><td>08.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>67</td><td>Kacper Malecki</td><td>50,11</td><td></td><td>jpMLFT5rWFQ</td><td>YT</td><td>Suzuki GSXR 750</td><td>Sport</td><td></td><td>18.08.2020</td><td></td><td>M</td></tr>
+  <tr><td>68</td><td>Motocykle</td><td>50,40</td><td></td><td>8Cy3ZOiHk_k</td><td>YT</td><td>MRF 140 SM</td><td>PitBike</td><td></td><td>24.08.2020</td><td></td><td>M</td></tr>
+  <tr><td>69</td><td>Fluffy GSXR750 Rotmanka</td><td>50,50</td><td>marco.fluffy</td><td></td><td>LapThrophy</td><td>Suzuki GSXR 750</td><td>Sport</td><td>S22</td><td>29.06.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>70</td><td>Emil_Uciekinier</td><td>50,83</td><td>emilh2r</td><td></td><td>LapThrophy</td><td>Kawasaki Ninja ZX10R</td><td>Sport</td><td></td><td>08.09.2024</td><td>Robson TD</td><td>M</td></tr>
+  <tr><td>71</td><td>Adam Szuba</td><td>50,99</td><td>FBprofile.php?id=61551900655271</td><td></td><td>3MMRacing</td><td>Suzuki GSXR 600</td><td>Sport</td><td>Metzeler Racetec TD Slick</td><td>19.09.2024</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>72</td><td>Szymon_ndg</td><td>51,00</td><td></td><td>sqgmlAghHsg</td><td></td><td>Kawasaki ninja 250r (14 lat)</td><td>Sport</td><td></td><td>30.08.2023</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>73</td><td>Typical Seba</td><td>51,00</td><td></td><td>YT</td><td>YT</td><td>Ducati Monster 1200R</td><td>Naked</td><td></td><td>07.09.2023</td><td></td><td>M</td></tr>
+  <tr><td>74</td><td>Mateusz Kaczmi Kaczmarek</td><td>51,35</td><td>suchykaczmii</td><td></td><td>LapThrophy</td><td>Yamaha FZ1-N</td><td>Naked</td><td>Dunlop SportSmart 3</td><td>03.07.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>75</td><td>Mateusz GSR750 GD</td><td>51,37</td><td></td><td></td><td>LapThrophy</td><td>Suzuki GSR 750</td><td>Naked</td><td>Dunlop gpr300</td><td>05.06.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>76</td><td>Lukasz_FZ1_Gdansk</td><td>51,64</td><td>FBputek.putynkowski</td><td></td><td>LapThrophy</td><td>Yamaha FZ1</td><td>Naked</td><td>S22</td><td>22.09.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>77</td><td>Piotr Falcon</td><td>51,68</td><td>piotrfalcon</td><td></td><td>LapThrophy</td><td>Yamaha MT09 2024</td><td>Naked</td><td>S23</td><td>08.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>78</td><td>Piotr  - HHB</td><td>51,99</td><td>FBpiotr.cieslik.161</td><td></td><td>3MMRacing</td><td>Yamaha R6</td><td>Sport</td><td>S23</td><td>05.07.2024</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>79</td><td>Szymon_ndg</td><td>52,01</td><td></td><td>YT</td><td>3MMRacing</td><td>Kawasaki ninja 250r</td><td>Sport</td><td></td><td>28.08.2022</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>80</td><td>Paweł (Sid) Dr-z 400 SM</td><td>52,02</td><td>sidartistics</td><td></td><td>LapTimer</td><td>Suzuki DR-Z 400 SM</td><td>SuperMoto</td><td>Pirelli Diablo Roso 2</td><td>03.07.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>81</td><td>Maciek Jagiełło</td><td>52,24</td><td>maciekzim</td><td></td><td>LapThrophy</td><td>Honda CBR 650R</td><td>Sport</td><td>Pirelli Diablo Rosso IV</td><td>17.08.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>82</td><td>Bartosz Butajło</td><td>52,56</td><td>FBrofile.php?id=100071721794049</td><td></td><td>Manual</td><td>Honda CB 600F</td><td>Naked</td><td>Michelin PILOT POWER 2ct</td><td>17.08.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>82</td><td>Mateusz Grzyb</td><td>52,59</td><td>FBmateusz.grzyb.31</td><td></td><td>LapTimer</td><td>Honda Cb 1000r 2009</td><td>Naked</td><td>Bridgestone bt023+ Metzeler m7rr</td><td>17.08.2025</td><td>TrackSpace</td><td>M</td></tr>
+  <tr><td>83</td><td>Angy_S1000R GDA</td><td>52,69</td><td>angy_s1000rr</td><td></td><td>LapThrophy</td><td>Bmw S1000R</td><td>Naked</td><td>S22</td><td>31.07.2024</td><td>TrackSpace</td><td>F</td></tr>
+  <tr><td>84</td><td>Dezyderiusz Łaszkiewicz</td><td>53,00</td><td></td><td>MBhLJZ8ToA0</td><td>YT</td><td>MRF 140 SM</td><td>PitBike</td><td></td><td>02.07.2024</td><td></td><td>M</td></tr>
+  <tr><td>85</td><td>Maciej Badtke- HHB</td><td>53,00</td><td>maciejbadtke</td><td>3EqleyD0mDU</td><td>YT</td><td>Yamah MT10</td><td>Naked</td><td>S22</td><td>01.08.2024</td><td>MotoZone</td><td>M</td></tr>
+  <tr><td>86</td><td>BabyMonster MT-07 GD</td><td>53,46</td><td>baby.monstermt07</td><td></td><td>LapThrophy</td><td>Yamaha MT07</td><td>Naked</td><td>Michelin Road 5</td><td>21.07.2024</td><td>MotoEkipa TD</td><td>F</td></tr>
+  <tr><td>87</td><td>Adrian (Trzonek)</td><td>50,74</td><td>FBtrzonek</td><td></td><td>LapThrophy</td><td>Tracer 9 Sport Touring</td><td>Touring</td><td>Metzeler RoadTec 01</td><td>08.08.2025</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>88</td><td>Bartek Trident Gdansk</td><td>53,64</td><td></td><td></td><td>LapThrophy</td><td>Triumph Trident 660</td><td>Naked</td><td>Michelin Road 5</td><td>19.07.2024</td><td></td><td>M</td></tr>
+  <tr><td>89</td><td>Jacek|SV650N|3city Bojano</td><td>54,92</td><td></td><td></td><td>LapThrophy</td><td>Suzuki SV650 N</td><td>Naked</td><td>Pirelli Diablo Rosso Corsa 2</td><td>29.06.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>90</td><td>Slav_XX1100_Gdynia</td><td>55,99</td><td>FBSlavSkyxx</td><td></td><td>3MMRacing</td><td>Honda CBR 1100 XX</td><td>Sport</td><td>Pirelli Angel</td><td>16.08.2024</td><td>3MMRacing</td><td>M</td></tr>
+  <tr><td>91</td><td>Kinga xj600s 3miasto</td><td>56,96</td><td>kina.urb</td><td></td><td>3MMRacing</td><td>Yamaha xj Diversion</td><td>Naked</td><td></td><td>24.08.2024</td><td>Robson TD</td><td>F</td></tr>
+  <tr><td>92</td><td>BugiiCb650r3city</td><td>58,00</td><td>FB</td><td>NYLzNRK0rsI</td><td>YT</td><td>Honda CB650 R</td><td>Naked</td><td>Metzeler</td><td>26.05.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>93</td><td>Javor Duke 390</td><td>58,44</td><td>FBJavor95</td><td></td><td>LapThrophy</td><td>KTM Duke 390</td><td>Naked</td><td>Contimotion</td><td>07.07.2024</td><td>NaKolanie</td><td>M</td></tr>
+  <tr><td>94</td><td>DenyMotoVlog</td><td>59,00</td><td></td><td>GgL4nH-ebqA</td><td>YT</td><td>MRF 140 SM</td><td>PitBike</td><td></td><td>28.06.2020</td><td></td><td>M</td></tr>
+  <tr><td>95</td><td>Mateusz Nowak</td><td>59,12</td><td>FBprofile.php?id=100009837462310</td><td></td><td>LapThrophy</td><td>Yamaha R125 2020</td><td>Sport</td><td>Michelin Pilot Street</td><td>21.07.2024</td><td>MotoEkipa TD</td><td>M</td></tr>
+  <tr><td>96</td><td>WitekMoto</td><td>60,00</td><td></td><td>7eRKsR6d5A4</td><td>YT</td><td></td><td>Sport</td><td></td><td>27.06.2021</td><td></td><td>M</td></tr>
+  <tr><td>97</td><td>Miroslaw Kondracki</td><td>60,00</td><td></td><td>MURaILW-jbI</td><td>YT</td><td>Suzuki GSXR 1000</td><td>Sport</td><td></td><td>09.08.2017</td><td></td><td>M</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Pozostałe zakładki z nową kolumną Gender -->
+<div id="naked" class="tab-content table-container" style="display:none;">
+    <table><thead><tr><th>M</th><th>Rider</th><th>Time</th><th>Profile</th><th>Add. Info</th><th>Recording Device</th><th>Motorcycle</th><th>Type</th><th>Tyres (front & back)</th><th>Date</th><th>Event</th><th>Gender</th></tr></thead><tbody></tbody></table>
+</div>
+<div id="SuperMoto" class="tab-content table-container" style="display:none;">
+    <table><thead><tr><th>M</th><th>Rider</th><th>Time</th><th>Profile</th><th>Add. Info</th><th>Recording Device</th><th>Motorcycle</th><th>Type</th><th>Tyres (front & back)</th><th>Date</th><th>Event</th><th>Gender</th></tr></thead><tbody></tbody></table>
+</div>
+<div id="sport" class="tab-content table-container" style="display:none;">
+    <table><thead><tr><th>M</th><th>Rider</th><th>Time</th><th>Profile</th><th>Add. Info</th><th>Recording Device</th><th>Motorcycle</th><th>Type</th><th>Tyres (front & back)</th><th>Date</th><th>Event</th><th>Gender</th></tr></thead><tbody></tbody></table>
+</div>
+<div id="pitbike" class="tab-content table-container" style="display:none;">
+    <table><thead><tr><th>M</th><th>Rider</th><th>Time</th><th>Profile</th><th>Add. Info</th><th>Recording Device</th><th>Motorcycle</th><th>Type</th><th>Tyres ( front & back)</th><th>Date</th><th>Event</th><th>Gender</th></tr></thead><tbody></tbody></table>
+</div>
+<div id="kobiety" class="tab-content table-container" style="display:none;">
+    <table><thead><tr><th>M</th><th>Rider</th><th>Time</th><th>Profile</th><th>Add. Info</th><th>Recording Device</th><th>Motorcycle</th><th>Type</th><th>Tyres (front & back)</th><th>Date</th><th>Event</th><th>Gender</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+// Główna funkcja inicjalizująca
+function initializeTable() {
+    // Najpierw przetwórz wszystkie linki w głównej tabeli
+    replaceEventLinks();
+    
+    // Następnie posortuj główną tabelę "Wszyscy" według czasu
+    sortMainTable();
+    
+    // Przygotuj puste tabele dla innych zakładek
+    prepareFilteredTables();
+    
+    // Dodaj linki do dowodów w kolumnie Time
+    addEvidenceLinks();
+    
+    // Na koniec wyświetl zakładkę "Wszyscy" jako domyślną
+    showDefaultTab();
+}
+
+// Funkcja dodająca linki do dowodów w kolumnie Time
+function addEvidenceLinks() {
+    const allTables = document.querySelectorAll('.tab-content table tbody');
+    const timeCountMap = {}; // Globalna mapa do zliczania wystąpień czasów
+    
+    // Najpierw policz wystąpienia każdego czasu w głównej tabeli "Wszyscy"
+    const mainTable = document.querySelector('#wszyscy table tbody');
+    const mainRows = mainTable.querySelectorAll('tr');
+    
+    mainRows.forEach(row => {
+        const timeCell = row.cells[2];
+        if (timeCell) {
+            const timeValue = timeCell.textContent.trim();
+            timeCountMap[timeValue] = (timeCountMap[timeValue] || 0) + 1;
+        }
+    });
+    
+    // Następnie dodaj linki we wszystkich tabelach
+    allTables.forEach(table => {
+        const rows = table.querySelectorAll('tr');
+        
+        rows.forEach(row => {
+            const timeCell = row.cells[2];
+            const riderCell = row.cells[1];
+            
+            if (timeCell && riderCell) {
+                const timeValue = timeCell.textContent.trim();
+                const riderValue = riderCell.textContent.trim();
+                
+                // Zamień przecinek na podkreślenie i usuń spacje
+                const timeFileName = timeValue.replace(',', '_').replace(/\s/g, '');
+                
+                // Sprawdź czy ten czas występuje więcej niż raz w głównej tabeli
+                if (timeCountMap[timeValue] > 1) {
+                    // Znajdź pierwszą część nazwy ridera (pierwsze słowo)
+                    let riderPrefix = riderValue;
+                    if (riderValue.includes('_')) {
+                        riderPrefix = riderValue.split('_')[0];
+                    } else if (riderValue.includes(' ')) {
+                        riderPrefix = riderValue.split(' ')[0];
+                    }
+                    
+                    // Użyj prefiksu ridera dla powtarzających się czasów
+                    const fileName = timeFileName + '_' + riderPrefix + '.jpg';
+                    timeCell.innerHTML = '<a href="Evidence/' + fileName + '" class="event-link" target="_blank" title="Zobacz dowód czasu">' + timeValue + '</a>';
+                } else {
+                    // Dla unikalnych czasów używamy tylko czasu
+                    const fileName = timeFileName + '.jpg';
+                    timeCell.innerHTML = '<a href="Evidence/' + fileName + '" class="event-link" target="_blank" title="Zobacz dowód czasu">' + timeValue + '</a>';
+                }
+            }
+        });
+    });
+}
+
+// Funkcja sortująca główną tabelę "Wszyscy"
+function sortMainTable() {
+    const allRows = document.querySelectorAll('#wszyscy table tbody tr');
+    const sortedRows = Array.from(allRows).sort((rowA, rowB) => {
+        const timeA = parseFloat(rowA.cells[2].textContent.replace(',', '.'));
+        const timeB = parseFloat(rowB.cells[2].textContent.replace(',', '.'));
+        return timeA - timeB;
+    });
+    
+    const targetTable = document.querySelector('#wszyscy table tbody');
+    targetTable.innerHTML = '';
+    
+    sortedRows.forEach((row, index) => {
+        const newRow = row.cloneNode(true);
+        replaceLinksInRow(newRow);
+        newRow.cells[0].textContent = index + 1; // Nowa numeracja
+        targetTable.appendChild(newRow);
+    });
+}
+
+// Funkcja przygotowująca przefiltrowane tabele
+function prepareFilteredTables() {
+    const tabIds = ['naked', 'SuperMoto', 'sport', 'pitbike', 'kobiety'];
+    
+    tabIds.forEach(tabId => {
+        fillFilteredTable(tabId);
+    });
+}
+
+// Funkcja wyświetlająca domyślną zakładkę
+function showDefaultTab() {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById('wszyscy').style.display = 'block';
+    
+    // Ustaw "Wszyscy" jako aktywny przycisk
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.style.background = '#444');
+    const allBtn = Array.from(document.querySelectorAll('.tab-btn'))
+        .find(b => b.textContent.trim() === 'Wszyscy');
+    if (allBtn) allBtn.style.background = '#ffcc00';
+}
+
+// Funkcja otwierająca zakładki
+function openTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => {
+        el.style.display = 'none';
+        const table = el.querySelector('table');
+        if (table) {
+            table.querySelector('thead').style.position = '';
+        }
+    });
+    
+    const activeTab = document.getElementById(tabId);
+    activeTab.style.display = 'block';
+    
+    // Ustaw pozycję sticky dla nagłówka
+    const table = activeTab.querySelector('table');
+    if (table) {
+        table.querySelector('thead').style.position = 'sticky';
+        table.querySelector('thead').style.top = '0';
+        table.querySelector('thead').style.background = 'rgba(255, 204, 0, 0.85)';
+        table.querySelector('thead').style.zIndex = '100';
+    }
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.style.background = '#444');
+    event.target.style.background = '#ffcc00';
+}
+
+// Funkcja wypełniająca przefiltrowane tabele
+function fillFilteredTable(tabId) {
+    const allRows = document.querySelector('#wszyscy table tbody').querySelectorAll('tr');
+    let filterType = '';
+    
+    if (tabId === 'naked') filterType = 'Naked';
+    if (tabId === 'SuperMoto') filterType = 'SuperMoto';
+    if (tabId === 'sport') filterType = 'Sport';
+    if (tabId === 'pitbike') filterType = 'PitBike';
+    if (tabId === 'kobiety') filterType = 'Kobiety';
+    
+    const targetTable = document.querySelector(`#${tabId} table tbody`);
+    targetTable.innerHTML = '';
+    
+    // Zbierz i przefiltruj wiersze
+    const filteredRows = Array.from(allRows).filter(row => {
+        const cells = row.cells;
+        const typeCell = cells[7]?.textContent.trim();
+        const genderCell = cells[11]?.textContent.trim();
+        
+        if (filterType === 'Kobiety') {
+            return genderCell === 'F';
+        } else {
+            return typeCell === filterType;
+        }
+    });
+    
+    // Posortuj wiersze według czasu (kolumna 2 - indeks 2)
+    filteredRows.sort((rowA, rowB) => {
+        const timeA = parseFloat(rowA.cells[2].textContent.replace(',', '.'));
+        const timeB = parseFloat(rowB.cells[2].textContent.replace(',', '.'));
+        return timeA - timeB;
+    });
+    
+    // Dodaj posortowane wiersze do tabeli z nową numeracją
+    filteredRows.forEach((row, index) => {
+        const newRow = row.cloneNode(true);
+        replaceLinksInRow(newRow);
+        newRow.cells[0].textContent = index + 1; // Numeracja od 1
+        targetTable.appendChild(newRow);
+    });
+    
+    // Dodaj linki do dowodów w przefiltrowanej tabeli
+    addEvidenceLinks();
+}
+
+// Funkcja przetwarzająca linki w wierszach
+function replaceLinksInRow(row) {
+    const cells = row.cells;
+    if (cells.length >= 12) {
+        // Zamiana wartości w kolumnie Add. Info (indeks 4) na linki YouTube
+        const addInfoCell = cells[4];
+        if (addInfoCell) {
+            const addInfoText = addInfoCell.textContent.trim();
+            if (addInfoText && addInfoText !== 'RaceBox') {
+                addInfoCell.innerHTML = '<a href="https://www.youtube.com/watch?v=' + addInfoText + '" class="event-link" target="_blank" title="Zobacz na YouTube"><img src="images/YT-logo2.png" alt="YouTube" style="height: 15px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+            }
+        }
+        
+        // Zamiana linków w kolumnie Event (indeks 10)
+    const eventCell = cells[10];
+    if (eventCell) {
+        const eventText = eventCell.textContent.trim();
+        switch(eventText) {
+                     case 'Robson TD':
+                eventCell.innerHTML = '<a href="https://www.robsonmotosport.com/trackdays" class="event-link" target="_blank" style="display: inline-block;"><img src="images/robsonmotorsport.png" alt="Robson TD" style="height: 20px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+					break;
+					case 'MotoEkipa TD':
+                eventCell.innerHTML = '<a href="https://www.motoekipa.pl/torowanie/" class="event-link" target="_blank" style="display: inline-block;"><img src="images/motoekipa-logo.png" alt="MotoEkipa TD" style="height: 20px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+					break;
+                case '3MMRacing':
+                    eventCell.innerHTML = '<a href="https://3mmracingacademy.pl/track-days/" class="event-link" target="_blank">3MMRacing</a>';
+                    break;
+                case 'TrackSpace':
+                    eventCell.innerHTML = '<a href="https://trackspace.pl/kategoria-produktu/track-day-pszczolki/" class="event-link" target="_blank">TrackSpace</a>';
+                    break;
+                case 'NaKolanie':
+                    eventCell.innerHTML = '<a href="https://nakolanie.pl/track-day/" class="event-link" target="_blank">NaKolanie</a>';
+                    break;
+                case 'TrackAttack.pl':
+                    eventCell.innerHTML = '<a href="https://mototravels.pl/wyjazdy-torowe-mototravels/" class="event-link" target="_blank">TrackAttack.pl</a>';
+                    break;
+                case 'MotoZone':
+                    eventCell.innerHTML = '<a href="https://www.moto-zone.org/school.html" class="event-link" target="_blank">MotoZone</a>';
+                    break;
+            }
+        }
+        
+        // Zamiana nazw opon na hiperłącza w kolumnie Tyres (indeks 8)
+        const tyresCell = cells[8];
+        if (tyresCell) {
+            let tyresText = tyresCell.innerHTML;
+            
+            if (tyresText.includes('S23')) {
+                tyresText = tyresText.replace(/S23/g, '<a href="https://www.bridgestone.pl/opony-motocyklowe/sport/battlax-s23" target="_blank" class="event-link">S23</a>');
+            }
+            
+            if (tyresText.includes('S22')) {
+                tyresText = tyresText.replace(/S22/g, '<a href="https://www.bridgestone.com/products/motorcycle_tires/products/detail/pr153" target="_blank" class="event-link">S22</a>');
+            }
+            
+            if (tyresText.includes('Pirelli Diablo Rosso IV Corsa')) {
+                tyresText = tyresText.replace(/Pirelli Diablo Rosso IV Corsa/g, '<a href="https://www.bridgestone.com/products/motorcycle_tires/products/detail/pr153" target="_blank" class="event-link">Pirelli Diablo Rosso IV Corsa</a>');
+            }
+            
+            tyresCell.innerHTML = tyresText;
+        }
+        
+        // Zmiana wartości w kolumnie Profile (indeks 3) na logo z linkami
+        const profileCell = cells[3];
+        if (profileCell && profileCell.textContent.trim() !== '') {
+            const profileName = profileCell.textContent.trim();
+            
+            if (profileName.startsWith('FB')) {
+                const fbProfile = profileName.substring(2);
+                profileCell.innerHTML = '<a href="https://www.facebook.com/' + fbProfile + '" class="event-link" target="_blank" title="' + fbProfile + '"><img src="images/fb-small.png" alt="Facebook" style="height: 30px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+            } 
+            else if (profileName !== 'FB') {
+                profileCell.innerHTML = '<a href="https://www.instagram.com/' + profileName + '" class="event-link" target="_blank" title="' + profileName + '"><img src="images/ig-small.png" alt="Instagram" style="height: 25px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+            }
+        }
+        // Obsługa kolumny Recording Device (indeks 5)
+	const recordingDeviceCell = cells[5];
+	if (recordingDeviceCell) {
+    const deviceText = recordingDeviceCell.textContent.trim();
+    
+    // Scenariusz 1: RaceBox
+    if (/^\d/.test(deviceText) && deviceText !== '3MMRacing') {
+        recordingDeviceCell.innerHTML = '<a href="https://www.racebox.pro/webapp/session/' + deviceText + '" class="event-link" target="_blank" title="Zobacz sesję RaceBox"><img src="images/RaceBox-logo2.png" alt="RaceBox" style="height: 22px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+    // Scenariusz 2: LapTimer
+    else if (deviceText === "LapTimer") {
+        recordingDeviceCell.innerHTML = '<a href="https://pl.aliexpress.com/w/wholesale-motorcycle-lap-timer.html" class="event-link" target="_blank" title="LapTimer na AliExpress"><img src="images/LapTimer.png" alt="LapTimer" style="height: 24px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+    // Scenariusz 3: LapThrophy
+    else if (deviceText === "LapThrophy") {
+        recordingDeviceCell.innerHTML = '<a href="https://www.laptrophy.com/en/" class="event-link" target="_blank" title="LapThrophy Official"><img src="images/LapThrophy.png" alt="LapThrophy" style="height: 20px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+    // Scenariusz 4: RaceChrono
+    else if (deviceText === "RaceChrono") {
+        recordingDeviceCell.innerHTML = '<a href="https://racechrono.com/" class="event-link" target="_blank" title="RaceChrono Official"><img src="images/RaceChronoLogo.png" alt="RaceChrono" style="height: 33px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+	// Scenariusz 5: YT
+    else if (deviceText === "YT") {
+        recordingDeviceCell.innerHTML = '<a href="https://youtu.be/JohSAyTq_JQ?t=525" class="event-link" target="_blank" title="Na Oko, po klatce"><img src="images/YT-Watchtime-logo.png" alt="Youtube" style="height: 27px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+	// Scenariusz 6: RaceBoxMini - no log
+    else if (deviceText === "RaceBox") {
+        recordingDeviceCell.innerHTML = '<a href="https://www.racebox.pro/products/racebox-mini" class="event-link" target="_blank" title="RaceBox Official"><img src="images/rb_mini.png" alt="RaceBox" style="height: 33px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+}
+        
+        
+        
+    }
+}
+
+// Funkcja przetwarzająca wszystkie linki w tabeli
+function replaceEventLinks() {
+    const allRows = document.querySelectorAll('#wszyscy table tbody tr');
+    
+    allRows.forEach(row => {
+        replaceLinksInRow(row);
+    });
+}
+
+// Uruchom inicjalizację po załadowaniu strony
+window.onload = initializeTable;
+</script>
+
+<h3 style="text-align:center; margin-top: 15px;color: #ffcc00;">ODTJ Autodrom Pomorze Track Days Promo</h3>
+<div class="videos">
+    <iframe src="https://www.youtube.com/embed/rM0RNgS1IqM" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/04DhX8mEs-A" allowfullscreen></iframe>
+</div>
+
+<footer>
+    <a href="https://www.youtube.com/watch?v=ugJNTPsMuMY&list=PLVK6ByZedOaO-D41vPNcVZ5aRVpz_cNum"><img src="images/YT-logo.png" alt="YT">YouTube</a>
+    <a href="https://docs.google.com/spreadsheets/d/1LJji-vXUDudTekKGC1VRb0uQhRArbUIp/edit?usp=drive_link&ouid=114564649456727801090&rtpof=true&sd=true"><img src="images/Google-logo.png" alt="Lista Wall Of Fame">Pełna Lista</a>
+    <a href="mailto:walloffamepszczolki@gmail"><img src="images/Pszczolki.png" alt="Contact">Kontakt</a>
+</footer>
+
+</body>
+</html>

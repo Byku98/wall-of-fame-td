@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9C61Q3QC6Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9C61Q3QC6Q');
+</script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Wall of Fame Pszczółki" property="og:title"/>
+<meta content="Ranking motocyklowy, najlepsze czasy, Tor Pszczółki - Wall of Fame Pszczółki" property="og:description"/>
+<meta content="https://wof.pszczolki.com.pl/" property="og:url"/>
+<meta content="website" property="og:type"/>
+<title>Wall of Fame Pszczółki</title>
+<!-- <link rel="icon" href="images/favicon.ico> -->
+<link href="images/favicon.png" rel="icon" type="image/x-icon"/>
+<link href="images/favicon.png" rel="apple-touch-icon"/>
+<link href="images/favicon.png" rel="share icon" type="image/x-icon"/>
+<meta content="images/favicon.png" property="og:image"/>
+<style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #000; color: #fff; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px; background-color: #000; border-bottom: 1px solid #444; }
+        .topbar .side { display: flex; gap: 15px; }
+        .topbar a { text-align: center; text-decoration: none; color: white; font-size: 12px; }
+        .topbar img { height: 35px; display: block; margin: 0 auto 5px; }
+        .title { font-size: 16px; font-weight: bold; text-align: center; }
+        .table-container { overflow-x: auto; background-image: url('images/IMG_20250724_212205_PNG.jpg'); background-size: cover; background-position: center; padding: 10px; border: 2px solid #444; margin: 20px auto; max-width: 95%; }
+        table { width: 100%; border-collapse: collapse; background-color: rgba(0,0,0,0.75); }
+        th, td { border: 1px solid #555; padding: 6px; font-size: 12px; color: white; }
+        th { background-color: rgba(255, 204, 0, 0.85); color: black; }
+        tr:nth-child(even) { background-color: rgba(255,255,255,0.05); }
+        .three-sections { display: flex; text-align: center; border-bottom: 1px solid #444; }
+        .three-sections .section { flex: 1; padding: 15px; border-right: 1px solid #444; }
+        .three-sections .section:last-child { border-right: none; }
+        .three-sections h3 { margin-top: 0; color: #ffcc00; }
+        .videos { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 10px; }
+        .videos iframe { width: 48%; height: 200px; margin-bottom: 10px; border: none; }
+        footer { display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #444; background-color: #000; }
+        footer a { text-align: center; text-decoration: none; color: white; font-size: 14px; }
+        footer img { height: 40px; display: block; margin: 0 auto 5px; }
+		table td:nth-child(4) { /* Profile column */
+		text-align: center;
+		}
+		table td:nth-child(11) { /* Event column */
+			text-align: center;
+			vertical-align: middle;
+		}
+        @media (max-width: 500px) {
+            .videos iframe { width: 100%; }
+            .three-sections { flex-direction: column; }
+            .three-sections .section { border-right: none; border-bottom: 1px solid #444; }
+            .three-sections .section:last-child { border-bottom: none; }
+        }
+        .tab-btn { background-color: #444; color: white; border: none; padding: 8px 16px; margin: 2px; cursor: pointer; font-size: 14px; border-radius: 4px; }
+        .tab-btn:hover { background-color: #666; }
+		a.event-link { color: #ffcc00; text-decoration: none; }
+		a.event-link:hover { text-decoration: underline; }
+		.event-link img {
+    transition: opacity 0.3s ease;
+}
+
+.event-link:hover img {
+    opacity: 0.8;
+}
+table td:nth-child(4) { /* Profile column */
+    text-align: center;
+}
+    
+/* --- Hide only the *displayed* Gender column; keep DOM & JS indices intact --- */
+table th:nth-child(12), table td:nth-child(12) { display: none; }
+
+</style>
+</head>
+<body>
+<div class="topbar">
+<div class="side">
+<a href="https://www.instagram.com/wof.pszczolki.com.pl"><img alt="Instagram" src="images/logo-instagram.png"/>Instagram</a>
+<a href="https://www.facebook.com/groups/walloffamepszczolki"><img alt="facebook" src="images/fb-logo.png"/>Facebook</a>
+<a href="https://discord.gg/2dk3r6vMJC"><img alt="Discord" src="images/discord_PNG3.png"/>Discord</a>
+</div>
+<div class="title">Witaj 👋<a href="https://www.instagram.com/explore/search/keyword/?q=%23jakiczaswariacie" style="color:#F9D100;">#jakiczaswariacie</a> </div>
+<div class="side">
+<a href="mailto:walloffamepszczolki@gmail.com?subject=New%20Time%20(PB)&amp;body=Hej!%20%0A%0APrzesy%C5%82am%20moje%20wyniki!%0A%0AName%20(nazwa%20kierowcy%2Fnick%20name)%0ATime%20(Czas%20do%20dwoch%20miejscach%20po%20przecinku)%0ADate%20(Data%20w%20kt%C3%B3rej%20czas%20zosta%C5%82%20osiagniety)%0ARecording%20Device%20(Urzadzenie%20rejestrujace%20RaceBox%2FLapTimer%2FLapThrophy%2FRaceChrono)%0AVisits%20(%20Ile%20wizyt%20na%20torze%20do%20tej%20pory%2C%20moze%20byc%20przyblizona%20liczba)%0ACrash%20(Ile%20bylo%20wypadkow%20do%20tej%20pory)%0AMotorcycle%20(Jakim%20motocyklem)%0AType%20(Jakiego%20typu%20sport%2Fnaked%2Fpitbike)%0ATyres%20(Jakie%20opony%20miales)%0AFB%2FIG%20(link%20do%20profilu)%0AGroup%20(%20W%20jakieg%20grupie%20smigasz%20MotoEkipa%2FHHB%2FInna)%0AEvent%20(U%20kogo%20jezdziles%2Fas)%0AYT%20%20(link%20do%20nagrania)%0A%0ANie%20zapomnij%20dodac%20zdjecia%20w%20za%C5%82aczniku!%0A%0ADzieki Team Wall of Fame - Pszczolki%0A%0A%0AUWAGA: Pamietaj te informacje zostaną opublikowane na stronie www.wof.pszczolki.com oraz profilach IG/FB%0A%0A"><img alt="Contact" src="images/Pszczolki.png"/>Prześlij wynik!</a>
+</div>
+</div>
+<div class="three-sections">
+<div class="section">
+<h3>Jestem Nowy</h3>
+<p>Informacje dla nowych osób <br/> w świecie Wall of Fame Pszczółki<br/><br/> Dział w budowie 🏗️</p><a href="index.html" style="color:white; text-decoration:none;">Wróć do tabeli wyników 📰 </a>
+</div>
+<div class="section">
+<h3>Social Media</h3>
+<p>Udostepnij nas znajomym, <br/> aby byli na bieżąco</p>
+<a href="#" onclick="sharePage()" style="display: inline-block; margin: 10px;">
+<img alt="Share" height="32" src="images/favicon.png" title="Udostępnij stronę" width="32"/>
+</a>
+<script>
+function sharePage() {
+  if (navigator.share) {
+    navigator.share({
+      title: document.title,
+      url: window.location.href
+    }).catch(err => {
+      console.log('Błąd udostępniania:', err);
+    });
+  } else {
+    // Fallback dla przeglądarek bez wsparcia Web Share API
+    alert('Funkcja udostępniania nie jest dostępna w Twojej przeglądarce. Skopiuj link ręcznie: ' + window.location.href);
+  }
+}
+</script>
+</div>
+<div class="section">
+<h3>Organizatorzy</h3>
+<p>Sprawdz interaktywny kalendarz<br/>wolnych terminów na torze 🐝🐝<br/> <br/>Dział w budowie by 🐂</p>
+</div>
+</div>
+<div style="text-align:center; margin-top:20px;">
+
+
+
+
+
+
+</div>
+
+<!-- Pozostałe zakładki z nową kolumną Gender -->
+
+
+
+
+
+<script>
+// Główna funkcja inicjalizująca
+function initializeTable() {
+    // Najpierw przetwórz wszystkie linki w głównej tabeli
+    replaceEventLinks();
+    
+    // Następnie posortuj główną tabelę "Wszyscy" według czasu
+    sortMainTable();
+    
+    // Przygotuj puste tabele dla innych zakładek
+    prepareFilteredTables();
+    
+    // Dodaj linki do dowodów w kolumnie Time
+    addEvidenceLinks();
+    
+    // Na koniec wyświetl zakładkę "Wszyscy" jako domyślną
+    showDefaultTab();
+}
+
+// Funkcja dodająca linki do dowodów w kolumnie Time
+function addEvidenceLinks() {
+    const allTables = document.querySelectorAll('.tab-content table tbody');
+    const timeCountMap = {}; // Globalna mapa do zliczania wystąpień czasów
+    
+    // Najpierw policz wystąpienia każdego czasu w głównej tabeli "Wszyscy"
+    const mainTable = document.querySelector('#wszyscy table tbody');
+    const mainRows = mainTable.querySelectorAll('tr');
+    
+    mainRows.forEach(row => {
+        const timeCell = row.cells[2];
+        if (timeCell) {
+            const timeValue = timeCell.textContent.trim();
+            timeCountMap[timeValue] = (timeCountMap[timeValue] || 0) + 1;
+        }
+    });
+    
+    // Następnie dodaj linki we wszystkich tabelach
+    allTables.forEach(table => {
+        const rows = table.querySelectorAll('tr');
+        
+        rows.forEach(row => {
+            const timeCell = row.cells[2];
+            const riderCell = row.cells[1];
+            
+            if (timeCell && riderCell) {
+                const timeValue = timeCell.textContent.trim();
+                const riderValue = riderCell.textContent.trim();
+                
+                // Zamień przecinek na podkreślenie i usuń spacje
+                const timeFileName = timeValue.replace(',', '_').replace(/\s/g, '');
+                
+                // Sprawdź czy ten czas występuje więcej niż raz w głównej tabeli
+                if (timeCountMap[timeValue] > 1) {
+                    // Znajdź pierwszą część nazwy ridera (pierwsze słowo)
+                    let riderPrefix = riderValue;
+                    if (riderValue.includes('_')) {
+                        riderPrefix = riderValue.split('_')[0];
+                    } else if (riderValue.includes(' ')) {
+                        riderPrefix = riderValue.split(' ')[0];
+                    }
+                    
+                    // Użyj prefiksu ridera dla powtarzających się czasów
+                    const fileName = timeFileName + '_' + riderPrefix + '.jpg';
+                    timeCell.innerHTML = '<a href="Evidence/' + fileName + '" class="event-link" target="_blank" title="Zobacz dowód czasu">' + timeValue + '</a>';
+                } else {
+                    // Dla unikalnych czasów używamy tylko czasu
+                    const fileName = timeFileName + '.jpg';
+                    timeCell.innerHTML = '<a href="Evidence/' + fileName + '" class="event-link" target="_blank" title="Zobacz dowód czasu">' + timeValue + '</a>';
+                }
+            }
+        });
+    });
+}
+
+// Funkcja sortująca główną tabelę "Wszyscy"
+function sortMainTable() {
+    const allRows = document.querySelectorAll('#wszyscy table tbody tr');
+    const sortedRows = Array.from(allRows).sort((rowA, rowB) => {
+        const timeA = parseFloat(rowA.cells[2].textContent.replace(',', '.'));
+        const timeB = parseFloat(rowB.cells[2].textContent.replace(',', '.'));
+        return timeA - timeB;
+    });
+    
+    const targetTable = document.querySelector('#wszyscy table tbody');
+    targetTable.innerHTML = '';
+    
+    sortedRows.forEach((row, index) => {
+        const newRow = row.cloneNode(true);
+        replaceLinksInRow(newRow);
+        newRow.cells[0].textContent = index + 1; // Nowa numeracja
+        targetTable.appendChild(newRow);
+    });
+}
+
+// Funkcja przygotowująca przefiltrowane tabele
+function prepareFilteredTables() {
+    const tabIds = ['naked', 'SuperMoto', 'sport', 'pitbike', 'kobiety'];
+    
+    tabIds.forEach(tabId => {
+        fillFilteredTable(tabId);
+    });
+}
+
+// Funkcja wyświetlająca domyślną zakładkę
+function showDefaultTab() {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById('wszyscy').style.display = 'block';
+    
+    // Ustaw "Wszyscy" jako aktywny przycisk
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.style.background = '#444');
+    const allBtn = Array.from(document.querySelectorAll('.tab-btn'))
+        .find(b => b.textContent.trim() === 'Wszyscy');
+    if (allBtn) allBtn.style.background = '#ffcc00';
+}
+
+// Funkcja otwierająca zakładki
+function openTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => {
+        el.style.display = 'none';
+        const table = el.querySelector('table');
+        if (table) {
+            table.querySelector('thead').style.position = '';
+        }
+    });
+    
+    const activeTab = document.getElementById(tabId);
+    activeTab.style.display = 'block';
+    
+    // Ustaw pozycję sticky dla nagłówka
+    const table = activeTab.querySelector('table');
+    if (table) {
+        table.querySelector('thead').style.position = 'sticky';
+        table.querySelector('thead').style.top = '0';
+        table.querySelector('thead').style.background = 'rgba(255, 204, 0, 0.85)';
+        table.querySelector('thead').style.zIndex = '100';
+    }
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.style.background = '#444');
+    event.target.style.background = '#ffcc00';
+}
+
+// Funkcja wypełniająca przefiltrowane tabele
+function fillFilteredTable(tabId) {
+    const allRows = document.querySelector('#wszyscy table tbody').querySelectorAll('tr');
+    let filterType = '';
+    
+    if (tabId === 'naked') filterType = 'Naked';
+    if (tabId === 'SuperMoto') filterType = 'SuperMoto';
+    if (tabId === 'sport') filterType = 'Sport';
+    if (tabId === 'pitbike') filterType = 'PitBike';
+    if (tabId === 'kobiety') filterType = 'Kobiety';
+    
+    const targetTable = document.querySelector(`#${tabId} table tbody`);
+    targetTable.innerHTML = '';
+    
+    // Zbierz i przefiltruj wiersze
+    const filteredRows = Array.from(allRows).filter(row => {
+        const cells = row.cells;
+        const typeCell = cells[7]?.textContent.trim();
+        const genderCell = cells[11]?.textContent.trim();
+        
+        if (filterType === 'Kobiety') {
+            return genderCell === 'F';
+        } else {
+            return typeCell === filterType;
+        }
+    });
+    
+    // Posortuj wiersze według czasu (kolumna 2 - indeks 2)
+    filteredRows.sort((rowA, rowB) => {
+        const timeA = parseFloat(rowA.cells[2].textContent.replace(',', '.'));
+        const timeB = parseFloat(rowB.cells[2].textContent.replace(',', '.'));
+        return timeA - timeB;
+    });
+    
+    // Dodaj posortowane wiersze do tabeli z nową numeracją
+    filteredRows.forEach((row, index) => {
+        const newRow = row.cloneNode(true);
+        replaceLinksInRow(newRow);
+        newRow.cells[0].textContent = index + 1; // Numeracja od 1
+        targetTable.appendChild(newRow);
+    });
+    
+    // Dodaj linki do dowodów w przefiltrowanej tabeli
+    addEvidenceLinks();
+}
+
+// Funkcja przetwarzająca linki w wierszach
+function replaceLinksInRow(row) {
+    const cells = row.cells;
+    if (cells.length >= 12) {
+        // Zamiana wartości w kolumnie Add. Info (indeks 4) na linki YouTube
+        const addInfoCell = cells[4];
+        if (addInfoCell) {
+            const addInfoText = addInfoCell.textContent.trim();
+            if (addInfoText && addInfoText !== 'RaceBox') {
+                addInfoCell.innerHTML = '<a href="https://www.youtube.com/watch?v=' + addInfoText + '" class="event-link" target="_blank" title="Zobacz na YouTube"><img src="images/YT-logo2.png" alt="YouTube" style="height: 15px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+            }
+        }
+        
+        // Zamiana linków w kolumnie Event (indeks 10)
+    const eventCell = cells[10];
+    if (eventCell) {
+        const eventText = eventCell.textContent.trim();
+        switch(eventText) {
+                     case 'Robson TD':
+                eventCell.innerHTML = '<a href="https://www.robsonmotosport.com/trackdays" class="event-link" target="_blank" style="display: inline-block;"><img src="images/robsonmotorsport.png" alt="Robson TD" style="height: 20px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+					break;
+					case 'MotoEkipa TD':
+                eventCell.innerHTML = '<a href="https://www.motoekipa.pl/torowanie/" class="event-link" target="_blank" style="display: inline-block;"><img src="images/motoekipa-logo.png" alt="MotoEkipa TD" style="height: 20px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+					break;
+                case '3MMRacing':
+                    eventCell.innerHTML = '<a href="https://3mmracingacademy.pl/track-days/" class="event-link" target="_blank">3MMRacing</a>';
+                    break;
+                case 'TrackSpace':
+                    eventCell.innerHTML = '<a href="https://trackspace.pl/kategoria-produktu/track-day-pszczolki/" class="event-link" target="_blank">TrackSpace</a>';
+                    break;
+                case 'NaKolanie':
+                    eventCell.innerHTML = '<a href="https://nakolanie.pl/track-day/" class="event-link" target="_blank">NaKolanie</a>';
+                    break;
+                case 'TrackAttack.pl':
+                    eventCell.innerHTML = '<a href="https://mototravels.pl/wyjazdy-torowe-mototravels/" class="event-link" target="_blank">TrackAttack.pl</a>';
+                    break;
+                case 'MotoZone':
+                    eventCell.innerHTML = '<a href="https://www.moto-zone.org/school.html" class="event-link" target="_blank">MotoZone</a>';
+                    break;
+            }
+        }
+        
+        // Zamiana nazw opon na hiperłącza w kolumnie Tyres (indeks 8)
+        const tyresCell = cells[8];
+        if (tyresCell) {
+            let tyresText = tyresCell.innerHTML;
+            
+            if (tyresText.includes('S23')) {
+                tyresText = tyresText.replace(/S23/g, '<a href="https://www.bridgestone.pl/opony-motocyklowe/sport/battlax-s23" target="_blank" class="event-link">S23</a>');
+            }
+            
+            if (tyresText.includes('S22')) {
+                tyresText = tyresText.replace(/S22/g, '<a href="https://www.bridgestone.com/products/motorcycle_tires/products/detail/pr153" target="_blank" class="event-link">S22</a>');
+            }
+            
+            if (tyresText.includes('Pirelli Diablo Rosso IV Corsa')) {
+                tyresText = tyresText.replace(/Pirelli Diablo Rosso IV Corsa/g, '<a href="https://www.bridgestone.com/products/motorcycle_tires/products/detail/pr153" target="_blank" class="event-link">Pirelli Diablo Rosso IV Corsa</a>');
+            }
+            
+            tyresCell.innerHTML = tyresText;
+        }
+        
+        // Zmiana wartości w kolumnie Profile (indeks 3) na logo z linkami
+        const profileCell = cells[3];
+        if (profileCell && profileCell.textContent.trim() !== '') {
+            const profileName = profileCell.textContent.trim();
+            
+            if (profileName.startsWith('FB')) {
+                const fbProfile = profileName.substring(2);
+                profileCell.innerHTML = '<a href="https://www.facebook.com/' + fbProfile + '" class="event-link" target="_blank" title="' + fbProfile + '"><img src="images/fb-small.png" alt="Facebook" style="height: 30px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+            } 
+            else if (profileName !== 'FB') {
+                profileCell.innerHTML = '<a href="https://www.instagram.com/' + profileName + '" class="event-link" target="_blank" title="' + profileName + '"><img src="images/ig-small.png" alt="Instagram" style="height: 25px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+            }
+        }
+        // Obsługa kolumny Recording Device (indeks 5)
+	const recordingDeviceCell = cells[5];
+	if (recordingDeviceCell) {
+    const deviceText = recordingDeviceCell.textContent.trim();
+    
+    // Scenariusz 1: RaceBox
+    if (/^\d/.test(deviceText) && deviceText !== '3MMRacing') {
+        recordingDeviceCell.innerHTML = '<a href="https://www.racebox.pro/webapp/session/' + deviceText + '" class="event-link" target="_blank" title="Zobacz sesję RaceBox"><img src="images/RaceBox-logo2.png" alt="RaceBox" style="height: 22px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+    // Scenariusz 2: LapTimer
+    else if (deviceText === "LapTimer") {
+        recordingDeviceCell.innerHTML = '<a href="https://pl.aliexpress.com/w/wholesale-motorcycle-lap-timer.html" class="event-link" target="_blank" title="LapTimer na AliExpress"><img src="images/LapTimer.png" alt="LapTimer" style="height: 24px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+    // Scenariusz 3: LapThrophy
+    else if (deviceText === "LapThrophy") {
+        recordingDeviceCell.innerHTML = '<a href="https://www.laptrophy.com/en/" class="event-link" target="_blank" title="LapThrophy Official"><img src="images/LapThrophy.png" alt="LapThrophy" style="height: 20px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+    // Scenariusz 4: RaceChrono
+    else if (deviceText === "RaceChrono") {
+        recordingDeviceCell.innerHTML = '<a href="https://racechrono.com/" class="event-link" target="_blank" title="RaceChrono Official"><img src="images/RaceChronoLogo.png" alt="RaceChrono" style="height: 33px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+	// Scenariusz 5: YT
+    else if (deviceText === "YT") {
+        recordingDeviceCell.innerHTML = '<a href="https://youtu.be/JohSAyTq_JQ?t=525" class="event-link" target="_blank" title="Na Oko, po klatce"><img src="images/YT-Watchtime-logo.png" alt="Youtube" style="height: 27px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+	// Scenariusz 6: RaceBoxMini - no log
+    else if (deviceText === "RaceBox") {
+        recordingDeviceCell.innerHTML = '<a href="https://www.racebox.pro/products/racebox-mini" class="event-link" target="_blank" title="RaceBox Official"><img src="images/rb_mini.png" alt="RaceBox" style="height: 33px; vertical-align: middle; display: block; margin: 0 auto;"></a>';
+    }
+}
+        
+        
+        
+    }
+}
+
+// Funkcja przetwarzająca wszystkie linki w tabeli
+function replaceEventLinks() {
+    const allRows = document.querySelectorAll('#wszyscy table tbody tr');
+    
+    allRows.forEach(row => {
+        replaceLinksInRow(row);
+    });
+}
+
+// Uruchom inicjalizację po załadowaniu strony
+window.onload = initializeTable;
+</script>
+<div class="privacy-policy" style="padding:20px; max-width:900px; margin:20px auto; background:rgba(0,0,0,0.7); border:1px solid #444; border-radius:8px; color:white; line-height:1.6;">
+<h2 style="color:#ffcc00;">Polityka prywatności</h2>
+<p>Polityka prywatności opisuje zasady przetwarzania przez nas informacji na Twój temat, w tym danych osobowych oraz ciasteczek, czyli tzw. cookies.</p>
+<h3>1. Informacje ogólne</h3>
+<p>Niniejsza polityka dotyczy Serwisu www, funkcjonującego pod adresem url: wof.pszczolki.com.pl oraz pszczolki.com.pl<br/>
+  Operatorem serwisu oraz Administratorem danych osobowych jest: Wojciech Tomczyk, Gdynia, Pomorskie <br/>
+  Adres kontaktowy poczty elektronicznej operatora: <a href="mailto:walloffamepszczolki@gmail.com">walloffamepszczolki@gmail.com</a><br/>
+  Operator jest Administratorem Twoich danych osobowych w odniesieniu do danych podanych dobrowolnie w serwisie przez Email/Discord/IG/FB.</p>
+<p>Serwis wykorzystuje dane osobowe w następujących celach:<br/>
+  Prezentacja profil użytkownika innym użytkownikom</p>
+<p>Serwis realizuje funkcje pozyskiwania informacji o użytkownikach i ich zachowaniu w następujący sposób:</p>
+<ul>
+<li>Poprzez dobrowolnie wprowadzone w formularzach dane, które zostają wprowadzone do systemów Operatora.</li>
+<li>Poprzez zapisywanie w urządzeniach końcowych plików cookie (tzw. „ciasteczka”).</li>
+</ul>
+<h3>2. Wybrane metody ochrony danych stosowane przez Operatora</h3>
+<p>Miejsca logowania i wprowadzania danych osobowych są chronione w warstwie transmisji (certyfikat SSL). Dzięki temu dane osobowe i dane logowania, wprowadzone na stronie, zostają zaszyfrowane w komputerze użytkownika i mogą być odczytane jedynie na docelowym serwerze.<br/>
+  Operator okresowo zmienia swoje hasła administracyjne.<br/>
+  W celu ochrony danych Operator regularnie wykonuje kopie bezpieczeństwa.<br/>
+  Istotnym elementem ochrony danych jest regularna aktualizacja wszelkiego oprogramowania, wykorzystywanego przez Operatora do przetwarzania danych osobowych, co w szczególności oznacza regularne aktualizacje komponentów programistycznych.</p>
+<h3>3. Hosting</h3>
+<p>Serwis jest hostowany (technicznie utrzymywany) na serwerach operatora: <a href="https://seohost.pl/">https://seohost.pl/</a><br/>
+  Firma hostingowa w celu zapewnienia niezawodności technicznej prowadzi logi na poziomie serwera. Zapisowi mogą podlegać:</p>
+<ul>
+<li>zasoby określone identyfikatorem URL (adresy żądanych zasobów – stron, plików),</li>
+<li>czas nadejścia zapytania,</li>
+<li>czas wysłania odpowiedzi,</li>
+<li>nazwę stacji klienta – identyfikacja realizowana przez protokół HTTP,</li>
+<li>informacje o błędach jakie nastąpiły przy realizacji transakcji HTTP,</li>
+<li>adres URL strony poprzednio odwiedzanej przez użytkownika (referer link) – w przypadku gdy przejście do Serwisu nastąpiło przez odnośnik,</li>
+<li>informacje o przeglądarce użytkownika,</li>
+<li>informacje o adresie IP,</li>
+<li>informacje diagnostyczne związane z procesem samodzielnego zamawiania usług poprzez rejestratory na stronie,</li>
+<li>informacje związane z obsługą poczty elektronicznej kierowanej do Operatora oraz wysyłanej przez Operatora.</li>
+</ul>
+<h3>4. Twoje prawa i dodatkowe informacje o sposobie wykorzystania danych</h3>
+<p>W niektórych sytuacjach Administrator ma prawo przekazywać Twoje dane osobowe innym odbiorcom, jeśli będzie to niezbędne do wykonania zawartej z Tobą umowy lub do zrealizowania obowiązków ciążących na Administratorze. Dotyczy to takich grup odbiorców:<br/>
+  upoważnieni pracownicy i współpracownicy, którzy korzystają z danych w celu realizacji celu działania strony</p>
+<p>Twoje dane osobowe przetwarzane przez Administratora nie dłużej, niż jest to konieczne do wykonania związanych z nimi czynności określonych osobnymi przepisami (np. o prowadzeniu rachunkowości). W odniesieniu do danych marketingowych dane nie będą przetwarzane dłużej niż przez 3 lata.</p>
+<p>Przysługuje Ci prawo żądania od Administratora:</p>
+<ul>
+<li>dostępu do danych osobowych Ciebie dotyczących,</li>
+<li>ich sprostowania,</li>
+<li>usunięcia,</li>
+<li>ograniczenia przetwarzania,</li>
+<li>oraz przenoszenia danych.</li>
+</ul>
+<p>Przysługuje Ci prawo do złożenia sprzeciwu w zakresie przetwarzania wskazanego w pkt 3.2 wobec przetwarzania danych osobowych w celu wykonania prawnie uzasadnionych interesów realizowanych przez Administratora, w tym profilowania, przy czym prawo sprzeciwu nie będzie mogło być wykonane w przypadku istnienia ważnych prawnie uzasadnionych podstaw do przetwarzania, nadrzędnych wobec Ciebie interesów, praw i wolności, w szczególności ustalenia, dochodzenia lub obrony roszczeń.</p>
+<p>Na działania Administratora przysługuje skarga do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa.</p>
+<p>Podanie danych osobowych jest dobrowolne, lecz niezbędne do obsługi Serwisu.</p>
+<p>W stosunku do Ciebie mogą być podejmowane czynności polegające na zautomatyzowanym podejmowaniu decyzji, w tym profilowaniu w celu świadczenia usług w ramach zawartej umowy oraz w celu prowadzenia przez Administratora marketingu bezpośredniego.</p>
+<p>Dane osobowe nie są przekazywane od krajów trzecich w rozumieniu przepisów o ochronie danych osobowych. Oznacza to, że nie przesyłamy ich poza teren Unii Europejskiej.</p>
+<h3>5. Informacje w formularzach</h3>
+<p>Serwis zbiera informacje podane dobrowolnie przez użytkownika, w tym dane osobowe, o ile zostaną one podane.<br/>
+  Serwis może zapisać informacje o parametrach połączenia (oznaczenie czasu, adres IP).<br/>
+  Serwis, w niektórych wypadkach, może zapisać informację ułatwiającą powiązanie danych w formularzu z adresem e-mail użytkownika wypełniającego formularz. W takim wypadku adres e-mail użytkownika pojawia się wewnątrz adresu url strony zawierającej formularz.<br/>
+  Dane podane w formularzu są przetwarzane w celu wynikającym z funkcji konkretnego formularza, np. w celu dokonania procesu obsługi zgłoszenia serwisowego lub kontaktu handlowego, rejestracji usług itp. Każdorazowo kontekst i opis formularza w czytelny sposób informuje, do czego on służy.</p>
+<h3>6. Logi Administratora</h3>
+<p>Informacje zachowaniu użytkowników w serwisie mogą podlegać logowaniu. Dane te są wykorzystywane w celu administrowania serwisem.</p>
+<h3>7. Istotne techniki marketingowe</h3>
+<p>Operator stosuje analizę statystyczną ruchu na stronie, poprzez Google Analytics (Google Inc. z siedzibą w USA). Operator nie przekazuje do operatora tej usługi danych osobowych, a jedynie zanonimizowane informacje. Usługa bazuje na wykorzystaniu ciasteczek w urządzeniu końcowym użytkownika. W zakresie informacji o preferencjach użytkownika gromadzonych przez sieć reklamową Google użytkownik może przeglądać i edytować informacje wynikające z plików cookies przy pomocy narzędzia: <a href="https://www.google.com/ads/preferences/">https://www.google.com/ads/preferences/</a></p>
+<h3>8. Informacja o plikach cookies</h3>
+<p>Serwis korzysta z plików cookies.<br/>
+  Pliki cookies (tzw. „ciasteczka”) stanowią dane informatyczne, w szczególności pliki tekstowe, które przechowywane są w urządzeniu końcowym Użytkownika Serwisu i przeznaczone są do korzystania ze stron internetowych Serwisu. Cookies zazwyczaj zawierają nazwę strony internetowej, z której pochodzą, czas przechowywania ich na urządzeniu końcowym oraz unikalny numer.<br/>
+  Podmiotem zamieszczającym na urządzeniu końcowym Użytkownika Serwisu pliki cookies oraz uzyskującym do nich dostęp jest operator Serwisu.</p>
+<p>Pliki cookies wykorzystywane są w następujących celach:</p>
+<ul>
+<li>utrzymanie sesji użytkownika Serwisu (po zalogowaniu), dzięki której użytkownik nie musi na każdej podstronie Serwisu ponownie wpisywać loginu i hasła;</li>
+<li>realizacji celów określonych powyżej w części "Istotne techniki marketingowe";</li>
+</ul>
+<p>W ramach Serwisu stosowane są dwa zasadnicze rodzaje plików cookies: „sesyjne” (session cookies) oraz „stałe” (persistent cookies). Cookies „sesyjne” są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Użytkownika do czasu wylogowania, opuszczenia strony internetowej lub wyłączenia oprogramowania (przeglądarki internetowej). „Stałe” pliki cookies przechowywane są w urządzeniu końcowym Użytkownika przez czas określony w parametrach plików cookies lub do czasu ich usunięcia przez Użytkownika.</p>
+<p>Oprogramowanie do przeglądania stron internetowych (przeglądarka internetowa) zazwyczaj domyślnie dopuszcza przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać zmiany ustawień w tym zakresie. Przeglądarka internetowa umożliwia usunięcie plików cookies. Możliwe jest także automatyczne blokowanie plików cookies Szczegółowe informacje na ten temat zawiera pomoc lub dokumentacja przeglądarki internetowej.</p>
+<p>Ograniczenia stosowania plików cookies mogą wpłynąć na niektóre funkcjonalności dostępne na stronach internetowych Serwisu.</p>
+<p>Pliki cookies zamieszczane w urządzeniu końcowym Użytkownika Serwisu wykorzystywane mogą być również przez współpracujące z operatorem Serwisu podmioty, w szczególności dotyczy to firm: Google (Google Inc. z siedzibą w USA), Facebook (Facebook Inc. z siedzibą w USA), Twitter (Twitter Inc. z siedzibą w USA).</p>
+<h3>9. Zarządzanie plikami cookies – jak w praktyce wyrażać i cofać zgodę?</h3>
+<p>Jeśli użytkownik nie chce otrzymywać plików cookies, może zmienić ustawienia przeglądarki. Zastrzegamy, że wyłączenie obsługi plików cookies niezbędnych dla procesów uwierzytelniania, bezpieczeństwa, utrzymania preferencji użytkownika może utrudnić, a w skrajnych przypadkach może uniemożliwić korzystanie ze stron www</p>
+<p>W celu zarządzania ustawienia cookies wybierz z listy poniżej przeglądarkę internetową, której używasz i postępuj zgodnie z instrukcjami:</p>
+<ul>
+<li><a href="https://support.microsoft.com/pl-pl/microsoft-edge/wy%C5%9Bwietlanie-i-usuwanie-historii-przegl%C4%85darki-w-programie-microsoft-edge-00cf7943-a9e1-975a-a33d-ac10ce454ca4" style="color:white; text-decoration:none;">Edge📰 </a></li>
+<li><a href="https://support.microsoft.com/pl-pl/topic/jak-usun%C4%85%C4%87-pliki-cookie-w-programie-internet-explorer-bca9446f-d873-78de-77ba-d42645fa52fc" style="color:white; text-decoration:none;">Internet Explorer 📰 </a></li>
+<li><a href="https://support.google.com/chrome/answer/95647?hl=pl" style="color:white; text-decoration:none;">Chrome 📰 </a></li>
+<li><a href="https://support.apple.com/en-gb/guide/safari/sfri11471/mac" style="color:white; text-decoration:none;">Safari📰 </a></li>
+<li><a href="https://support.mozilla.org/pl/kb/wzmocniona-ochrona-przed-sledzeniem-firefox-desktop?redirectslug=W%C5%82%C4%85czanie+i+wy%C5%82%C4%85czanie+obs%C5%82ugi+ciasteczek&redirectlocale=pl" style="color:white; text-decoration:none;">Opera 📰 </a></li>
+<li><a href="https://help.opera.com/en/latest/web-preferences/#cookies" style="color:white; text-decoration:none;">Polityka Prywatnosci 📰 </a></li>
+</ul>
+<p>Urządzenia mobilne:</p>
+<ul>
+<li><a href="https://support.google.com/chrome/answer/95647?hl=pl" style="color:white; text-decoration:none;">Android 📰 </a></li>
+<li><a href="https://support.apple.com/pl-pl/105082" style="color:white; text-decoration:none;">Safari (iOS) 📰 </a></li>
+<li><a href="https://support.microsoft.com/en-gb/windows/what-does-it-mean-if-windows-isn-t-supported-08f3b92d-7539-671e-1452-2e71cdad18b5" style="color:white; text-decoration:none;">Windows Phone📰 </a></li>
+</ul>
+</div>
+
+<h3 style="text-align:center; margin-top: 15px;color: #ffcc00;">ODTJ Autodrom Pomorze Track Days Promo</h3>
+<div class="videos">
+<iframe allowfullscreen="" src="https://www.youtube.com/embed/rM0RNgS1IqM"></iframe>
+<iframe allowfullscreen="" src="https://www.youtube.com/embed/04DhX8mEs-A"></iframe>
+</div>
+
+
+
+
+<footer>
+<a href="https://www.youtube.com/watch?v=ugJNTPsMuMY&amp;list=PLVK6ByZedOaO-D41vPNcVZ5aRVpz_cNum"><img alt="YT" src="images/YT-logo.png"/>YouTube</a>
+<a href="https://docs.google.com/spreadsheets/d/1LJji-vXUDudTekKGC1VRb0uQhRArbUIp/edit?usp=drive_link&amp;ouid=114564649456727801090&amp;rtpof=true&amp;sd=true"><img alt="Lista Wall Of Fame" src="images/Google-logo.png"/>Pełna Lista</a>
+<a href="mailto:walloffamepszczolki@gmail"><img alt="Contact" src="images/Pszczolki.png"/>Kontakt</a>
+</footer>
+
+
+</body>
+</html>

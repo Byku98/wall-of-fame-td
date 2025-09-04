@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5 text-center">
+    <h1 class="text-primary"><%= title %></h1>
+    <p class="lead"><%= subtitle %></p>
+    <h3>Welcome, <%= user.name %> 🎉</h3>
+
+    <ul class="list-group mt-3">
+      <% features.forEach(feature => { %>
+        <li class="list-group-item"><%= feature %></li>
+      <% }) %>
+    </ul>
+  </div>
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+    /* After page load, we’ll add .visible */
+    #logo.fade-in.visible {
+      transition-delay: 0.5s;
+      opacity: 1;
+    }
+
+    #subPages.fade-in.visible {
+      transition-delay: 1s;
+      opacity: 1;
+    }
+
+    #socialMedia.fade-in.visible {
+      transition-delay: 1.5s;
+      opacity: 1;
+    }

@@ -1,22 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
+
 <head>
   <meta charset="UTF-8">
-  <title><%= title %></title>
+  <title>
+    <%= title %>
+  </title>
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-</head>
-<body>
-  <div class="container mt-5 text-center">
-    <h1 class="text-primary"><%= title %></h1>
-    <p class="lead"><%= subtitle %></p>
-    <h3>Welcome, <%= user.name %> 🎉</h3>
 
-    <ul class="list-group mt-3">
-      <% features.forEach(feature => { %>
-        <li class="list-group-item"><%= feature %></li>
+  <!-- Import Styles -->
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/landing_styles.css">
+
+</head>
+
+<body class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-dark text-light">
+
+  <!-- Logo -->
+  <img src="<%= logo %>" alt="Logo" class="img-fluid mb-5 fade-in" id="logo" style="max-width: 600px;">
+
+  <!-- Options -->
+  <div class="d-flex gap-3 flex-wrap justify-content-center fade-in" id="subPages">
+    <% subPages.forEach(subPages=> { %>
+      <a href="<%= subPages.url %>" class="btn btn-lg btn-<%= subPages.style %>">
+        <%= subPages.label %>
+      </a>
       <% }) %>
-    </ul>
   </div>
+
+  <div class="d-flex gap-3 flex-wrap justify-content-center mt-5 fade-in social-glow" id="socialMedia">
+    <% socialMedia.forEach(socialMedia=> { %>
+      <a href="<%= socialMedia.url %>" target="_blank">
+        <img src="<%= socialMedia.logo %>" alt="<%= socialMedia.label %>" class="img-fluid"
+          style="height: 35px; width: auto;">
+      </a>
+      <% }) %>
+  </div>
+
   <script src="/static/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // When page loads, add 'visible' class to trigger fade-in
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('logo')?.classList.add('visible');
+      document.getElementById('subPages')?.classList.add('visible');
+      document.getElementById('socialMedia')?.classList.add('visible');
+    });
+  </script>
 </body>
+
 </html>

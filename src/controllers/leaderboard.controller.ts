@@ -1,10 +1,21 @@
 import { Request, Response } from "express";
+import { leaderboardService } from "../services/leaderboard.service";
 
-export function renderLeaderboardPage(req: Request, res: Response) {
-  const dynamicContent = {
-    title: "Pszczółki - Wall of Fame",
-    logo: "/assets/images/wof-internal/wof-logo-big.png",
-  };
+export async function renderLeaderboardPage(req: Request, res: Response) {
+  try {
+    const trackList = await leaderboardService.getAllTracks();
 
-  res.render("leaderboard", dynamicContent);
+    console.log(trackList);
+
+    const dynamicContent = {
+      title: "Pszczółki - Wall of Fame",
+      logo: "/assets/images/wof-internal/wof-logo-big.png",
+      trackList,
+    };
+
+    res.render("leaderboard", dynamicContent);
+  } catch (err) {
+    console.log("Error fetching track list: ", err);
+    res.status(500).send("Internal Server Error");
+  }
 }

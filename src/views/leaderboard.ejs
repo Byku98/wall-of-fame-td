@@ -20,22 +20,20 @@
 
       <!-- Track dropdown (to be filled from DB later) -->
       <select class="form-select w-auto" id="trackSelect">
-        <option selected disabled>Track to choose from</option>
-        <!-- Options will be dynamically added via JS when DB integration is ready -->
+        <option selected>Wybierz tor</option>
+        <% if (typeof trackList !=='undefined' ) { %>
+          <% trackList.forEach(track=> { %>
+            <option value="<%= track.track_id %>"> <%= track.track_name %> </option>
+          <% }) %>
+        <% } %>
+                <!-- Options will be dynamically added via JS when DB integration is ready -->
       </select>
-    </div>
 
-    <div class="d-flex align-items-center gap-3 mb-4">
       <!-- Filter button (locked for now) -->
-      <button class="btn btn-secondary" disabled>Filtruj</button>
-    </div>
-    
-    <div class="d-flex align-items-center gap-3 mb-4">
+      <button class="btn btn-secondary" id="filterLeaderboard" ></button>">Filtruj</button>
+      
       <!-- Check it out button (locked for now) -->
       <button class="btn btn-primary" disabled>Sprawdź się</button>
-    </div>
-
-
 
   </div>
 

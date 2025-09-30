@@ -5,7 +5,7 @@ export const leaderboardService = {
     return leaderboardRepository.getAllTracks;
   },
 
-  getLapsByTrack: async (trackId: number) => {
-    return leaderboardRepository.getLapsFromTrackUnfiltered(trackId);
+  getLeaderboardByTrack: async (trackId: number) => {
+    return leaderboardRepository.getLeaderboardFromTrackUnfiltered(trackId);
   }
 };

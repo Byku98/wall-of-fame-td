@@ -3,7 +3,7 @@ import { pool } from "../config/leaderboard.database.config";
 export const leaderboardRepository = {
   getAllTracks: async () => {
     const [rows] = await pool.query("select track_id, track_name from tracks");
-    return rows;
+    return rows as any[];
   },
 
   getLeaderboardFromTrackUnfiltered: async (trackId: number) => {

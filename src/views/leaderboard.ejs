@@ -21,23 +21,23 @@
       <!-- Track dropdown -->
       <select class="form-select w-auto" id="trackSelect">
         <!-- The default "Wybierz tor" option is now only selected if no track is pre-selected -->
-        <option value="" <%= selectedTrackId === null ? 'selected' : '' %>Wybierz tor</option>
-        <% if (typeof trackList !== 'undefined') { %>
+        <option value="" <%=selectedTrackId===null ? 'selected' : '' %>Wybierz tor</option>
+        <% if (typeof trackList !=='undefined' ) { %>
           <% trackList.forEach(track=> { %>
-            <option value="<%= track.track_id %>" <%= selectedTrackId === track.track_id ? 'selected' : '' %>>
+            <option value="<%= track.track_id %>" <%=selectedTrackId===track.track_id ? 'selected' : '' %>>
               <%= track.track_name %>
             </option>
-          <% }) %>
-        <% } %>
+            <% }) %>
+              <% } %>
       </select>
 
       <!-- Filter button (locked for now) -->
       <button class="btn btn-secondary" id="filterLeaderboard">Filtruj</button>
-      
+
       <!-- Check it out button (locked for now) -->
       <button class="btn btn-primary" disabled>Sprawdź się</button>
-</div>
-        <!-- Leaderboard Table -->
+    </div>
+    <!-- Leaderboard Table -->
     <div class="table-responsive" id="leaderboardTableContainer">
       <table class="table table-striped table-hover">
         <thead>
@@ -54,87 +54,48 @@
         </thead>
         <tbody id="leaderboardTableBody">
           <% // Always render the table with data, even if empty, to show "No laps found" %>
-          <% if (leaderboard.length > 0) { %>
-            <% leaderboard.forEach((lap, index) => { %>
-              <tr>
-                <td><%= index + 1 %></td>
-                <td><%= lap.lap_time %></td>
-                <td><%= lap.rider_name %></td>
-                <td><%= lap.validity %></td>
-                <td><%= lap.motorcycle %></td>
-                <td><%= lap.tyre_front %></td>
-                <td><%= lap.tyre_rear %></td>
-                <td><%= new Date(lap.lap_date).toLocaleDateString() %></td>
-              </tr>
-            <% }) %>
-          <% } else { %>
-            <tr>
-              <td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td>
-            </tr>
-          <% } %>
+            <% if (leaderboard.length> 0) { %>
+              <% leaderboard.forEach((lap, index)=> { %>
+                <tr>
+                  <td>
+                    <%= index + 1 %>
+                  </td>
+                  <td>
+                    <%= lap.lap_time %>
+                  </td>
+                  <td>
+                    <%= lap.rider_name %>
+                  </td>
+                  <td>
+                    <%= lap.validity %>
+                  </td>
+                  <td>
+                    <%= lap.motorcycle %>
+                  </td>
+                  <td>
+                    <%= lap.tyre_front %>
+                  </td>
+                  <td>
+                    <%= lap.tyre_rear %>
+                  </td>
+                  <td>
+                    <%= new Date(lap.lap_date).toLocaleDateString() %>
+                  </td>
+                </tr>
+                <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td>
+                    </tr>
+                    <% } %>
         </tbody>
       </table>
     </div>
 
   </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const trackSelect = document.getElementById('trackSelect');
-      const filterButton = document.getElementById('filterLeaderboard');
-      const leaderboardTableContainer = document.getElementById('leaderboardTableContainer');
-      const leaderboardTableBody = document.getElementById('leaderboardTableBody');
-
-      // Function to render table rows
-      const renderTable = (laps) => {
-
-        leaderboardTableBody.innerHTML = ''; // Clear existing rows
-
-        if (laps.length === 0) {
-          leaderboardTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>';
-        } else {
-          laps.forEach((lap, index) => {
-            const row = leaderboardTableBody.insertRow();
-            row.insertCell().textContent = index + 1; // Position
-            row.insertCell().textContent = lap.lap_time;
-            row.insertCell().textContent = lap.rider_name;
-            row.insertCell().textContent = lap.validity;
-            row.insertCell().textContent = lap.motorcycle;
-            row.insertCell().textContent = lap.tyre_front;
-            row.insertCell().textContent = lap.tyre_rear;
-            row.insertCell().textContent = new Date(lap.lap_date).toLocaleDateString(); // Format date
-          });
-        }
-      };
-
-      // No need for initial render logic here, EJS handles the first load.
-      // The dropdown will already be pre-selected by EJS.
-
-      filterButton.addEventListener('click', async () => {
-        const selectedTrackId = trackSelect.value;
-
-        // If "Wybierz tor" (value="") is selected, and it's disabled,
-        // the user must select a valid track.
-        if (!selectedTrackId) {
-          leaderboardTableBody.innerHTML = '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>';
-          return;
-        }
-
-        try {
-          const response = await fetch(`/leaderboard/filter?trackId=${selectedTrackId}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const laps = await response.json();
-          renderTable(laps); // Use the render function
-        } catch (error) {
-          console.error('Error fetching leaderboard data:', error);
-          leaderboardTableBody.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Failed to load leaderboard data.</td></tr>';
-        }
-      });
-    });
-  </script>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/client_scripts/leaderboard.js"></script> <!-- Link to your new script -->
 </body>
 
 </html>

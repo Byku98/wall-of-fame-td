@@ -27,7 +27,7 @@ export async function renderLeaderboardPage(req: Request, res: Response) {
 
     const dynamicContent = {
       title: "Wall of Fame - Leaderbaord",
-      logo: "/assets/images/wof-internal/wof-logo-big.png",
+      logo: "/images/wof-internal/wof-logo-big.png",
       trackList,
       leaderboard,
       selectedTrackId: trackId_selected

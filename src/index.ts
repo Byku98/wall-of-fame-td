@@ -14,8 +14,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/static", express.static(path.join(__dirname, "../node_modules/bootstrap/dist")));
 
 // add external assets and images
-app.use("/assets", express.static("src/assets"));
-// app.use("/assets", express.static(path.join(__dirname, "assets")));
+app.use("/images", express.static(path.join(__dirname, "../public/assets/images")));
+app.use('/client_scripts', express.static(path.join(__dirname, "../public/scripts")));
+app.use('/evidences', express.static(path.join(__dirname, "../uploads/evidences")));
 
 // Routes
 app.use("/", pagesRoute);

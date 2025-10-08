@@ -23,7 +23,7 @@ export async function renderLeaderboardPage(req: Request, res: Response) {
       // trackIdToLoad = (trackList[0] as any).track_id; // Assuming track_id is on the first item
     // }
 
-    console.log(trackList);
+    // console.log(trackList);
 
     const dynamicContent = {
       title: "Wall of Fame - Leaderbaord",

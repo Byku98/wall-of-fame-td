@@ -1,0 +1,24 @@
+    <!-- Top controls -->
+    <div class="d-flex align-items-center gap-3 mb-4">
+
+      <!-- Track dropdown -->
+      <select class="form-select w-auto" id="trackSelect">
+        <% if (typeof trackList !=='undefined' && trackList.length> 0) { %>
+          <% trackList.forEach(track=> { %>
+            <option value="<%= track.track_id %>" <%=selectedTrackId===track.track_id ? 'selected' : '' %>>
+              <%= track.track_name %>
+            </option>
+            <% }) %>
+              <% } %>
+      </select>
+
+      <!-- Filter button (locked for now) -->
+      <button class="btn btn-primary" id="filterLeaderboard">Pokaż tor</button>
+
+      <!-- New button for extended filters -->
+      <button class="btn btn-secondary" id="toggleFiltersDropdown">Filtry</button>
+
+      <!-- Check it out button (locked for now) -->
+      <button class="btn btn-secondary" id="virtualLapTime" disabled>Sprawdź się</button>
+
+    </div>

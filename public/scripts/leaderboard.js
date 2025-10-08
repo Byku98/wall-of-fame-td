@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         row.insertCell().textContent = index + 1; // Position
         row.insertCell().textContent = lap.lap_time;
         row.insertCell().textContent = lap.rider_name;
+        row.insertCell().textContent = lap.rider_level;
         row.insertCell().textContent = lap.validity;
         row.insertCell().textContent = lap.motorcycle;
         row.insertCell().textContent = lap.tyre_front;

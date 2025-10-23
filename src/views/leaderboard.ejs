@@ -16,13 +16,13 @@
   <div class="container py-5">
 
     <!-- Top controls of the page like track dropodwn, select track, virual leadearbaord and filtering-->
-    <%- include('components/leaderboard/_top_controls') %>
+    <%- include('components/leaderboard/_top_controls', { trackList: trackList, selectedTrackId: selectedTrackId }) %>
 
     <!-- Advanced Filtering Options (initially hidden) -->
     <%- include('components/leaderboard/_filtering_dropdown') %>
 
     <!-- Leaderboard Table -->
-    <%- include('components/leaderboard/_leaderboard_table') %>
+    <%- include('components/leaderboard/_leaderboard_table', { leaderboard: leaderboard }) %>
 
   </div>
   </div>

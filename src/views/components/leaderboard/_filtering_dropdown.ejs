@@ -3,40 +3,90 @@
     <!-- This is where your new filter inputs will go -->
     <div class="row g-3">
         <div class="col-md-4">
-            <label for="fasterThanFilter" class="form-label">Szybciej niż</label>
-            <input type="text" class="form-control" id="fasterThanFilter" placeholder="Czas">
-        </div>
-        <div class="col-md-4">
-            <label for="slowerThanFilter" class="form-label">Wolniej niż</label>
-            <input type="text" class="form-control" id="slowerThanFilter" placeholder="Czas">
-        </div>
-        <div class="col-md-4">
             <label for="motorcycleNameFilter" class="form-label">Motocykl</label>
-            <input type="text" class="form-control" id="motorcycleNameFilter" placeholder="Motocykl">
+            <input type="text" class="form-control" id="motorcycleNameFilter" placeholder="Motocykl"
+                list="motorcycleSuggestions">
+            <datalist id="motorcycleSuggestions">
+                <!-- Options will be populated by JavaScript -->
+            </datalist>
         </div>
         <div class="col-md-4">
             <label for="tyreFrontFilter" class="form-label">Opona - przód</label>
-            <input type="text" class="form-control" id="tyreFrontFilter" placeholder="Wpisz imię">
+            <input type="text" class="form-control" id="tyreFrontFilter" placeholder="Opona - przód"
+                list="tyreFrontSuggestions">
+            <datalist id="tyreFrontSuggestions">
+                <!-- Options will be populated by JavaScript -->
+            </datalist>
         </div>
         <div class="col-md-4">
             <label for="tyreRearFilter" class="form-label">Opona - tył</label>
-            <input type="text" class="form-control" id="tyreRearFilter" placeholder="Wpisz imię">
+            <input type="text" class="form-control" id="tyreRearFilter" placeholder="Opona - tył"
+                list="tyreRearSuggestions">
+            <datalist id="tyreRearSuggestions">
+                <!-- Options will be populated by JavaScript -->
+            </datalist>
         </div>
-        <div class="col-md-4">
-            <label class="form-label">Płeć</label>
-            <div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="sexMale" value="male">
-                    <label class="form-check-label" for="sexMale">Mężczyzna</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="sexFemale" value="female">
-                    <label class="form-check-label" for="sexFemale">Kobieta</label>
-                </div>
-                <!-- Add more sex options here -->
+        <div class="col-md-3">
+            <label for="fasterThanMinutes" class="form-label">Szybciej niż</label>
+            <div class="input-group">
+                <select class="form-select" id="fasterThanMinutes">
+                    <option value="">Min</option>
+                    <% for (let i=0; i <=3; i++) { %>
+                        <option value="<%= i %>">
+                            <%= String(i).padStart(2, '0' ) %>
+                        </option>
+                        <% } %>
+                </select>
+                <span class="input-group-text">:</span>
+                <select class="form-select" id="fasterThanSeconds">
+                    <option value="">Sek</option>
+                    <% for (let i=0; i <=59; i++) { %>
+                        <option value="<%= i %>">
+                            <%= String(i).padStart(2, '0' ) %>
+                        </option>
+                        <% } %>
+                </select>
+                <button class="btn btn-secondary" id="clearFiltersFasterThan" style="width: 28%;">Wyczyść</button>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <label for="slowerThanMinutes" class="form-label">Wolniej niż</label>
+            <div class="input-group">
+                <select class="form-select" id="slowerThanMinutes">
+                    <option value="">Min</option>
+                    <% for (let i=0; i <=3; i++) { %>
+                        <option value="<%= i %>">
+                            <%= String(i).padStart(2, '0' ) %>
+                        </option>
+                        <% } %>
+                </select>
+                <span class="input-group-text">:</span>
+                <select class="form-select" id="slowerThanSeconds">
+                    <option value="">Sek</option>
+                    <% for (let i=0; i <=59; i++) { %>
+                        <option value="<%= i %>">
+                            <%= String(i).padStart(2, '0' ) %>
+                        </option>
+                        <% } %>
+                </select>
+                <button class="btn btn-secondary" id="clearFiltersSlowerThan" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="dateFromFilter" class="form-label">Data - od</label>
+            <div class="input-group">
+                <input type="date" class="form-control" id="dateFromFilter" placeholder="Data - od">
+                <button class="btn btn-secondary" id="clearFiltersDateFrom" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="dateToFilter" class="form-label">Data - do</label>
+            <div class="input-group">
+                <input type="date" class="form-control" id="dateToFilter" placeholder="Data - do">
+                <button class="btn btn-secondary" id="clearFiltersDateTo" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <div class="col-12">
             <label class="form-label">Doświadczenie</label>
             <div>
                 <div class="form-check form-check-inline">
@@ -65,7 +115,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-12">
             <label class="form-label">Dokładność pomiaru</label>
             <div>
                 <div class="form-check form-check-inline">
@@ -84,11 +134,24 @@
                     <input class="form-check-input" type="checkbox" id="accLow" value="low">
                     <label class="form-check-label" for="accLow">Niska</label>
                 </div>
+            </div>
         </div>
-        </div>
-        <div class="col-md-4">
-            <label for="dateFilter" class="form-label">Data</label>
-            <input type="text" class="form-control" id="dateFilter" placeholder="Data">
+        <div class="col-12">
+            <label class="form-label">Płeć</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sexAll" name="gender" value="allGenders" checked>
+                    <label class="form-check-label" for="sexAll">Wszyscy</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sexMale" name="gender" value="male">
+                    <label class="form-check-label" for="sexMale">Mężczyzna</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sexFemale" name="gender" value="female">
+                    <label class="form-check-label" for="sexFemale">Kobieta</label>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row mt-3">

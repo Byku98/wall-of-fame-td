@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const filtersDropdownContainer = document.getElementById(
     "filtersDropdownContainer"
   );
+  const MISSING_DATA_TEXT = "Brak danych";
 
   // Constnats for autocomplete filtering leaderboard
   const motorcycleNameFilter = document.getElementById("motorcycleNameFilter");
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Variable to store the last fetched laps data to extract unique motorcycles
   let currentLapsData = [];
+  let allTrackLapsData = [];
 
   // Event listener for clearing faster than filters
   if (clearFiltersFasterThan) {
@@ -79,62 +81,56 @@ document.addEventListener("DOMContentLoaded", () => {
   // Reset all filter inputs to their default values (empty strings)
   if (clearFiltersDropdown) {
     clearFiltersDropdown.addEventListener("click", () => {
-      // Open filtering reset to null values
-      motorcycleNameFilter.value = "";
-      tyreFrontFilter.value = "";
-      tyreRearFilter.value = "";
-      // Laptime filtering
-      fasterThanMinutes.value = "";
-      fasterThanSeconds.value = "";
-      slowerThanMinutes.value = "";
-      slowerThanSeconds.value = "";
-      // Date filtering
-      dateFromFilter.value = "";
-      dateToFilter.value = "";
-      // Experience filtering
-      expFreshman.checked = false;
-      expBeginner.checked = false;
-      expMedium.checked = false;
-      expAdvanced.checked = false;
-      expSemipro.checked = false;
-      expProfessional.checked = false;
-      // Accuracy filtering
-      accVeryHigh.checked = false;
-      accHigh.checked = false;
-      accMedium.checked = false;
-      accLow.checked = false;
-      // Gender filtering
-      sexMale.checked = false;
-      sexFemale.checked = false;
-      sexAll.checked = true;
+      // Reset all filter inputs to their default values (empty strings or unchecked)
+      if (motorcycleNameFilter) motorcycleNameFilter.value = "";
+      if (tyreFrontFilter) tyreFrontFilter.value = "";
+      if (tyreRearFilter) tyreRearFilter.value = "";
+      if (fasterThanMinutes) fasterThanMinutes.value = "";
+      if (fasterThanSeconds) fasterThanSeconds.value = "";
+      if (slowerThanMinutes) slowerThanMinutes.value = "";
+      if (slowerThanSeconds) slowerThanSeconds.value = "";
+      if (dateFromFilter) dateFromFilter.value = "";
+      if (dateToFilter) dateToFilter.value = "";
+      // Reset checkboxes to unchecked
+      if (expFreshman) expFreshman.checked = false;
+      if (expBeginner) expBeginner.checked = false;
+      if (expMedium) expMedium.checked = false;
+      if (expAdvanced) expAdvanced.checked = false;
+      if (expSemipro) expSemipro.checked = false;
+      if (expProfessional) expProfessional.checked = false;
+      if (accVeryHigh) accVeryHigh.checked = false;
+      if (accHigh) accHigh.checked = false;
+      if (accMedium) accMedium.checked = false;
+      if (accLow) accLow.checked = false;
+      // Reset radios to default (sexAll checked)
+      if (sexAll) sexAll.checked = true;
+      if (sexMale) sexMale.checked = false;
+      if (sexFemale) sexFemale.checked = false;
+      // Re-render the table with all unfiltered data
+      renderTable(allTrackLapsData);
     });
   }
 
+  // Function to get total seconds from minutes and seconds select elements
+  const getTotalSeconds = (minElement, secElement) => {
+    const min = parseInt(minElement.value || 0, 10);
+    const sec = parseInt(secElement.value || 0, 10);
+    return min * 60 + sec;
+  };
+
   const validateLapTimeRange = () => {
+    const fasterTotal = getTotalSeconds(fasterThanMinutes, fasterThanSeconds);
+    const slowerTotal = getTotalSeconds(slowerThanMinutes, slowerThanSeconds);
+    console.log(fasterTotal);
+    console.log(slowerTotal);
     if (
-      fasterThanMinutes &&
-      fasterThanSeconds &&
-      slowerThanMinutes &&
-      slowerThanSeconds
+      (fasterTotal >= slowerTotal || slowerTotal >= fasterTotal) &&
+      fasterTotal != 0 &&
+      slowerTotal != 0
     ) {
-      const fasterMin = parseInt(fasterThanMinutes.value || 0, 10);
-      const fasterSec = parseInt(fasterThanSeconds.value || 0, 10);
-      const slowerMin = parseInt(slowerThanMinutes.value || 0, 10);
-      const slowerSec = parseInt(slowerThanSeconds.value || 0, 10);
-      const fasterTotal = fasterMin * 60 + fasterSec;
-      const slowerTotal = slowerMin * 60 + slowerSec;
-      if (
-        fasterThanMinutes.value &&
-        fasterThanSeconds.value &&
-        slowerThanMinutes.value &&
-        slowerThanSeconds.value &&
-        fasterTotal <= slowerTotal
-      ) {
-        return false; // Invalid: "Szybciej niż" is not faster than "Wolniej niż"
-      }
-      return true; // Valid
+      return false; // Invalid: "Szybciej niż" is not faster than "Wolniej niż"
     }
-    return true; // If not all fields are set, consider valid
+    return true; // If fields are set 0 or it won't enter trap, consider valid
   };
 
   // Add validation on change event for lap time selects
@@ -142,8 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fasterThanMinutes.addEventListener("change", () => {
       if (!validateLapTimeRange()) {
         alert("Czas 'Szybciej niż' musi być mniejszy niż 'Wolniej niż'.");
-        fasterThanMinutes.value = "";
-        fasterThanSeconds.value = "";
+        fasterThanMinutes.value = "00";
+        fasterThanSeconds.value = "00";
       }
     });
   }
@@ -151,8 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fasterThanSeconds.addEventListener("change", () => {
       if (!validateLapTimeRange()) {
         alert("Czas 'Szybciej niż' musi być mniejszy niż 'Wolniej niż'.");
-        fasterThanMinutes.value = "";
-        fasterThanSeconds.value = "";
+        fasterThanMinutes.value = "00";
+        fasterThanSeconds.value = "00";
       }
     });
   }
@@ -160,8 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
     slowerThanMinutes.addEventListener("change", () => {
       if (!validateLapTimeRange()) {
         alert("Czas 'Wolniej niż' musi być większy niż 'Szybciej niż'.");
-        slowerThanMinutes.value = "";
-        slowerThanSeconds.value = "";
+        slowerThanMinutes.value = "00";
+        slowerThanSeconds.value = "00";
       }
     });
   }
@@ -169,8 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
     slowerThanSeconds.addEventListener("change", () => {
       if (!validateLapTimeRange()) {
         alert("Czas 'Wolniej niż' musi być większy niż 'Szybciej niż'.");
-        slowerThanMinutes.value = "";
-        slowerThanSeconds.value = "";
+        slowerThanMinutes.value = "00";
+        slowerThanSeconds.value = "00";
       }
     });
   }
@@ -252,14 +248,13 @@ document.addEventListener("DOMContentLoaded", () => {
         row.insertCell().textContent = index + 1; // Position
         row.insertCell().textContent = formatLapTime(lap.lap_time); // Call the new function
         row.insertCell().textContent = lap.rider_name;
-        row.insertCell().textContent = lap.rider_level;
-        row.insertCell().textContent = lap.validity;
-        row.insertCell().textContent = lap.motorcycle;
-        row.insertCell().textContent = lap.tyre_front;
-        row.insertCell().textContent = lap.tyre_rear;
-        row.insertCell().textContent = dateFormatter.format(
-          new Date(lap.lap_date)
-        ); // Use the formatter
+        row.insertCell().textContent = lap.rider_level || MISSING_DATA_TEXT;
+        row.insertCell().textContent = lap.validity || MISSING_DATA_TEXT;
+        row.insertCell().textContent = lap.motorcycle || MISSING_DATA_TEXT;
+        row.insertCell().textContent = lap.tyre_front || MISSING_DATA_TEXT;
+        row.insertCell().textContent = lap.tyre_rear || MISSING_DATA_TEXT;
+        row.insertCell().textContent =
+          dateFormatter.format(new Date(lap.lap_date)) || MISSING_DATA_TEXT; // Use the formatter
       });
     }
     populateFilterAutofillDatalist(); // Update datalist with motorcycles after rendering table
@@ -287,6 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const laps = await response.json();
+      allTrackLapsData = laps; // Store the full unfiltered data for filtering
       renderTable(laps); // Use the render function
     } catch (error) {
       console.error("Error fetching leaderboard data:", error);
@@ -367,4 +363,116 @@ document.addEventListener("DOMContentLoaded", () => {
   filtersDropdownContainer.addEventListener("hide.bs.collapse", () => {
     toggleFiltersDropdownButton.textContent = "Filtry"; // Corrected ID
   });
+
+  // Function to filter laps based on current filter values
+  const filterLaps = (laps) => {
+    return laps.filter((lap) => {
+      // Motorcycle filter
+      if (
+        motorcycleNameFilter &&
+        motorcycleNameFilter.value &&
+        !lap.motorcycle
+          ?.toLowerCase()
+          .includes(motorcycleNameFilter.value.toLowerCase())
+      ) {
+        return false;
+      }
+      // Tyre front filter
+      if (
+        tyreFrontFilter &&
+        tyreFrontFilter.value &&
+        !lap.tyre_front
+          ?.toLowerCase()
+          .includes(tyreFrontFilter.value.toLowerCase())
+      ) {
+        return false;
+      }
+      // Tyre rear filter
+      if (
+        tyreRearFilter &&
+        tyreRearFilter.value &&
+        !lap.tyre_rear
+          ?.toLowerCase()
+          .includes(tyreRearFilter.value.toLowerCase())
+      ) {
+        return false;
+      }
+      // Faster than filter (convert to total seconds)
+      if (fasterThanMinutes && fasterThanSeconds) {
+        const fasterTotal = getTotalSeconds(
+          fasterThanMinutes,
+          fasterThanSeconds
+        );
+        if (fasterTotal > 0) {
+          const lapTimeParts = lap.lap_time.split(":");
+          const lapMin = parseInt(lapTimeParts[0] || 0, 10);
+          const lapSec = parseFloat(lapTimeParts[1] || 0);
+          const lapTotal = lapMin * 60 + lapSec;
+          if (lapTotal >= fasterTotal) return false; // Lap time must be faster (less than)
+        }
+      }
+      // Slower than filter (convert to total seconds)
+      if (slowerThanMinutes && slowerThanSeconds) {
+        const slowerTotal = getTotalSeconds(
+          slowerThanMinutes,
+          slowerThanSeconds
+        );
+        if (slowerTotal > 0) {
+          const lapTimeParts = lap.lap_time.split(":");
+          const lapMin = parseInt(lapTimeParts[0] || 0, 10);
+          const lapSec = parseFloat(lapTimeParts[1] || 0);
+          const lapTotal = lapMin * 60 + lapSec;
+          if (lapTotal <= slowerTotal) return false; // Lap time must be slower (greater than)
+        }
+      }
+      // Date from filter
+      if (dateFromFilter && dateFromFilter.value) {
+        const fromDate = new Date(dateFromFilter.value);
+        const lapDate = new Date(lap.lap_date);
+        if (lapDate < fromDate) return false;
+      }
+      // Date to filter
+      if (dateToFilter && dateToFilter.value) {
+        const toDate = new Date(dateToFilter.value);
+        const lapDate = new Date(lap.lap_date);
+        if (lapDate > toDate) return false;
+      }
+      // Experience checkboxes (at least one must match if any are checked)
+      const expChecked = [
+        expFreshman,
+        expBeginner,
+        expMedium,
+        expAdvanced,
+        expSemipro,
+        expProfessional,
+      ]
+        .filter((cb) => cb && cb.checked)
+        .map((cb) => cb.value);
+      if (expChecked.length > 0 && !expChecked.includes(lap.rider_level)) {
+        return false;
+      }
+      // Accuracy checkboxes (at least one must match if any are checked)
+      const accChecked = [accVeryHigh, accHigh, accMedium, accLow]
+        .filter((cb) => cb && cb.checked)
+        .map((cb) => cb.value);
+      if (accChecked.length > 0 && !accChecked.includes(lap.validity)) {
+        return false;
+      }
+      // Gender radio (must match selected)
+      if (sexMale && sexFemale && sexAll) {
+        if (sexMale.checked && lap.gender !== "male") return false;
+        if (sexFemale.checked && lap.gender !== "female") return false;
+        // sexAll.checked means no filter
+      }
+      return true;
+    });
+  };
+
+  // Event listener for applying filters
+  if (applyFiltersDropdown) {
+    applyFiltersDropdown.addEventListener("click", () => {
+      const filteredLaps = filterLaps(allTrackLapsData); // Filter from the full unfiltered data
+      renderTable(filteredLaps);
+    });
+  }
 });

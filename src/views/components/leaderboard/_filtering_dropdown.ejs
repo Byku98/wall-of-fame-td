@@ -27,10 +27,9 @@
             </datalist>
         </div>
         <div class="col-md-3">
-            <label for="fasterThanMinutes" class="form-label">Szybciej niż</label>
+            <label for="fasterThanMinutes" class="form-label">Szybciej niż (MM:SS)</label>
             <div class="input-group">
                 <select class="form-select" id="fasterThanMinutes">
-                    <option value="">Min</option>
                     <% for (let i=0; i <=3; i++) { %>
                         <option value="<%= i %>">
                             <%= String(i).padStart(2, '0' ) %>
@@ -39,7 +38,6 @@
                 </select>
                 <span class="input-group-text">:</span>
                 <select class="form-select" id="fasterThanSeconds">
-                    <option value="">Sek</option>
                     <% for (let i=0; i <=59; i++) { %>
                         <option value="<%= i %>">
                             <%= String(i).padStart(2, '0' ) %>
@@ -50,10 +48,9 @@
             </div>
         </div>
         <div class="col-md-3">
-            <label for="slowerThanMinutes" class="form-label">Wolniej niż</label>
+            <label for="slowerThanMinutes" class="form-label">Wolniej niż (MM:SS)</label>
             <div class="input-group">
                 <select class="form-select" id="slowerThanMinutes">
-                    <option value="">Min</option>
                     <% for (let i=0; i <=3; i++) { %>
                         <option value="<%= i %>">
                             <%= String(i).padStart(2, '0' ) %>
@@ -62,7 +59,6 @@
                 </select>
                 <span class="input-group-text">:</span>
                 <select class="form-select" id="slowerThanSeconds">
-                    <option value="">Sek</option>
                     <% for (let i=0; i <=59; i++) { %>
                         <option value="<%= i %>">
                             <%= String(i).padStart(2, '0' ) %>

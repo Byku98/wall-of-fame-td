@@ -72,19 +72,22 @@ document.addEventListener("DOMContentLoaded", () => {
   let allTrackLapsData = []; // Full unfiltered data for the selected track
   const MISSING_DATA_TEXT = "Brak danych";
 
-  // Helper function to get total seconds from minutes and seconds select elements
-  const getTotalSeconds = (minElement, secElement) => {
-    const min = parseInt(minElement.value || 0, 10);
-    const sec = parseInt(secElement.value || 0, 10);
-    return min * 60 + sec;
-  };
-
-  // Helper function to parse lap time string to total seconds
-  const parseLapTimeToSeconds = (timeString) => {
-    const parts = timeString.split(":");
-    const minutes = parseInt(parts[0] || 0, 10);
-    const seconds = parseFloat(parts[1] || 0);
-    return minutes * 60 + seconds;
+  // Unified helper function to get total seconds from either DOM elements or a time string
+  const getTotalSeconds = (input) => {
+    if (typeof input === "string") {
+      // Parse from time string (e.g., "00:00:41.76")
+      const parts = input.split(":");
+      const hours = parseInt(parts[0] || 0, 10);
+      const minutes = parseInt(parts[1] || 0, 10);
+      const seconds = parseFloat(parts[2] || 0);
+      return hours * 3600 + minutes * 60 + seconds;
+    } else if (input.length === 2) {
+      // Parse from DOM elements (minElement, secElement)
+      const min = parseInt(input[0].value || 0, 10);
+      const sec = parseInt(input[1].value || 0, 10);
+      return min * 60 + sec;
+    }
+    return 0; // Default for invalid input
   };
 
   // Function to validate date range order
@@ -102,15 +105,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to validate lap time range
   const validateLapTimeRange = () => {
-    const fasterTotal = getTotalSeconds(fasterThanMinutes, fasterThanSeconds);
-    const slowerTotal = getTotalSeconds(slowerThanMinutes, slowerThanSeconds);
+    const fasterTotal = getTotalSeconds([fasterThanMinutes, fasterThanSeconds]);
+    const slowerTotal = getTotalSeconds([slowerThanMinutes, slowerThanSeconds]);
     console.log(fasterTotal, slowerTotal);
-    // Only validate if both filters are set (not default 0)
-    if (fasterTotal === 0 || slowerTotal === 0) {
-      return true; // Both filters not set, consider valid}
-    }
-    if (fasterTotal <= slowerTotal ){
-      return false; // Invalid: "Szybciej niż" must be faster (less than) "Wolniej niż"
+    if (fasterTotal > 0 && slowerTotal > 0 && fasterTotal <= slowerTotal) {
+      return false; // Invalid: "Szybciej niż" must be grater (bigger than) "Wolniej niż"
     }
     return true; // Valid or one/both filters not set
   };
@@ -242,23 +241,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       // Faster than filter
       if (fasterThanMinutes && fasterThanSeconds) {
-        const fasterTotal = getTotalSeconds(
+        const fasterTotal = getTotalSeconds([
           fasterThanMinutes,
-          fasterThanSeconds
-        );
+          fasterThanSeconds,
+        ]);
         if (fasterTotal > 0) {
-          const lapTotal = parseLapTimeToSeconds(lap.lap_time);
+          const lapTotal = getTotalSeconds(lap.lap_time);
           if (lapTotal >= fasterTotal) return false; // Lap time must be faster (less than)
         }
       }
       // Slower than filter
       if (slowerThanMinutes && slowerThanSeconds) {
-        const slowerTotal = getTotalSeconds(
+        const slowerTotal = getTotalSeconds([
           slowerThanMinutes,
-          slowerThanSeconds
-        );
+          slowerThanSeconds,
+        ]);
         if (slowerTotal > 0) {
-          const lapTotal = parseLapTimeToSeconds(lap.lap_time);
+          const lapTotal = getTotalSeconds(lap.lap_time);
           if (lapTotal <= slowerTotal) return false; // Lap time must be slower (greater than)
         }
       }
@@ -274,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const lapDate = new Date(lap.lap_date);
         if (lapDate > toDate) return false;
       }
-      // Experience checkboxes
+      // Experience checkboxes (case-insensitive, handle null/undefined)
       const expChecked = [
         expFreshman,
         expBeginner,
@@ -284,21 +283,38 @@ document.addEventListener("DOMContentLoaded", () => {
         expProfessional,
       ]
         .filter((cb) => cb && cb.checked)
-        .map((cb) => cb.value);
-      if (expChecked.length > 0 && !expChecked.includes(lap.rider_level)) {
+        .map((cb) => cb.value.toLowerCase()); // Normalize to lowercase
+      if (
+        expChecked.length > 0 &&
+        (!lap.rider_level ||
+          !expChecked.includes(lap.rider_level.toLowerCase()))
+      ) {
         return false;
       }
-      // Accuracy checkboxes
+
+      // Accuracy checkboxes (case-insensitive, handle null/undefined)
       const accChecked = [accVeryHigh, accHigh, accMedium, accLow]
         .filter((cb) => cb && cb.checked)
-        .map((cb) => cb.value);
-      if (accChecked.length > 0 && !accChecked.includes(lap.validity)) {
+        .map((cb) => cb.value.toLowerCase()); // Normalize to lowercase
+      if (
+        accChecked.length > 0 &&
+        (!lap.validity || !accChecked.includes(lap.validity.toLowerCase()))
+      ) {
         return false;
       }
-      // Gender radio
+
+      // Gender radio (case-insensitive, handle null/undefined)
       if (sexMale && sexFemale && sexAll) {
-        if (sexMale.checked && lap.gender !== "male") return false;
-        if (sexFemale.checked && lap.gender !== "female") return false;
+        if (
+          sexMale.checked &&
+          (!lap.gender || lap.gender.toLowerCase() !== "male")
+        )
+          return false;
+        if (
+          sexFemale.checked &&
+          (!lap.gender || lap.gender.toLowerCase() !== "female")
+        )
+          return false;
         // sexAll.checked means no filter
       }
       return true;

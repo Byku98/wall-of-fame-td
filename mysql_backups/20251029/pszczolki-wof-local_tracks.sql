@@ -16,30 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `lap_approvals`
+-- Table structure for table `tracks`
 --
 
-DROP TABLE IF EXISTS `lap_approvals`;
+DROP TABLE IF EXISTS `tracks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `lap_approvals` (
-  `approval_id` int NOT NULL AUTO_INCREMENT,
-  `lap_id` int NOT NULL,
-  `approval_token` varchar(512) NOT NULL,
-  PRIMARY KEY (`approval_id`),
-  UNIQUE KEY `approval_token_UNIQUE` (`approval_token`),
-  KEY `fk.lap.id` (`lap_id`),
-  CONSTRAINT `fk.lap.id` FOREIGN KEY (`lap_id`) REFERENCES `laps` (`lap_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `tracks` (
+  `track_id` int NOT NULL AUTO_INCREMENT,
+  `track_name` varchar(256) DEFAULT NULL,
+  `city` varchar(54) NOT NULL,
+  `country` varchar(54) NOT NULL,
+  `type_id` int NOT NULL,
+  `length_m` varchar(45) NOT NULL,
+  PRIMARY KEY (`track_id`),
+  UNIQUE KEY `id_UNIQUE` (`track_id`),
+  UNIQUE KEY `name_UNIQUE` (`track_name`),
+  KEY `fk.track_typs.id_idx` (`type_id`),
+  CONSTRAINT `fk.track_typs.id` FOREIGN KEY (`type_id`) REFERENCES `track_types` (`type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `lap_approvals`
+-- Dumping data for table `tracks`
 --
 
-LOCK TABLES `lap_approvals` WRITE;
-/*!40000 ALTER TABLE `lap_approvals` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lap_approvals` ENABLE KEYS */;
+LOCK TABLES `tracks` WRITE;
+/*!40000 ALTER TABLE `tracks` DISABLE KEYS */;
+INSERT INTO `tracks` VALUES (1,'ODTJ Autodrom Pomorze \"Pszczółki\"','Pszczółki','Poland',2,'1047'),(2,'Tor Poznań','Poznań','Poland',1,'4085');
+/*!40000 ALTER TABLE `tracks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-28 22:31:41
+-- Dump completed on 2025-10-29 23:18:25

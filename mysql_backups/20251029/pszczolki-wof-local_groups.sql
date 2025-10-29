@@ -16,29 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `devices`
+-- Table structure for table `groups`
 --
 
-DROP TABLE IF EXISTS `devices`;
+DROP TABLE IF EXISTS `groups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `devices` (
-  `device_id` int NOT NULL AUTO_INCREMENT,
-  `device_name` varchar(100) NOT NULL,
+CREATE TABLE `groups` (
+  `group_id` int NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(128) NOT NULL,
+  `city` varchar(128) DEFAULT NULL,
   `logo_path` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`device_id`),
-  UNIQUE KEY `id_UNIQUE` (`device_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `devices`
+-- Dumping data for table `groups`
 --
 
-LOCK TABLES `devices` WRITE;
-/*!40000 ALTER TABLE `devices` DISABLE KEYS */;
-INSERT INTO `devices` VALUES (1,'Offline laptimer',NULL),(2,'RaceBox',NULL),(3,'Aim Solo',NULL),(4,'Dragy',NULL),(5,'PZRacing',NULL),(6,'Android/iOS',NULL),(8,'Qstarz',NULL),(9,'Starlane',NULL),(10,'LP-Cheetah',NULL);
-/*!40000 ALTER TABLE `devices` ENABLE KEYS */;
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` VALUES (1,'Hot Head Bikers','Gdynia',NULL);
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-28 22:31:42
+-- Dump completed on 2025-10-29 23:18:25

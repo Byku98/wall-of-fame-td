@@ -16,28 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `laps_validity`
+-- Table structure for table `sex`
 --
 
-DROP TABLE IF EXISTS `laps_validity`;
+DROP TABLE IF EXISTS `sex`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `laps_validity` (
-  `validity_id` int NOT NULL AUTO_INCREMENT,
-  `validity` varchar(45) NOT NULL,
-  PRIMARY KEY (`validity_id`),
-  UNIQUE KEY `validity_id_UNIQUE` (`validity_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `sex` (
+  `sex_id` int NOT NULL AUTO_INCREMENT,
+  `sex` varchar(45) NOT NULL,
+  PRIMARY KEY (`sex_id`),
+  UNIQUE KEY `sex_UNIQUE` (`sex`),
+  UNIQUE KEY `sex_id_UNIQUE` (`sex_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `laps_validity`
+-- Dumping data for table `sex`
 --
 
-LOCK TABLES `laps_validity` WRITE;
-/*!40000 ALTER TABLE `laps_validity` DISABLE KEYS */;
-INSERT INTO `laps_validity` VALUES (1,'LOW'),(2,'MEDIUM'),(3,'HIGH'),(4,'VERY HIGH');
-/*!40000 ALTER TABLE `laps_validity` ENABLE KEYS */;
+LOCK TABLES `sex` WRITE;
+/*!40000 ALTER TABLE `sex` DISABLE KEYS */;
+INSERT INTO `sex` VALUES (1,'female'),(2,'male');
+/*!40000 ALTER TABLE `sex` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-28 22:32:27
+-- Dump completed on 2025-10-29 23:18:25

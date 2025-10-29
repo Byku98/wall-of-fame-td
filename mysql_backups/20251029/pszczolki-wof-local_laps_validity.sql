@@ -16,29 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `riders_levels`
+-- Table structure for table `laps_validity`
 --
 
-DROP TABLE IF EXISTS `riders_levels`;
+DROP TABLE IF EXISTS `laps_validity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `riders_levels` (
-  `level_id` int NOT NULL AUTO_INCREMENT,
-  `rider_level` varchar(45) NOT NULL,
-  PRIMARY KEY (`level_id`),
-  UNIQUE KEY `id_UNIQUE` (`level_id`),
-  UNIQUE KEY `level_UNIQUE` (`rider_level`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `laps_validity` (
+  `validity_id` int NOT NULL AUTO_INCREMENT,
+  `validity` varchar(45) NOT NULL,
+  PRIMARY KEY (`validity_id`),
+  UNIQUE KEY `validity_id_UNIQUE` (`validity_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `riders_levels`
+-- Dumping data for table `laps_validity`
 --
 
-LOCK TABLES `riders_levels` WRITE;
-/*!40000 ALTER TABLE `riders_levels` DISABLE KEYS */;
-INSERT INTO `riders_levels` VALUES (4,'advanced'),(2,'beginner'),(1,'freshman'),(3,'medium'),(6,'professional'),(5,'semi-pro');
-/*!40000 ALTER TABLE `riders_levels` ENABLE KEYS */;
+LOCK TABLES `laps_validity` WRITE;
+/*!40000 ALTER TABLE `laps_validity` DISABLE KEYS */;
+INSERT INTO `laps_validity` VALUES (1,'low'),(2,'medium'),(3,'high'),(4,'very_high');
+/*!40000 ALTER TABLE `laps_validity` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-28 22:32:27
+-- Dump completed on 2025-10-29 23:18:24

@@ -16,35 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tracks`
+-- Table structure for table `organizers`
 --
 
-DROP TABLE IF EXISTS `tracks`;
+DROP TABLE IF EXISTS `organizers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tracks` (
-  `track_id` int NOT NULL AUTO_INCREMENT,
-  `track_name` varchar(256) DEFAULT NULL,
-  `city` varchar(54) NOT NULL,
-  `country` varchar(54) NOT NULL,
-  `type_id` int NOT NULL,
-  `length_km` varchar(45) NOT NULL,
-  PRIMARY KEY (`track_id`),
-  UNIQUE KEY `id_UNIQUE` (`track_id`),
-  UNIQUE KEY `name_UNIQUE` (`track_name`),
-  KEY `fk.track_typs.id_idx` (`type_id`),
-  CONSTRAINT `fk.track_typs.id` FOREIGN KEY (`type_id`) REFERENCES `track_types` (`type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `organizers` (
+  `organizer_id` int NOT NULL AUTO_INCREMENT,
+  `organizer_name` varchar(256) NOT NULL,
+  `logo_path` varchar(512) DEFAULT NULL,
+  PRIMARY KEY (`organizer_id`),
+  UNIQUE KEY `id_UNIQUE` (`organizer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tracks`
+-- Dumping data for table `organizers`
 --
 
-LOCK TABLES `tracks` WRITE;
-/*!40000 ALTER TABLE `tracks` DISABLE KEYS */;
-INSERT INTO `tracks` VALUES (1,'ODTJ Autodrom Pomorze \"Pszczółki\"','Pszczółki','Poland',2,'1047');
-/*!40000 ALTER TABLE `tracks` ENABLE KEYS */;
+LOCK TABLES `organizers` WRITE;
+/*!40000 ALTER TABLE `organizers` DISABLE KEYS */;
+INSERT INTO `organizers` VALUES (1,'TrackAttack',NULL),(2,'3MMRacing',NULL),(3,'MotoEkipa',NULL),(4,'MotoZone',NULL),(5,'NaKolanie',NULL),(6,'Robson TD',NULL),(7,'TrackSpace',NULL);
+/*!40000 ALTER TABLE `organizers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-28 22:32:26
+-- Dump completed on 2025-10-29 23:18:25

@@ -37,7 +37,7 @@ CREATE TABLE `riders_levels` (
 
 LOCK TABLES `riders_levels` WRITE;
 /*!40000 ALTER TABLE `riders_levels` DISABLE KEYS */;
-INSERT INTO `riders_levels` VALUES (4,'advanced'),(2,'beginner'),(1,'freshman'),(3,'medium'),(6,'professional'),(5,'semi-pro');
+INSERT INTO `riders_levels` VALUES (4,'advanced'),(2,'baginner'),(1,'freshman'),(3,'medium'),(6,'professional'),(5,'semipro');
 /*!40000 ALTER TABLE `riders_levels` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-28 22:31:43
+-- Dump completed on 2025-10-29 23:18:26

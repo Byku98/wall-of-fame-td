@@ -41,16 +41,30 @@ export async function renderLeaderboardPage(req: Request, res: Response) {
 }
 
 export const getFilteredLeaderboardData = async (req: Request, res: Response) => {
-  try {
-    const trackId = parseInt(req.query.trackId as string, 10);
-    if (isNaN(trackId)) {
-      return res.status(400).json({ message: "Invalid track ID" });
+    const { trackName } = req.query; // Change from trackId
+    if (!trackName || typeof trackName !== 'string') {
+      return res.status(400).json({ error: 'Invalid trackName' });
     }
+    try {
+      const laps = await leaderboardService.getLeaderboardByTrack(trackName); // Update service to accept string
+      res.json(laps);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to fetch data' });
+    }
+}
 
-    const laps = await leaderboardService.getLeaderboardByTrack(trackId);
-    res.json(laps);
+export const getLapDetails = async (req: Request, res: Response) => {
+  // Destructure parameters to match leaderboard.service.ts::getLapDetails signature
+  const { lapTime, riderName, motorcycle, lap_date } = req.params;
+  if (!lapTime || !riderName || !motorcycle || !lap_date) {
+    return res.status(400).json({ message: "Invalid parameters" });
+  }
+  try {
+    // Call the service with the extracted parameters (convert lap_date to Date as per service signature)
+    const lapDetails = await leaderboardService.getLapDetails(lapTime, riderName, motorcycle, new Date(lap_date));
+    res.render('lap-details', { title: 'Szczegóły Okrążenia', lapDetails });
   } catch (error) {
-    console.error("Error fetching filtered leaderboard data:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(404).render('error', { title: 'Błąd', message: 'Okrążenie nie znalezione' });
   }
 };

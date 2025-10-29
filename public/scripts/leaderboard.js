@@ -384,8 +384,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Event listener for track selection and initial data fetch
   if (filterButton) {
     filterButton.addEventListener("click", async () => {
-      const selectedTrackId = trackSelect.value;
-      if (!selectedTrackId) {
+      const selectedTrackName = trackSelect.value;
+      if (!selectedTrackName) {
         leaderboardTableBody.innerHTML =
           '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>';
         return;
@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const response = await fetch(
-          `/leaderboard/filter?trackId=${selectedTrackId}`
+          `/leaderboard/filter?trackName=${selectedTrackName}`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -449,6 +449,34 @@ document.addEventListener("DOMContentLoaded", () => {
     filtersDropdownContainer.addEventListener("hide.bs.collapse", () => {
       if (toggleFiltersDropdownButton)
         toggleFiltersDropdownButton.textContent = "Filtry";
+    });
+  }
+
+  // Add event listener for table row clicks to fetch lap details
+  if (leaderboardTableBody) {
+    leaderboardTableBody.addEventListener("click", (event) => {
+      const target = event.target.closest("tr");
+      if (target && target.rowIndex > 0) {
+        // Skip header row
+        const cells = target.querySelectorAll("td");
+        const lapTime = cells[1]?.textContent?.trim(); // Lap time
+        const riderName = cells[2]?.textContent?.trim(); // Rider name
+        const motorcycle = cells[4]?.textContent?.trim(); // Motorcycle
+        const lapDate = cells[7]?.textContent?.trim(); // Lap date (assuming DD.MM.YYYY format)
+
+        if (lapTime && riderName && motorcycle && lapDate) {
+          // Navigate to the lap details page with query parameters
+          window.location.href = `/leaderboard/lap-details?lapTime=${encodeURIComponent(
+            lapTime
+          )}&riderName=${encodeURIComponent(
+            riderName
+          )}&motorcycle=${encodeURIComponent(
+            motorcycle
+          )}&lap_date=${encodeURIComponent(lapDate)}`;
+        } else {
+          alert("Nie można pobrać szczegółów okrążenia. Spróbuj ponownie.");
+        }
+      }
     });
   }
 });

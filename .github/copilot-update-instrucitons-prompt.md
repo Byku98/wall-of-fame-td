@@ -6,7 +6,7 @@ You are tasked with updating the `.github/copilot-instructions.md` file to refle
 
 1.  **Analyze Recent Changes:** Review the current state of the codebase, paying close attention to:
     *   New files or directories.
-    *   Modified files, especially in `src/controllers/`, `src/services/`, `src/repositories/`, `src/routes/`, and `public/scripts/`.
+    *   Modified files, especially in `src/controllers/`, `src/services/`, `src/repositories/`, `src/routes/`, and `public/scripts/` and other subfolders and files in the `src` folder
     *   Changes in data flow or component interactions.
     *   Updates to `package.json` (new dependencies) or `tsconfig.json`.
     *   Any new or modified critical developer workflows (e.g., build commands, test scripts).

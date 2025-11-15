@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { renderLeaderboardPage, getFilteredLeaderboardData, getLapDetails } from "../controllers/leaderboard.controller";
+import { renderLeaderboardPage, getFilteredLeaderboardData } from "../controllers/leaderboard.controller";
+import { getLapDetails } from "../controllers/lap-details.controller";
 
 const router = Router();
 
@@ -9,7 +10,7 @@ router.get("/leaderboard", renderLeaderboardPage);
 // Route to get filtered leaderboard data via AJAX
 router.get("/leaderboard/filter", getFilteredLeaderboardData);
 
-// New route for lap details
-router.get('/lap-details', getLapDetails);
+// Change from query params to URL params
+router.get('/lap-details/:lapTime/:riderName/:motorcycle/:lap_date', getLapDetails);
 
 export default router;

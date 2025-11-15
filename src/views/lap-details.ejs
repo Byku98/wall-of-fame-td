@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/lap-details.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+  <div class="container-fluid py-5">
+    <div class="row justify-content-center">
+      <!-- Left Div: Lap Details -->
+      <div class="col-md-10 mt-5">
+        <%- include('components/lap-details/_rider_single_lap_details') %>
+      </div>
+      <!-- Right Div: Rider Track History -->
+      <div class="col-md-10 mt-5">
+        <%- include('components/lap-details/_rider_track_history') %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include client-side scripts -->
+  <script src="/scripts/utils.js" type="module"></script>
+  <script src="/scripts/lap-details.js" type="module"></script>
+</body>
+
+</html>

@@ -52,19 +52,4 @@ export const getFilteredLeaderboardData = async (req: Request, res: Response) =>
       console.error(error);
       res.status(500).json({ error: 'Failed to fetch data' });
     }
-}
-
-export const getLapDetails = async (req: Request, res: Response) => {
-  // Destructure parameters to match leaderboard.service.ts::getLapDetails signature
-  const { lapTime, riderName, motorcycle, lap_date } = req.params;
-  if (!lapTime || !riderName || !motorcycle || !lap_date) {
-    return res.status(400).json({ message: "Invalid parameters" });
-  }
-  try {
-    // Call the service with the extracted parameters (convert lap_date to Date as per service signature)
-    const lapDetails = await leaderboardService.getLapDetails(lapTime, riderName, motorcycle, new Date(lap_date));
-    res.render('lap-details', { title: 'Szczegóły Okrążenia', lapDetails });
-  } catch (error) {
-    res.status(404).render('error', { title: 'Błąd', message: 'Okrążenie nie znalezione' });
-  }
 };

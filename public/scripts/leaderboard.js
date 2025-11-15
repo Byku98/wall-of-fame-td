@@ -1,3 +1,5 @@
+import { convertMysqlToDate, convertDateToMySQL, formatLapTime } from './utils.js';
+
 document.addEventListener("DOMContentLoaded", () => {
   // Constants for DOM elements
   const trackSelect = document.getElementById("trackSelect");
@@ -115,20 +117,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Function to format lap time for display
-  const formatLapTime = (timeString) => {
-    const timeParts = timeString.split(":"); // e.g., ["00", "00", "41.76"]
-    const hours = parseInt(timeParts[0], 10);
-    const minutes = parseInt(timeParts[1], 10);
-    const secondsAndMs = timeParts[2]; // Keep as string to preserve milliseconds
+  // const formatLapTime = (timeString) => {
+  //   const timeParts = timeString.split(":"); // e.g., ["00", "00", "41.76"]
+  //   const hours = parseInt(timeParts[0], 10);
+  //   const minutes = parseInt(timeParts[1], 10);
+  //   const secondsAndMs = timeParts[2]; // Keep as string to preserve milliseconds
 
-    if (hours > 0) {
-      return `${hours}:${String(minutes).padStart(2, "0")}:${secondsAndMs}`;
-    } else if (minutes > 0) {
-      return `${minutes}:${secondsAndMs}`;
-    } else {
-      return secondsAndMs;
-    }
-  };
+  //   if (hours > 0) {
+  //     return `${hours}:${String(minutes).padStart(2, "0")}:${secondsAndMs}`;
+  //   } else if (minutes > 0) {
+  //     return `${minutes}:${secondsAndMs}`;
+  //   } else {
+  //     return secondsAndMs;
+  //   }
+  // };
 
   // Function to render table rows
   const renderTable = (laps) => {
@@ -138,15 +140,21 @@ document.addEventListener("DOMContentLoaded", () => {
       leaderboardTableBody.innerHTML =
         '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>';
     } else {
-      // Define the date formatter once outside the loop for efficiency
-      const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-
       laps.forEach((lap, index) => {
         const row = leaderboardTableBody.insertRow();
+
+        // Extract date-only from lap.lap_date (e.g., "2020-07-19" from "2020-07-19T22:00:00.000Z")
+        const dateOnly = lap.lap_date
+          ? new Date(lap.lap_date).toISOString().split("T")[0]
+          : ""; // YYYY-MM-DD
+
+        // Add data attributes for later use
+        row.setAttribute("data-lap-time", lap.lap_time || "");
+        row.setAttribute("data-rider-name", lap.rider_name || "");
+        row.setAttribute("data-motorcycle", lap.motorcycle || "");
+        row.setAttribute("data-lap-date", convertMysqlToDate(lap.lap_date) || "");
+
+        // Populate row cells
         row.insertCell().textContent = index + 1; // Position
         row.insertCell().textContent =
           formatLapTime(lap.lap_time) || MISSING_DATA_TEXT; // Lap time
@@ -156,8 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         row.insertCell().textContent = lap.motorcycle || MISSING_DATA_TEXT; // Motorcycle
         row.insertCell().textContent = lap.tyre_front || MISSING_DATA_TEXT; // Tyre front
         row.insertCell().textContent = lap.tyre_rear || MISSING_DATA_TEXT; // Tyre rear
-        row.insertCell().textContent =
-          dateFormatter.format(new Date(lap.lap_date)) || MISSING_DATA_TEXT; // Lap date
+        row.insertCell().textContent = convertMysqlToDate(lap.lap_date); // Use custom formatter for DD.MM.YYYY
       });
     }
     populateFilterAutofillDatalist(); // Update datalists after rendering table
@@ -458,21 +465,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = event.target.closest("tr");
       if (target && target.rowIndex > 0) {
         // Skip header row
-        const cells = target.querySelectorAll("td");
-        const lapTime = cells[1]?.textContent?.trim(); // Lap time
-        const riderName = cells[2]?.textContent?.trim(); // Rider name
-        const motorcycle = cells[4]?.textContent?.trim(); // Motorcycle
-        const lapDate = cells[7]?.textContent?.trim(); // Lap date (assuming DD.MM.YYYY format)
+        const lapTime = target.getAttribute("data-lap-time")?.trim(); // Use data attributes instead of cells
+        const riderName = target.getAttribute("data-rider-name")?.trim();
+        const motorcycle = target.getAttribute("data-motorcycle")?.trim();
+        const displayedDate = target
+          .querySelectorAll("td")[8]
+          ?.textContent?.trim();
+        const lapDate = convertDateToMySQL(displayedDate);
+
+        // console.log("Extracted data:", {
+        //   lapTime,
+        //   riderName,
+        //   motorcycle,
+        //   lapDate,
+        // });
 
         if (lapTime && riderName && motorcycle && lapDate) {
           // Navigate to the lap details page with query parameters
-          window.location.href = `/leaderboard/lap-details?lapTime=${encodeURIComponent(
+          const url = `/lap-details/${encodeURIComponent(
             lapTime
-          )}&riderName=${encodeURIComponent(
-            riderName
-          )}&motorcycle=${encodeURIComponent(
+          )}/${encodeURIComponent(riderName)}/${encodeURIComponent(
             motorcycle
-          )}&lap_date=${encodeURIComponent(lapDate)}`;
+          )}/${encodeURIComponent(lapDate)}`;
+          window.location.href = url;
         } else {
           alert("Nie można pobrać szczegółów okrążenia. Spróbuj ponownie.");
         }

@@ -13,4 +13,14 @@ export interface LapDetails {
   proof_url: string | null;
   proof_picture_path: string | null;
   video_url: string | null;
+  rider_fb: string | null;
+  rider_ig: string | null;
+}
+
+export interface riderHistory {
+  lap_time: string;
+  rider_name: string;
+  motorcycle: string;
+  lap_date: string;
+  trackName: string;
 }

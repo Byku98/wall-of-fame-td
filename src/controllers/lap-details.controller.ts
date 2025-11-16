@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { lapDetailsService } from "../services/lap-datails.service";
 import { translateObject } from "../utils/translations";
-import  { formatLapTime } from "../utils/formatters"; // Use require for JS file
+import { formatLapTime, convertMysqlToDate } from "../utils/formatters";
+import { LapDetails } from "../types/lap-details"; // Import shared interface
 
 // Module-level variables accessible to all functions in this file
 const title = "Szczegóły okrążenia";
 const chooseTrack = "Wybierz inny tor";
-const resultsHistory = "Historia wyninków";
+const resultsHistory = "Historia wyników";
 
 export const getLapDetails = async (req: Request, res: Response) => {
   // Destructure parameters to match leaderboard.service.ts::getLapDetails signature
@@ -26,28 +27,29 @@ export const getLapDetails = async (req: Request, res: Response) => {
 
   try {
     // Call the service with the extracted parameters (convert lap_date to Date as per service signature)
-    let lapDetails = await lapDetailsService.getLapDetails(
+    let lapDetails: LapDetails | null = await lapDetailsService.getLapDetails(
       lapTime,
       riderName,
       motorcycle,
       lap_date
     );
 
-    // const lapDetails = lapDetailsArray[0];
-
     console.log("Lap details retrieved:", lapDetails);
 
-    lapDetails = translateObject(lapDetails, ["sex"], "pl");
+    if (!lapDetails) {
+      throw new Error("Lap details not found");
+    }
 
-    console.log("Lap details after transalation:", lapDetails);
+    console.log("Lap details after translation:", lapDetails);
 
-    // if (!lapDetails) {
-    //   throw new Error("Lap details not found");
-    // }
+    if (!lapDetails) {
+      throw new Error("Lap details not found after translation");
+    }
 
-    // lapDetails.sex = translate('sex', lapDetails.sex, 'pl');
-
+    // Format lap_time server-side for consistent display
     lapDetails.lap_time = formatLapTime(lapDetails.lap_time);
+    lapDetails.lap_date = convertMysqlToDate(lapDetails.lap_date);
+    lapDetails = translateObject(lapDetails, ["sex"], "pl");
 
     res.render("lap-details", {
       lapDetails,

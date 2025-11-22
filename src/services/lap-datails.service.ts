@@ -8,7 +8,6 @@ export const lapDetailsService = {
     motorcycle: string,
     lap_date: string
   ): Promise<LapDetails | null> => {
-    console.log("Lap Details Service Loaded");
 
     const rows = await leaderboardRepository.getLapDetails(
       lapTime,
@@ -17,7 +16,6 @@ export const lapDetailsService = {
       lap_date
     );
 
-    console.log("I'm here!!!!!!!!!");
 
     // List all rows with their indexes for debugging
     rows.forEach((row: LapDetails, index: number) => {

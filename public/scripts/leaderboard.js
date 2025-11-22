@@ -116,22 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return true; // Valid or one/both filters not set
   };
 
-  // Function to format lap time for display
-  // const formatLapTime = (timeString) => {
-  //   const timeParts = timeString.split(":"); // e.g., ["00", "00", "41.76"]
-  //   const hours = parseInt(timeParts[0], 10);
-  //   const minutes = parseInt(timeParts[1], 10);
-  //   const secondsAndMs = timeParts[2]; // Keep as string to preserve milliseconds
-
-  //   if (hours > 0) {
-  //     return `${hours}:${String(minutes).padStart(2, "0")}:${secondsAndMs}`;
-  //   } else if (minutes > 0) {
-  //     return `${minutes}:${secondsAndMs}`;
-  //   } else {
-  //     return secondsAndMs;
-  //   }
-  // };
-
   // Function to render table rows
   const renderTable = (laps) => {
     leaderboardTableBody.innerHTML = ""; // Clear existing rows
@@ -160,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
           formatLapTime(lap.lap_time) || MISSING_DATA_TEXT; // Lap time
         row.insertCell().textContent = lap.rider_name || MISSING_DATA_TEXT; // Rider name
         row.insertCell().textContent = lap.rider_level || MISSING_DATA_TEXT; // Rider level
-        row.insertCell().textContent = lap.validity || MISSING_DATA_TEXT; // Validity
+        // row.insertCell().textContent = lap.validity || MISSING_DATA_TEXT; // Validity
         row.insertCell().textContent = lap.motorcycle || MISSING_DATA_TEXT; // Motorcycle
         row.insertCell().textContent = lap.tyre_front || MISSING_DATA_TEXT; // Tyre front
         row.insertCell().textContent = lap.tyre_rear || MISSING_DATA_TEXT; // Tyre rear
@@ -472,21 +456,23 @@ document.addEventListener("DOMContentLoaded", () => {
           .querySelectorAll("td")[8]
           ?.textContent?.trim();
         const lapDate = convertDateToMySQL(displayedDate);
+        const selectedTrackName = trackSelect.value;
 
-        // console.log("Extracted data:", {
-        //   lapTime,
-        //   riderName,
-        //   motorcycle,
-        //   lapDate,
-        // });
+        console.log("Extracted data:", {
+          lapTime,
+          riderName,
+          motorcycle,
+          lapDate,
+          selectedTrackName,
+        });
 
-        if (lapTime && riderName && motorcycle && lapDate) {
-          // Navigate to the lap details page with query parameters
+        if (lapTime && riderName && motorcycle && lapDate && selectedTrackName) {
+          // Navigate to the lap details page with query parameters including track name
           const url = `/lap-details/${encodeURIComponent(
             lapTime
           )}/${encodeURIComponent(riderName)}/${encodeURIComponent(
             motorcycle
-          )}/${encodeURIComponent(lapDate)}`;
+          )}/${encodeURIComponent(lapDate)}/${encodeURIComponent(selectedTrackName)}`;
           window.location.href = url;
         } else {
           alert("Nie można pobrać szczegółów okrążenia. Spróbuj ponownie.");

@@ -33,13 +33,13 @@ export const getLapDetails = async (req: Request, res: Response) => {
       lap_date
     );
 
-    console.log("Lap details retrieved:", lapDetails);
+    // console.log("Lap details retrieved:", lapDetails);
 
     if (!lapDetails) {
       throw new Error("Lap details not found");
     }
 
-    console.log("Lap details after translation:", lapDetails);
+    // console.log("Lap details after translation:", lapDetails);
 
     // Format lap_time server-side for consistent display
     lapDetails.lap_time = formatLapTime(lapDetails.lap_time);
@@ -55,6 +55,8 @@ export const getLapDetails = async (req: Request, res: Response) => {
   // Second try: Fetch and process riderHistory (optional, don't throw on failure)
   try {
     riderHistory = await lapDetailsService.getRiderLapHistory(riderName, trackName);
+
+    console.log("Lap history:", riderHistory);
 
     if (riderHistory) {
       // Format each lap_time and lap_date for display

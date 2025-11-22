@@ -1,0 +1,22 @@
+<h2 class="mb-1">
+    <%= lapDetails.rider_name %>
+</h2>
+<h6>
+    (<%= lapDetails.sex %>)
+</h6>
+<h3>
+    <!-- Conditional Instagram and Facebook logos under sex -->
+    <% if (lapDetails.rider_ig) { %>
+        <a href="<%= lapDetails.rider_ig %>" target="_blank">
+            <img src="/images/media/instagram-logo-full.png" alt="Instagram"
+                style="width: 40px; height: 40px; margin-right: 10px;">
+        </a>
+        <% } %>
+            <% if (lapDetails.rider_fb) { %>
+                <a href="<%= lapDetails.rider_fb %>" target="_blank">
+                    <img src="/images/media/fb-logo.png" alt="Facebook" style="width: 40px; height: 40px;"></a>
+                <% } %>
+</h3>
+<h4 class="pt-3">
+<p>Okrążenia toru: <%= riderHistory[0].track_name %></p>
+</h4>

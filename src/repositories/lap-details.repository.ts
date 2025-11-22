@@ -19,7 +19,7 @@ export const leaderboardRepository = {
 
   getRiderLapHistory: async (riderName: string, trackName: string): Promise<riderHistory[]> => {
     const [rows] = await pool.query(
-      "SELECT * FROM rider_laptimes_all where and rider_name = ? and track_name = ? ",
+      "SELECT * FROM rider_laptimes_all where rider_name = ? and track_name = ? order by lap_time asc",
       [riderName, trackName]
     );
 

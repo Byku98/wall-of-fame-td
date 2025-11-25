@@ -56,7 +56,7 @@ export const getLapDetails = async (req: Request, res: Response) => {
   try {
     riderHistory = await lapDetailsService.getRiderLapHistory(riderName, trackName);
 
-    console.log("Lap history:", riderHistory);
+    // console.log("Lap history:", riderHistory);
 
     if (riderHistory) {
       // Format each lap_time and lap_date for display

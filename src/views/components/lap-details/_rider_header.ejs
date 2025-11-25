@@ -1,22 +1,24 @@
-<h2 class="mb-1">
-    <%= lapDetails.rider_name %>
-</h2>
-<h6>
-    (<%= lapDetails.sex %>)
-</h6>
-<h3>
-    <!-- Conditional Instagram and Facebook logos under sex -->
+<div class="d-flex align-items-center">
+  <div class="d-flex align-items-center">
     <% if (lapDetails.rider_ig) { %>
-        <a href="<%= lapDetails.rider_ig %>" target="_blank">
-            <img src="/images/media/instagram-logo-full.png" alt="Instagram"
-                style="width: 40px; height: 40px; margin-right: 10px;">
-        </a>
-        <% } %>
-            <% if (lapDetails.rider_fb) { %>
-                <a href="<%= lapDetails.rider_fb %>" target="_blank">
-                    <img src="/images/media/fb-logo.png" alt="Facebook" style="width: 40px; height: 40px;"></a>
-                <% } %>
-</h3>
-<h4 class="pt-3">
-<p>Okrążenia toru: <%= riderHistory[0].track_name %></p>
-</h4>
+      <a href="<%= lapDetails.rider_ig %>" target="_blank" rel="noopener noreferrer" class="me-2">
+        <img src="/images/media/instagram-logo-full.png" alt="Instagram" style="width:42px; height:42px;">
+      </a>
+    <% } %>
+    <% if (lapDetails.rider_fb) { %>
+      <a href="<%= lapDetails.rider_fb %>" target="_blank" rel="noopener noreferrer" class="me-2">
+        <img src="/images/media/fb-logo.png" alt="Facebook" style="width:42px; height:42px;">
+      </a>
+    <% } %>
+  </div>
+
+  <div class="ms-2">
+    <h2 class="mb-0 d-flex align-items-baseline">
+      <span class="me-2"><%= lapDetails.rider_name %></span>
+      <small class="text-muted">(<%= lapDetails.sex %>)</small>
+    </h2>
+    <h6 class="mb-0 text-muted pt-1">
+      Okrążenia toru: <%= (riderHistory && riderHistory[0] && riderHistory[0].track_name) ? riderHistory[0].track_name : '' %>
+    </h6>
+  </div>
+</div>

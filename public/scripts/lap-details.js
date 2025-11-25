@@ -1,4 +1,4 @@
-import { convertMysqlToDate, convertDateToMySQL, formatLapTime } from './utils.js';
+import { convertDateToMySQL} from './utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("lap-details.js loaded");

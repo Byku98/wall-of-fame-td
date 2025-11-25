@@ -1,6 +1,8 @@
 import { convertMysqlToDate, convertDateToMySQL, formatLapTime } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("lap-details.js loaded");
+
   // Constants for DOM elements
   const trackSelect = document.getElementById("trackSelect");
   const filterButton = document.getElementById("filterLeaderboard");
@@ -137,6 +139,11 @@ document.addEventListener("DOMContentLoaded", () => {
         row.setAttribute("data-rider-name", lap.rider_name || "");
         row.setAttribute("data-motorcycle", lap.motorcycle || "");
         row.setAttribute("data-lap-date", convertMysqlToDate(lap.lap_date) || "");
+        row.setAttribute("data-sex", lap.sex_name || "");
+        row.setAttribute("data-rider-level", lap.rider_level || "");
+        row.setAttribute("data-validity", lap.validity || "");
+        row.setAttribute("data-tyre-front", lap.tyre_front || "");
+        row.setAttribute("data-tyre-rear", lap.tyre_rear || "");
 
         // Populate row cells
         row.insertCell().textContent = index + 1; // Position
@@ -197,74 +204,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Function to filter laps based on current filter values
-  const filterLaps = (laps) => {
-    return laps.filter((lap) => {
+  // Function to filter table rows based on current filter values (client-side on DOM)
+  const filterTableRows = () => {
+    const rows = leaderboardTableBody.querySelectorAll("tr");
+    rows.forEach((row) => {
+      if (row.cells.length === 0) return; // Skip empty or header rows
+
+      const lapTime = row.getAttribute("data-lap-time") || "";
+      const motorcycle = row.getAttribute("data-motorcycle") || "";
+      const tyreFront = row.getAttribute("data-tyre-front") || "";
+      const tyreRear = row.getAttribute("data-tyre-rear") || "";
+      const riderLevel = row.getAttribute("data-rider-level") || "";
+      // const validity = row.getAttribute("data-validity") || "";
+      const sex = row.getAttribute("data-sex") || "";
+      const lapDateStr = row.getAttribute("data-lap-date") || "";
+
+      console.log("Filtering row - sex:", sex, "riderLevel:", riderLevel); // Debug log
+
+      let showRow = true;
+
       // Motorcycle filter
       if (
         motorcycleNameFilter &&
         motorcycleNameFilter.value &&
-        !lap.motorcycle
-          ?.toLowerCase()
-          .includes(motorcycleNameFilter.value.toLowerCase())
+        !motorcycle.toLowerCase().includes(motorcycleNameFilter.value.toLowerCase())
       ) {
-        return false;
+        showRow = false;
       }
+
       // Tyre front filter
       if (
         tyreFrontFilter &&
         tyreFrontFilter.value &&
-        !lap.tyre_front
-          ?.toLowerCase()
-          .includes(tyreFrontFilter.value.toLowerCase())
+        !tyreFront.toLowerCase().includes(tyreFrontFilter.value.toLowerCase())
       ) {
-        return false;
+        showRow = false;
       }
+
       // Tyre rear filter
       if (
         tyreRearFilter &&
         tyreRearFilter.value &&
-        !lap.tyre_rear
-          ?.toLowerCase()
-          .includes(tyreRearFilter.value.toLowerCase())
+        !tyreRear.toLowerCase().includes(tyreRearFilter.value.toLowerCase())
       ) {
-        return false;
+        showRow = false;
       }
+
       // Faster than filter
       if (fasterThanMinutes && fasterThanSeconds) {
-        const fasterTotal = getTotalSeconds([
-          fasterThanMinutes,
-          fasterThanSeconds,
-        ]);
+        const fasterTotal = getTotalSeconds([fasterThanMinutes, fasterThanSeconds]);
         if (fasterTotal > 0) {
-          const lapTotal = getTotalSeconds(lap.lap_time);
-          if (lapTotal >= fasterTotal) return false; // Lap time must be faster (less than)
+          const lapTotal = getTotalSeconds(lapTime);
+          if (lapTotal >= fasterTotal) showRow = false;
         }
       }
+
       // Slower than filter
       if (slowerThanMinutes && slowerThanSeconds) {
-        const slowerTotal = getTotalSeconds([
-          slowerThanMinutes,
-          slowerThanSeconds,
-        ]);
+        const slowerTotal = getTotalSeconds([slowerThanMinutes, slowerThanSeconds]);
         if (slowerTotal > 0) {
-          const lapTotal = getTotalSeconds(lap.lap_time);
-          if (lapTotal <= slowerTotal) return false; // Lap time must be slower (greater than)
+          const lapTotal = getTotalSeconds(lapTime);
+          if (lapTotal <= slowerTotal) showRow = false;
         }
       }
+
       // Date from filter
       if (dateFromFilter && dateFromFilter.value) {
         const fromDate = new Date(dateFromFilter.value);
-        const lapDate = new Date(lap.lap_date);
-        if (lapDate < fromDate) return false;
+        const lapDate = new Date(lapDateStr.split('.').reverse().join('-')); // Convert DD.MM.YYYY to YYYY-MM-DD
+        if (lapDate < fromDate) showRow = false;
       }
+
       // Date to filter
       if (dateToFilter && dateToFilter.value) {
         const toDate = new Date(dateToFilter.value);
-        const lapDate = new Date(lap.lap_date);
-        if (lapDate > toDate) return false;
+        const lapDate = new Date(lapDateStr.split('.').reverse().join('-'));
+        if (lapDate > toDate) showRow = false;
       }
-      // Experience checkboxes (case-insensitive, handle null/undefined)
+
+      // Experience checkboxes
       const expChecked = [
         expFreshman,
         expBeginner,
@@ -274,41 +292,41 @@ document.addEventListener("DOMContentLoaded", () => {
         expProfessional,
       ]
         .filter((cb) => cb && cb.checked)
-        .map((cb) => cb.value.toLowerCase()); // Normalize to lowercase
+        .map((cb) => cb.value.toLowerCase());
       if (
         expChecked.length > 0 &&
-        (!lap.rider_level ||
-          !expChecked.includes(lap.rider_level.toLowerCase()))
+        (!riderLevel || !expChecked.includes(riderLevel.toLowerCase()))
       ) {
-        return false;
+        showRow = false;
       }
 
-      // Accuracy checkboxes (case-insensitive, handle null/undefined)
-      const accChecked = [accVeryHigh, accHigh, accMedium, accLow]
-        .filter((cb) => cb && cb.checked)
-        .map((cb) => cb.value.toLowerCase()); // Normalize to lowercase
-      if (
-        accChecked.length > 0 &&
-        (!lap.validity || !accChecked.includes(lap.validity.toLowerCase()))
-      ) {
-        return false;
-      }
+      // Accuracy checkboxes (uncomment if needed)
+      // const accChecked = [accVeryHigh, accHigh, accMedium, accLow]
+      //   .filter((cb) => cb && cb.checked)
+      //   .map((cb) => cb.value.toLowerCase());
+      // if (
+      //   accChecked.length > 0 &&
+      //   (!validity || !accChecked.includes(validity.toLowerCase()))
+      // ) {
+      //   showRow = false;
+      // }
 
-      // Gender radio (case-insensitive, handle null/undefined)
+      // Gender radio
       if (sexMale && sexFemale && sexAll) {
         if (
           sexMale.checked &&
-          (!lap.gender || lap.gender.toLowerCase() !== "male")
-        )
-          return false;
+          (!sex || sex.toLowerCase() !== "male")
+        ) showRow = false;
         if (
           sexFemale.checked &&
-          (!lap.gender || lap.gender.toLowerCase() !== "female")
-        )
-          return false;
+          (!sex || sex.toLowerCase() !== "female")
+        ) showRow = false;
         // sexAll.checked means no filter
       }
-      return true;
+
+      console.log("Row showRow:", showRow); // Debug log
+
+      row.style.display = showRow ? "" : "none";
     });
   };
 
@@ -367,8 +385,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Reset hints
       if (fasterThanHint) fasterThanHint.style.display = "none";
       if (slowerThanHint) slowerThanHint.style.display = "none";
-      // Re-render the table with all unfiltered data
-      renderTable(allTrackLapsData);
+      // Show all rows
+      const rows = leaderboardTableBody.querySelectorAll("tr");
+      rows.forEach((row) => (row.style.display = ""));
     });
   }
 
@@ -414,8 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       // Proceed with filtering
-      const filteredLaps = filterLaps(allTrackLapsData);
-      renderTable(filteredLaps);
+      filterTableRows();
     });
   }
 
@@ -453,7 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const riderName = target.getAttribute("data-rider-name")?.trim();
         const motorcycle = target.getAttribute("data-motorcycle")?.trim();
         const displayedDate = target
-          .querySelectorAll("td")[8]
+          .querySelectorAll("td")[7]
           ?.textContent?.trim();
         const lapDate = convertDateToMySQL(displayedDate);
         const selectedTrackName = trackSelect.value;
@@ -479,5 +497,69 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+  }
+
+  // Add click handler for rider history table to dynamically reload left div
+  const riderHistoryTable = document.getElementById("rider-history-table");
+
+  console.log("Rider History Table found:", riderHistoryTable);
+
+  if (riderHistoryTable) {
+    console.log("Attaching event listener to table");
+
+    riderHistoryTable.addEventListener("click", async (event) => {
+      const target = event.target.closest("tr");
+      
+      console.log("Row clicked:", target);
+      
+      if (target && target.rowIndex > 0) { // Skip header row
+        const lapTime = target.getAttribute("data-lap-time")?.trim();
+        const riderName = target.getAttribute("data-rider-name")?.trim();
+        const motorcycle = target.getAttribute("data-motorcycle")?.trim();
+        const lapDate = target.getAttribute("data-lap-date")?.trim();
+        const trackName = target.getAttribute("data-track-name")?.trim();
+
+        console.log("Extracted data:", { lapTime, riderName, motorcycle, lapDate, trackName });
+
+        if (lapTime && riderName && motorcycle && lapDate && trackName) {
+          try {
+            // Construct URL for the new lap details
+            const url = `/lap-details/${encodeURIComponent(lapTime)}/${encodeURIComponent(riderName)}/${encodeURIComponent(motorcycle)}/${encodeURIComponent(lapDate)}/${encodeURIComponent(trackName)}`;
+
+            console.log("Fetching URL:", url);
+
+            // Fetch the full page HTML
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
+
+            const html = await response.text();
+
+            // Parse the HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // Extract the left div content
+            const newLeftDiv = doc.getElementById("lap-details-left");
+            if (newLeftDiv) {
+              // Replace the current left div content
+              const currentLeftDiv = document.getElementById("lap-details-left");
+              if (currentLeftDiv) {
+                currentLeftDiv.innerHTML = newLeftDiv.innerHTML;
+                console.log("Left div updated successfully");
+              }
+            } else {
+              console.error("New left div not found in fetched HTML");
+            }
+          } catch (error) {
+            console.error("Error reloading lap details:", error);
+            alert("Nie udało się załadować szczegółów okrążenia.");
+          }
+        } else {
+          console.error("Missing required data attributes");
+        }
+      }
+    });
+  } else {
+    console.error("Rider history table not found");
   }
 });

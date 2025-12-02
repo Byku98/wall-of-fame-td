@@ -1,4 +1,9 @@
-import { convertMysqlToDate, convertDateToMySQL, formatLapTime } from './utils.js';
+import {
+  convertMysqlToDate,
+  convertDateToMySQL,
+  formatLapTime,
+} from "./utils.js";
+import { translate } from "./translations.js"; // Import translations
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("lap-details.js loaded");
@@ -20,6 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   const applyFiltersDropdown = document.getElementById("applyFiltersDropdown");
   const clearFiltersDropdown = document.getElementById("clearFiltersDropdown");
+
+  // Constants for virtual lap time
+  const virtualLapTimeButton = document.getElementById("virtualLapTime");
+  const virtualLapTimeContainer = document.getElementById(
+    "virtualLapTimeContainer"
+  );
+  const virtualMinutes = document.getElementById("virtualMinutes");
+  const virtualSeconds = document.getElementById("virtualSeconds");
+  const virtualMiliSeconds = document.getElementById("virtualMiliSeconds");
+  const applyVirtualLaptime = document.getElementById("applyVirtualLaptime");
+  const clearVirtualLaptime = document.getElementById("clearVirtualLaptime");
 
   // Constants for autocomplete filtering inputs and datalists
   const motorcycleNameFilter = document.getElementById("motorcycleNameFilter");
@@ -138,7 +154,12 @@ document.addEventListener("DOMContentLoaded", () => {
         row.setAttribute("data-lap-time", lap.lap_time || "");
         row.setAttribute("data-rider-name", lap.rider_name || "");
         row.setAttribute("data-motorcycle", lap.motorcycle || "");
-        row.setAttribute("data-lap-date", convertMysqlToDate(lap.lap_date) || "");
+        if (!lap.isVirtual) {
+          row.setAttribute(
+            "data-lap-date",
+            convertMysqlToDate(lap.lap_date) || ""
+          );
+        }
         row.setAttribute("data-sex", lap.sex_name || "");
         row.setAttribute("data-rider-level", lap.rider_level || "");
         row.setAttribute("data-validity", lap.validity || "");
@@ -149,13 +170,23 @@ document.addEventListener("DOMContentLoaded", () => {
         row.insertCell().textContent = index + 1; // Position
         row.insertCell().textContent =
           formatLapTime(lap.lap_time) || MISSING_DATA_TEXT; // Lap time
-        row.insertCell().textContent = lap.rider_name || MISSING_DATA_TEXT; // Rider name
-        row.insertCell().textContent = lap.rider_level || MISSING_DATA_TEXT; // Rider level
-        // row.insertCell().textContent = lap.validity || MISSING_DATA_TEXT; // Validity
-        row.insertCell().textContent = lap.motorcycle || MISSING_DATA_TEXT; // Motorcycle
-        row.insertCell().textContent = lap.tyre_front || MISSING_DATA_TEXT; // Tyre front
-        row.insertCell().textContent = lap.tyre_rear || MISSING_DATA_TEXT; // Tyre rear
-        row.insertCell().textContent = convertMysqlToDate(lap.lap_date); // Use custom formatter for DD.MM.YYYY
+        if (lap.isVirtual) {
+          // For virtual row, only show position and time, blanks for others
+          row.insertCell().textContent = "JESTEŚ TUTAJ"; // Rider name
+          row.insertCell().textContent = ""; // Rider level
+          row.insertCell().textContent = ""; // Motorcycle
+          row.insertCell().textContent = ""; // Tyre front
+          row.insertCell().textContent = ""; // Tyre rear
+          row.insertCell().textContent = ""; // Date
+        } else {
+          row.insertCell().textContent = lap.rider_name || MISSING_DATA_TEXT; // Rider name
+          row.insertCell().textContent =
+            translate("rider_level", lap.rider_level) || MISSING_DATA_TEXT; // Translated Rider level
+          row.insertCell().textContent = lap.motorcycle || MISSING_DATA_TEXT; // Motorcycle
+          row.insertCell().textContent = lap.tyre_front || MISSING_DATA_TEXT; // Tyre front
+          row.insertCell().textContent = lap.tyre_rear || MISSING_DATA_TEXT; // Tyre rear
+          row.insertCell().textContent = convertMysqlToDate(lap.lap_date); // Use custom formatter for DD.MM.YYYY
+        }
       });
     }
     populateFilterAutofillDatalist(); // Update datalists after rendering table
@@ -227,7 +258,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (
         motorcycleNameFilter &&
         motorcycleNameFilter.value &&
-        !motorcycle.toLowerCase().includes(motorcycleNameFilter.value.toLowerCase())
+        !motorcycle
+          .toLowerCase()
+          .includes(motorcycleNameFilter.value.toLowerCase())
       ) {
         showRow = false;
       }
@@ -252,7 +285,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Faster than filter
       if (fasterThanMinutes && fasterThanSeconds) {
-        const fasterTotal = getTotalSeconds([fasterThanMinutes, fasterThanSeconds]);
+        const fasterTotal = getTotalSeconds([
+          fasterThanMinutes,
+          fasterThanSeconds,
+        ]);
         if (fasterTotal > 0) {
           const lapTotal = getTotalSeconds(lapTime);
           if (lapTotal >= fasterTotal) showRow = false;
@@ -261,7 +297,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Slower than filter
       if (slowerThanMinutes && slowerThanSeconds) {
-        const slowerTotal = getTotalSeconds([slowerThanMinutes, slowerThanSeconds]);
+        const slowerTotal = getTotalSeconds([
+          slowerThanMinutes,
+          slowerThanSeconds,
+        ]);
         if (slowerTotal > 0) {
           const lapTotal = getTotalSeconds(lapTime);
           if (lapTotal <= slowerTotal) showRow = false;
@@ -271,14 +310,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Date from filter
       if (dateFromFilter && dateFromFilter.value) {
         const fromDate = new Date(dateFromFilter.value);
-        const lapDate = new Date(lapDateStr.split('.').reverse().join('-')); // Convert DD.MM.YYYY to YYYY-MM-DD
+        const lapDate = new Date(lapDateStr.split(".").reverse().join("-")); // Convert DD.MM.YYYY to YYYY-MM-DD
         if (lapDate < fromDate) showRow = false;
       }
 
       // Date to filter
       if (dateToFilter && dateToFilter.value) {
         const toDate = new Date(dateToFilter.value);
-        const lapDate = new Date(lapDateStr.split('.').reverse().join('-'));
+        const lapDate = new Date(lapDateStr.split(".").reverse().join("-"));
         if (lapDate > toDate) showRow = false;
       }
 
@@ -313,14 +352,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Gender radio
       if (sexMale && sexFemale && sexAll) {
-        if (
-          sexMale.checked &&
-          (!sex || sex.toLowerCase() !== "male")
-        ) showRow = false;
-        if (
-          sexFemale.checked &&
-          (!sex || sex.toLowerCase() !== "female")
-        ) showRow = false;
+        if (sexMale.checked && (!sex || sex.toLowerCase() !== "male"))
+          showRow = false;
+        if (sexFemale.checked && (!sex || sex.toLowerCase() !== "female"))
+          showRow = false;
         // sexAll.checked means no filter
       }
 
@@ -446,6 +481,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (toggleFiltersDropdownButton) {
     toggleFiltersDropdownButton.addEventListener("click", () => {
       bsCollapse.toggle();
+      virtualCollapse.hide(); // Hide virtual lap time when filters dropdown is toggled
     });
   }
 
@@ -458,6 +494,64 @@ document.addEventListener("DOMContentLoaded", () => {
     filtersDropdownContainer.addEventListener("hide.bs.collapse", () => {
       if (toggleFiltersDropdownButton)
         toggleFiltersDropdownButton.textContent = "Filtry";
+    });
+  }
+
+  // Initialize Bootstrap Collapse for virtual lap time
+  const virtualCollapse = new bootstrap.Collapse(virtualLapTimeContainer, {
+    toggle: false,
+  });
+
+  // Event listener for virtual lap time button
+  if (virtualLapTimeButton) {
+    virtualLapTimeButton.addEventListener("click", () => {
+      virtualCollapse.toggle();
+      bsCollapse.hide(); // Hide filters dropdown when virtual lap time is toggled
+    });
+  }
+
+  // Event listener for applying virtual lap time
+  if (applyVirtualLaptime) {
+    console.log("Function Applying virtual lap time");
+
+    applyVirtualLaptime.addEventListener("click", () => {
+      const min = virtualMinutes.value;
+      const sec = virtualSeconds.value;
+      const ms = virtualMiliSeconds.value;
+
+      if (min === "00" && sec === "00" && ms === "00") {
+        alert("Wprowadź prawidłowy czas.");
+        return;
+      }
+
+      const lapTime = `00:${min}:${sec}.${ms}`;
+
+      // Remove existing virtual lap if present
+      allTrackLapsData = allTrackLapsData.filter((lap) => !lap.isVirtual);
+      // Add new virtual lap
+      const virtualLap = {
+        lap_time: lapTime,
+        isVirtual: true,
+      };
+      allTrackLapsData.push(virtualLap);
+      // Sort by lap time (fastest first)
+      allTrackLapsData.sort(
+        (a, b) => getTotalSeconds(a.lap_time) - getTotalSeconds(b.lap_time)
+      );
+      renderTable(allTrackLapsData);
+    });
+  }
+
+  // Event listener for clearing virtual lap time
+  if (clearVirtualLaptime) {
+    clearVirtualLaptime.addEventListener("click", () => {
+      // Reset selects
+      if (virtualMinutes) virtualMinutes.value = "0";
+      if (virtualSeconds) virtualSeconds.value = "0";
+      if (virtualMiliSeconds) virtualMiliSeconds.value = "0";
+      // Remove virtual lap
+      allTrackLapsData = allTrackLapsData.filter((lap) => !lap.isVirtual);
+      renderTable(allTrackLapsData);
     });
   }
 
@@ -484,13 +578,21 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedTrackName,
         });
 
-        if (lapTime && riderName && motorcycle && lapDate && selectedTrackName) {
+        if (
+          lapTime &&
+          riderName &&
+          motorcycle &&
+          lapDate &&
+          selectedTrackName
+        ) {
           // Navigate to the lap details page with query parameters including track name
           const url = `/lap-details/${encodeURIComponent(
             lapTime
           )}/${encodeURIComponent(riderName)}/${encodeURIComponent(
             motorcycle
-          )}/${encodeURIComponent(lapDate)}/${encodeURIComponent(selectedTrackName)}`;
+          )}/${encodeURIComponent(lapDate)}/${encodeURIComponent(
+            selectedTrackName
+          )}`;
           window.location.href = url;
         } else {
           alert("Nie można pobrać szczegółów okrążenia. Spróbuj ponownie.");
@@ -509,28 +611,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     riderHistoryTable.addEventListener("click", async (event) => {
       const target = event.target.closest("tr");
-      
+
       console.log("Row clicked:", target);
-      
-      if (target && target.rowIndex > 0) { // Skip header row
+
+      if (target && target.rowIndex > 0) {
+        // Skip header row
         const lapTime = target.getAttribute("data-lap-time")?.trim();
         const riderName = target.getAttribute("data-rider-name")?.trim();
         const motorcycle = target.getAttribute("data-motorcycle")?.trim();
         const lapDate = target.getAttribute("data-lap-date")?.trim();
         const trackName = target.getAttribute("data-track-name")?.trim();
 
-        console.log("Extracted data:", { lapTime, riderName, motorcycle, lapDate, trackName });
+        console.log("Extracted data:", {
+          lapTime,
+          riderName,
+          motorcycle,
+          lapDate,
+          trackName,
+        });
 
         if (lapTime && riderName && motorcycle && lapDate && trackName) {
           try {
             // Construct URL for the new lap details
-            const url = `/lap-details/${encodeURIComponent(lapTime)}/${encodeURIComponent(riderName)}/${encodeURIComponent(motorcycle)}/${encodeURIComponent(lapDate)}/${encodeURIComponent(trackName)}`;
+            const url = `/lap-details/${encodeURIComponent(
+              lapTime
+            )}/${encodeURIComponent(riderName)}/${encodeURIComponent(
+              motorcycle
+            )}/${encodeURIComponent(lapDate)}/${encodeURIComponent(trackName)}`;
 
             console.log("Fetching URL:", url);
 
             // Fetch the full page HTML
             const response = await fetch(url);
-            if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
+            if (!response.ok)
+              throw new Error(`Failed to fetch: ${response.status}`);
 
             const html = await response.text();
 
@@ -542,7 +656,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const newLeftDiv = doc.getElementById("lap-details-left");
             if (newLeftDiv) {
               // Replace the current left div content
-              const currentLeftDiv = document.getElementById("lap-details-left");
+              const currentLeftDiv =
+                document.getElementById("lap-details-left");
               if (currentLeftDiv) {
                 currentLeftDiv.innerHTML = newLeftDiv.innerHTML;
                 console.log("Left div updated successfully");

@@ -45,11 +45,27 @@ document.addEventListener("DOMContentLoaded", () => {
             // Extract the left div content
             const newLeftDiv = doc.getElementById("lap-details-left");
             if (newLeftDiv) {
-              // Replace the current left div content
+              // Replace the current left div content with animation
               const currentLeftDiv = document.getElementById("lap-details-left");
               if (currentLeftDiv) {
+                // prepare animation: fade out/slide slightly
+                currentLeftDiv.style.transition = 'opacity 250ms ease, transform 250ms ease';
+                currentLeftDiv.style.opacity = '0';
+                currentLeftDiv.style.transform = 'translateY(8px)';
+
+                // replace content
                 currentLeftDiv.innerHTML = newLeftDiv.innerHTML;
-                console.log("Left div updated successfully");
+
+                // force reflow and then animate in
+                void currentLeftDiv.offsetWidth;
+                currentLeftDiv.style.opacity = '1';
+                currentLeftDiv.style.transform = 'translateY(0)';
+
+                // Smooth scroll page to the left div top
+                const top = Math.max(window.scrollY + currentLeftDiv.getBoundingClientRect().top - 20, 0);
+                window.scrollTo({ top, behavior: 'smooth' });
+
+                console.log("Left div updated and animated successfully");
               }
             } else {
               console.error("New left div not found in fetched HTML");

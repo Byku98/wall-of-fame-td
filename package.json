@@ -1,28 +1,27 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true
-  },
+  "name": "pszczolki-wof-terms",
+  "version": "1.0.0",
+  "main": "dist/index.js",        // Assuming your main entry point after compilation will be server.js in dist
   "scripts": {
-    "dev": "npx nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts", // Assuming src/server.ts is your main entry point for dev
+    "build": "rimraf dist && tsc", // Clean 'dist' then compile
+    "start": "node dist/index.js",  // Run the compiled server.js from dist
+    "start:prod": "NODE_ENV=production node dist/index.js" // Recommended for production
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
-    "mysql2": "^3.15.1",
-    "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2"
+    "mysql2": "^3.15.1"
   },
   "devDependencies": {
+    "typescript": "^5.x.x",         // Pin your TS version
+    "ts-node": "^10.x.x",           // For 'dev' script
+    "nodemon": "^3.x.x",            // For 'dev' script
+    "@types/node": "^20.x.x",       // Types for Node.js APIs
+    "@types/express": "^5.0.3",
     "@types/ejs": "^3.1.5",
-    "@types/express": "^5.0.3"
+    "rimraf": "^5.x.x"              // For cleaning 'dist' folder
   }
 }

@@ -117,7 +117,8 @@ When responding to the user:
 
 1. Provide a **short explanation**  
 2. Provide a **list of changed/new files**  
-3. Provide **complete, ready-to-paste file contents**  
+3. Provide **parts of code which needs to be inserted / updated**
+4. Provide **complete, ready-to-paste file contents** only when requested
 4. Provide **optional instructions** for manual steps, if needed  
 
 ---

@@ -44,7 +44,7 @@ export const getLapDetails = async (req: Request, res: Response) => {
     // Format lap_time server-side for consistent display
     lapDetails.lap_time = formatLapTime(lapDetails.lap_time);
     lapDetails.lap_date = convertMysqlToDate(lapDetails.lap_date);
-    lapDetails = translateObject(lapDetails, ["sex"], "pl");
+    lapDetails = translateObject(lapDetails, ["sex", "rider_level", "validity"], "pl");
   } catch (error) {
     res
       .status(404)

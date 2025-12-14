@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES2020",         // Compile to modern JS (Node.js supports this)
-    "module": "commonjs",       // Node.js module system
-    "outDir": "./dist",         // Where to put compiled .js files
-    "rootDir": "./src",         // Where your .ts source files are
-    "strict": true,             // Strongly recommended for type safety
-    "esModuleInterop": true,    // Better interoperability with CommonJS and ES modules
-    "forceConsistentCasingInFileNames": true, // Good practice for cross-platform
-    "sourceMap": true,          // Generate .map files for debugging (recommended)
-    "skipLibCheck": true,      // Speeds up compilation, good for simplifying
-    "lib": ["ES2020"]           // Standard library for TypeScript to know about
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "lib": ["ES2020"]
   },
   "include": [
-    "src/**/*.ts"               // Ensure all .ts files in src are included
+    "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules",             // Exclude node_modules from compilation
-    "**/*.spec.ts"              // Exclude test files if you have them
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

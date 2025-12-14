@@ -5,7 +5,7 @@ import pagesRoute from "./routes/pages.route";
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000
 
 // Set view engine
 app.set("view engine", "ejs");
@@ -23,19 +23,6 @@ app.use('/utils', express.static(path.join(__dirname, "./utils")));
 
 // Routes
 app.use("/", pagesRoute);
-
-// app.use(helmet({
-  // contentSecurityPolicy: {
-    // directives: {
-      // defaultSrc: ["'self'"], // Allow localhost connections
-      // connectSrc: ["'self'", "http://localhost:3000"], // Allow DevTools and local fetches
-      // scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], // Allow Bootstrap CDN and inline scripts if needed
-      // styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], // Allow Bootstrap CSS
-      // imgSrc: ["'self'", "data:", "https:"], // Allow images from public/assets/
-      // Add other directives as needed (e.g., fontSrc for fonts)
-    // },
-  // },
-// }));
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);

@@ -172,7 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
           formatLapTime(lap.lap_time) || MISSING_DATA_TEXT; // Lap time
         if (lap.isVirtual) {
           // For virtual row, only show position and time, blanks for others
-          row.insertCell().textContent = "JESTEŚ TUTAJ"; // Rider name
+          row.classList.add("virtual-lap-row"); // Keep this class for styling
+          row.insertCell().textContent = "Twój czas"; // Rider name
           row.insertCell().textContent = ""; // Rider level
           row.insertCell().textContent = ""; // Motorcycle
           row.insertCell().textContent = ""; // Tyre front
@@ -539,6 +540,12 @@ document.addEventListener("DOMContentLoaded", () => {
         (a, b) => getTotalSeconds(a.lap_time) - getTotalSeconds(b.lap_time)
       );
       renderTable(allTrackLapsData);
+
+      // Scroll to the virtual lap row
+      const virtualRow = document.querySelector(".virtual-lap-row");
+      if (virtualRow) {
+        virtualRow.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     });
   }
 

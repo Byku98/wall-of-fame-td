@@ -14,9 +14,9 @@
         </thead>
         <tbody id="leaderboardTableBody">
             <% // Always render the table with data, even if empty, to show "Brak czasów dla wybranego toru." %>
-                <% if (leaderboard.length> 0) { %>
+                <% if (leaderboard.length > 0) { %>
                     <% leaderboard.forEach((lap, index)=> { %>
-                        <tr>
+                        <tr class="<%= lap.isVirtual ? 'virtual-lap-row' : '' %>">  <%- /* Add this line */ %>
                             <td>
                                 <%= index + 1 %>
                             </td>
@@ -24,22 +24,36 @@
                                 <%= lap.lap_time %>
                             </td>
                             <td>
-                                <%= lap.rider_name %>
+                                <% if (lap.isVirtual) { %>
+                                    Twój czas
+                                <% } else { %>
+                                    <%= lap.rider_name %>
+                                <% } %>
                             </td>
                             <td>
-                                <%= lap.rider_level %>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.rider_level %>
+                                <% } %>
                             </td>
                             <td>
-                                <%= lap.motorcycle %>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.motorcycle %>
+                                <% } %>
                             </td>
                             <td>
-                                <%= lap.tyre_front %>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.tyre_front %>
+                                <% } %>
                             </td>
                             <td>
-                                <%= lap.tyre_rear %>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.tyre_rear %>
+                                <% } %>
                             </td>
                             <td>
-                                <%= new Date(lap.lap_date).toLocaleDateString() %>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= new Date(lap.lap_date).toLocaleDateString() %>
+                                <% } %>
                             </td>
                         </tr>
                         <% }) %>

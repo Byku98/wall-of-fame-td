@@ -23,3 +23,8 @@
 .fade-collapse.show {
   opacity: 1; /* Fully visible when shown */
 }
+
+.virtual-lap-row {
+  font-weight: bold !important; /* Make the text bold */
+  border-left: 3px solid #1fafdb;
+}

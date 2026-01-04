@@ -1,0 +1,100 @@
+<div class="container py-5">
+    <h1>Dodaj Czas Okrążenia</h1>
+    <p>Wypełnij poniższe pola, aby dodać nowy czas okrążenia do bazy danych.</p>
+
+    <form id="addLaptimeForm">
+
+        <!-- Track Selection -->
+        <div class="mb-3">
+            <label for="trackSelect" class="form-label">Wybierz Tor</label>
+            <select class="form-select" id="trackSelect" name="trackName" required>
+                <option value="">-- Wybierz tor --</option>
+                <% if (typeof trackList !=='undefined' && trackList.length> 0) { %>
+                    <% trackList.forEach(track=> { %>
+                        <option value="<%= track.track_name %>">
+                            <%= track.track_name %>
+                        </option>
+                        <% }) %>
+                            <% } %>
+            </select>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wybierz tor, na którym został uzyskany czas.
+            </div>
+        </div>
+
+        <!-- Rider Name -->
+        <div class="mb-3">
+            <label for="riderName" class="form-label">Imię Zawodnika</label>
+            <input type="text" class="form-control" id="riderName" name="riderName" placeholder="Wprowadź imię"
+                required disabled> 
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i>Aby dodać kolejny wynik wprowadź nazwą istniejącego zawodnika. Upewnij się że nazwa jest taka sama jak w istniejącej tabeli. Jeżeli zawodnik jest nowy, zostanie on automatycznie utworzony.
+            </div>
+        </div>
+
+        <!-- Lap Time (Single Text Input) -->
+        <div class="mb-3">
+            <label for="lapTime" class="form-label">Czas Okrążenia (MM:SS.mm)</label>
+            <input type="text" class="form-control" id="lapTime" name="lapTime" placeholder="np. 01:23.45" pattern="[0-5][0-9]:[0-5][0-9]\.[0-9]{2}" title="Format: MM:SS.mm (np. 01:23.45)" required disabled> 
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Podaj czas okrążenia w formacie minuty:sekundy.milisekundy (np. 01:23.45).
+            </div>
+        </div>
+
+        <!-- Date Picker -->
+        <div class="mb-3">
+            <label for="lapDate" class="form-label">Data Okrążenia</label>
+            <input type="date" class="form-control" id="lapDate" name="lapDate" required disabled> 
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wybierz datę, kiedy okrążenie zostało wykonane.
+            </div>
+        </div>
+
+        <!-- Motorcycle -->
+        <div class="mb-3">
+            <label for="motorcycle" class="form-label">Motocykl</label>
+            <input type="text" class="form-control" id="motorcycle" name="motorcycle" placeholder="np. Yamaha R6"
+                required disabled> 
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wprowadź markę i model motocykla.
+            </div>
+        </div>
+
+        <!-- Tyre Front -->
+        <div class="mb-3">
+            <label for="tyreFront" class="form-label">Opona (przód)</label>
+            <input type="text" class="form-control" id="tyreFront" name="tyreFront"
+                placeholder="np. Pirelli Supercorsa SC1" required disabled> 
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Podaj markę i model opony przedniej.
+            </div>
+        </div>
+
+        <!-- Tyre Rear -->
+        <div class="mb-3">
+            <label for="tyreRear" class="form-label">Opona (tył)</label>
+            <input type="text" class="form-control" id="tyreRear" name="tyreRear"
+                placeholder="np. Pirelli Supercorsa SC2" required disabled> 
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Podaj markę i model opony tylnej.
+            </div>
+        </div>
+
+        <!-- Captcha Placeholder -->
+        <div class="mb-3">
+            <label for="captcha" class="form-label">Weryfikacja (Captcha)</label>
+            <div id="captchaPlaceholder" class="border p-3 bg-light text-muted">
+                <!-- Here you would integrate your actual Captcha solution (e.g., reCAPTCHA) -->
+                <p>Miejsce na Captcha (np. reCAPTCHA)</p>
+                <input type="text" class="form-control" id="captcha" name="captcha" placeholder="Wprowadź kod z obrazka"
+                    required disabled>
+            </div>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wprowadź tekst widoczny na obrazku, aby potwierdzić, że nie
+                jesteś robotem.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" disabled>Dodaj Czas</button>
+    </form>
+</div>

@@ -1,19 +1,7 @@
-    /* Initial state: invisible */
-    .fade-in {
-      opacity: 0;
-      transition: opacity 1s ease-in;
-      /* fade in over 1.5 seconds */
-    }
-
-    /* image glow */
-  .social-glow img {
-    transition: 0.3s ease-in-out;
-    opacity: 0.7;
-  }
-
-  /* image glow at hover*/
-  .social-glow img:hover {
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
-    transform: scale(1.1); /* optional small zoom effect */
-    opacity: 1;
-  }
+/* Hover effect for header navigation buttons */
+.header-nav-btn:hover {
+  color: #eeff00 !important; /* Ensure text stays white or changes to a brighter white */
+  background-color: rgb(255, 251, 2); /* Subtle white background with transparency */
+  border-radius: 0.8rem; /* Slightly rounded corners */
+  transition: background-color 0.5s ease-in-out; /* Smooth transition */
+}

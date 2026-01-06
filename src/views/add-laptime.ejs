@@ -17,8 +17,8 @@
     <!-- Include the shared header -->
     <%- include('components/header/_header') %>
 
-    <!-- Include the laptime details section -->
-    <%- include('components/add-laptime/_laptime_details') %>
+    <!-- Include the new add laptime form partial, passing all necessary data -->
+    <%- include('components/add-laptime/_laptime_details', { trackList: trackList, }) %>
 
     <!-- Include scripts -->
     <%- include('components/add-laptime/_scripts') %>

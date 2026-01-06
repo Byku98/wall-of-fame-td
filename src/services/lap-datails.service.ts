@@ -16,7 +16,6 @@ export const lapDetailsService = {
       lap_date
     );
 
-
     // List all rows with their indexes for debugging
     rows.forEach((row: LapDetails, index: number) => {
       console.log(`Row ${index}:`, row);

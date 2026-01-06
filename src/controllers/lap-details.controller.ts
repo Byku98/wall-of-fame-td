@@ -14,12 +14,12 @@ export const getLapDetails = async (req: Request, res: Response) => {
     trackName: string;
   };
 
-  console.log("Fetching lap details for:", {
-    lapTime,
-    riderName,
-    motorcycle,
-    lap_date,
-  });
+  // console.log("Fetching lap details for:", {
+  //   lapTime,
+  //   riderName,
+  //   motorcycle,
+  //   lap_date,
+  // });
 
   let lapDetails: LapDetails | null = null;
   let riderHistory: riderHistory[] | null = null;

@@ -28,4 +28,12 @@ export const addLaptimeRepository = {
     );
     return rows as any[];
   },
+
+  getOrganizersFromTrack: async (trackName: string) => {
+    const [rows] = await pool.query(
+      "select * from track_organizers where track_name = ?", // Adjust query based on your schema
+      [trackName]
+    );
+    return rows as any[];
+  },
 };

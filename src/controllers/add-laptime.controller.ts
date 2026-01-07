@@ -21,7 +21,7 @@ export async function getAddLaptime(req: Request, res: Response) {
   }
 }
 
-// NEW: Controller function to get motorcycles as JSON
+// Controller function to get motorcycles as JSON
 export async function getMotorcyclesJson(req: Request, res: Response) {
   try {
     const motorcycleList = await addLaptimeService.getAllMotorcycles();
@@ -32,7 +32,7 @@ export async function getMotorcyclesJson(req: Request, res: Response) {
   }
 }
 
-// NEW: Controller function to get front tyres as JSON
+// Controller function to get front tyres as JSON
 export async function getTyresFrontJson(req: Request, res: Response) {
   try {
     const tyreFrontList = await addLaptimeService.getAllTyresFront();
@@ -43,7 +43,7 @@ export async function getTyresFrontJson(req: Request, res: Response) {
   }
 }
 
-// NEW: Controller function to get rear tyres as JSON
+// Controller function to get rear tyres as JSON
 export async function getTyresRearJson(req: Request, res: Response) {
   try {
     const tyreRearList = await addLaptimeService.getAllTyresRear();
@@ -66,5 +66,17 @@ export async function getRidersFromTrackJson(req: Request, res: Response) {
   } catch (error) {
     console.error("Error fetching riders from track JSON:", error);
     res.status(500).json({ message: "Failed to fetch riders from track" });
+  }
+}
+
+// Controller function to get organizers by track as JSON
+export async function getOrganizersByTrackJson(req: Request, res: Response) {
+  try {
+    const { trackName } = req.params;
+    const organizersList = await addLaptimeService.getOrganizersFromTrack(trackName);
+    res.json(organizersList);
+  } catch (error) {
+    console.error("Error fetching organizers by track JSON:", error);
+    res.status(500).json({ message: "Failed to fetch organizers for track" });
   }
 }

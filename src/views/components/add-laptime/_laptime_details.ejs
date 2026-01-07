@@ -29,16 +29,32 @@
                 list="riderSuggestions" required disabled>
             <datalist id="riderSuggestions"></datalist>
             <div class="form-text text-muted">
-                <i class="fas fa-info-circle me-1"></i>Aby dodać kolejny wynik wprowadź nazwą istniejącego zawodnika. Upewnij się że nazwa jest taka sama jak w istniejącej tabeli. Jeżeli zawodnik jest nowy, zostanie on automatycznie utworzony.
+                <i class="fas fa-info-circle me-1"></i>Aby dodać kolejny wynik wprowadź nazwą istniejącego zawodnika.
+                Upewnij się że nazwa jest taka sama jak w istniejącej tabeli. Jeżeli zawodnik jest nowy, zostanie on
+                automatycznie utworzony.
+            </div>
+        </div>
+
+        <!-- Organizer Selection -->
+        <div class="mb-3">
+            <label for="organizer" class="form-label">Organizator</label>
+            <select class="form-select" id="organizerList" name="organizer" required disabled>
+                <option value="">-- Wybierz organizatora --</option>
+                <!-- Options will be populated dynamically by JavaScript -->
+            </select>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wybierz organizatora u którego zrobiłeś wynik.
             </div>
         </div>
 
         <!-- Lap Time (Single Text Input) -->
         <div class="mb-3">
             <label for="lapTime" class="form-label">Czas Okrążenia (MM:SS.mm)</label>
-            <input type="text" class="form-control" id="lapTime" name="lapTime" placeholder="np. 01:23.45" pattern="[0-5][0-9]:[0-5][0-9]\.[0-9]{2}" title="Format: MM:SS.mm (np. 01:23.45)" required disabled>
+            <input type="text" class="form-control" id="lapTime" name="lapTime" placeholder="np. 01:23.45"
+                pattern="[0-5][0-9]:[0-5][0-9]\.[0-9]{2}" title="Format: MM:SS.mm (np. 01:23.45)" required disabled>
             <div class="form-text text-muted">
-                <i class="fas fa-info-circle me-1"></i> Podaj czas okrążenia w formacie minuty:sekundy.milisekundy (np. 01:23.45).
+                <i class="fas fa-info-circle me-1"></i> Podaj czas okrążenia w formacie minuty:sekundy.milisekundy (np.
+                01:23.45).
             </div>
         </div>
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import {getAddLaptime, getMotorcyclesJson, getTyresFrontJson, getTyresRearJson, getRidersFromTrackJson} from '../controllers/add-laptime.controller';
+import {getAddLaptime, getMotorcyclesJson, getTyresFrontJson, getTyresRearJson, getRidersFromTrackJson, getOrganizersByTrackJson} from '../controllers/add-laptime.controller';
 
 const router = Router();
 
@@ -11,6 +11,7 @@ router.get('/add-laptime/api/motorcycles', getMotorcyclesJson);
 router.get('/add-laptime/api/tyres/front', getTyresFrontJson);
 router.get('/add-laptime/api/tyres/rear', getTyresRearJson);
 router.get('/add-laptime/api/riders/:trackName', getRidersFromTrackJson);
+router.get('/add-laptime/api/organizers/:trackName', getOrganizersByTrackJson);
 
 // POST request to handle form submission (uncomment when controller function is ready)
 // router.post('/', addLaptimeController.postAddLaptime);

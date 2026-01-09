@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("add-laptime.js loaded and running");
-
   const trackSelect = document.getElementById("trackSelect");
+  const deviceSelect = document.getElementById("deviceSelect");
   const addLaptimeForm = document.getElementById("addLaptimeForm");
 
   if (!trackSelect || !addLaptimeForm) {
@@ -37,31 +36,31 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Function to populate select options
-const populateSelect = (selectId, dataArray, key) => {
-  const select = document.getElementById(selectId);
-  
-  if (!select) {
-    console.error(`BŁĄD: Nie znaleziono elementu o ID: "${selectId}"`);
-    return; // Przerwij funkcję natychmiast
-  }
+  const populateSelect = (selectId, dataArray, key) => {
+    const select = document.getElementById(selectId);
 
-  if (!dataArray || !Array.isArray(dataArray)) {
-    console.error(`BŁĄD: Dane dla ${selectId} są nieprawidłowe:`, dataArray);
-    return;
-  }
-
-  // Jeśli tu dotarliśmy, select na pewno istnieje
-  select.innerHTML = '<option value="">-- Wybierz organizatora --</option>';
-  
-  dataArray.forEach((item) => {
-    if (item[key]) {
-      const option = document.createElement("option");
-      option.value = item[key];
-      option.textContent = item[key];
-      select.appendChild(option);
+    if (!select) {
+      console.error(`BŁĄD: Nie znaleziono elementu o ID: "${selectId}"`);
+      return; // Przerwij funkcję natychmiast
     }
-  });
-};
+
+    if (!dataArray || !Array.isArray(dataArray)) {
+      console.error(`BŁĄD: Dane dla ${selectId} są nieprawidłowe:`, dataArray);
+      return;
+    }
+
+    // Jeśli tu dotarliśmy, select na pewno istnieje
+    select.innerHTML = '<option value="">-- Wybierz organizatora --</option>';
+
+    dataArray.forEach((item) => {
+      if (item[key]) {
+        const option = document.createElement("option");
+        option.value = item[key];
+        option.textContent = item[key];
+        select.appendChild(option);
+      }
+    });
+  };
 
   // Initial state: disable all controls except trackSelect
   toggleFormControls(false);
@@ -106,6 +105,7 @@ const populateSelect = (selectId, dataArray, key) => {
     } else {
       toggleFormControls(false);
       console.log("No track selected. Fields disabled.");
+
       // Clear datalists if no track is selected
       populateDatalist("motorcycleSuggestions", [], "motorcycle_name");
       populateDatalist("tyreFrontSuggestions", [], "tyre_name");

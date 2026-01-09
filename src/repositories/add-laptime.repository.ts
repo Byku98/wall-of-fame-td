@@ -6,6 +6,11 @@ export const addLaptimeRepository = {
     return rows as any[];
   },
 
+  getAllDevices: async () => {
+    const [rows] = await pool.query("select device_name from devices");
+    return rows as any[];
+  },
+
   getAllTyresFront: async () => {
     const [rows] = await pool.query("select * from tyres_front_all");
     return rows as any[];

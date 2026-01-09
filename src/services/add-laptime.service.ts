@@ -5,6 +5,10 @@ export const addLaptimeService = {
     return addLaptimeRepository.getAllTracks();
   },
 
+  getAllDevices: async () => {
+    return addLaptimeRepository.getAllDevices();
+  },
+
   getAllMotorcycles: async () => {
     return addLaptimeRepository.getAllMotorcycles();
   },

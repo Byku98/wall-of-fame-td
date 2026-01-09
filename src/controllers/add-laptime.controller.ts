@@ -5,11 +5,12 @@ import { addLaptimeService } from "../services/add-laptime.service";
 export async function getAddLaptime(req: Request, res: Response) {
   try {
     const trackList = await addLaptimeService.getAllTracks(); // Only fetch tracks for initial render
+    const devicesList = await addLaptimeService.getAllDevices(); // Only fetch devices which measures time
 
     const dynamicContent = {
       title: "Dodaj Czas Okrążenia",
       trackList,
-      // motorcycleList, tyresFrontList, tyresRearList are NO LONGER PASSED HERE
+      devicesList
     };
 
     res.render("add-laptime", dynamicContent);

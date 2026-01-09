@@ -14,11 +14,23 @@
                         <option value="<%= track.track_name %>">
                             <%= track.track_name %>
                         </option>
-                        <% }) %>
-                            <% } %>
+                    <% }) %>
+                <% } %>
             </select>
             <div class="form-text text-muted">
                 <i class="fas fa-info-circle me-1"></i> Wybierz tor, na którym został uzyskany czas.
+            </div>
+        </div>
+
+        <!-- Organizer Selection -->
+        <div class="mb-3">
+            <label for="organizer" class="form-label">Organizator</label>
+            <select class="form-select" id="organizerList" name="organizer" required disabled>
+                <option value="">-- Wybierz organizatora --</option>
+                <!-- Options will be populated dynamically by JavaScript -->
+            </select>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wybierz organizatora u którego zrobiłeś wynik.
             </div>
         </div>
 
@@ -35,18 +47,6 @@
             </div>
         </div>
 
-        <!-- Organizer Selection -->
-        <div class="mb-3">
-            <label for="organizer" class="form-label">Organizator</label>
-            <select class="form-select" id="organizerList" name="organizer" required disabled>
-                <option value="">-- Wybierz organizatora --</option>
-                <!-- Options will be populated dynamically by JavaScript -->
-            </select>
-            <div class="form-text text-muted">
-                <i class="fas fa-info-circle me-1"></i> Wybierz organizatora u którego zrobiłeś wynik.
-            </div>
-        </div>
-
         <!-- Lap Time (Single Text Input) -->
         <div class="mb-3">
             <label for="lapTime" class="form-label">Czas Okrążenia (MM:SS.mm)</label>
@@ -55,6 +55,33 @@
             <div class="form-text text-muted">
                 <i class="fas fa-info-circle me-1"></i> Podaj czas okrążenia w formacie minuty:sekundy.milisekundy (np.
                 01:23.45).
+            </div>
+        </div>
+
+        <!-- NEW: Device Selection -->
+        <div class="mb-3">
+            <label for="device" class="form-label">Urządzenie Pomiarowe</label>
+            <select class="form-select" id="deviceSelect" name="device" required disabled>
+                <option value="">-- Wybierz urządzenie --</option>
+                <% if (typeof devicesList !=='undefined' && devicesList.length> 0) { %>
+                    <% devicesList.forEach(device=> { %>
+                        <option value="<%= device.device_name %>">
+                            <%= device.device_name %>
+                        </option>
+                    <% }) %>
+                <% } %>
+            </select>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wybierz urządzenie, które mierzyło czas.
+            </div>
+        </div>
+
+        <!-- NEW: YouTube Proof URL (shown when device is selected) -->
+        <div class="mb-3">
+            <label for="youtubeProof" class="form-label">Link do Dowodu na YouTube</label>
+            <input type="url" class="form-control" id="youtubeProof" name="youtubeProof" placeholder="https://www.youtube.com/watch?v=..." required disabled>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Podaj link do filmu na YouTube jako dowód.
             </div>
         </div>
 

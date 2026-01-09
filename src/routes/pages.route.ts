@@ -1,5 +1,4 @@
 import { Router } from "express";
-import landingRoute from "./landing.route";
 import leaderboardRoute from "./leaderboard.route";
 import addLaptimeRoute from "./add-laptime.route";
 // import aboutRoutes from "./about.routes";
@@ -9,7 +8,7 @@ import addLaptimeRoute from "./add-laptime.route";
 const router = Router();
 
 // Mount sub-routes
-router.use("/", landingRoute); 
+router.get('/', (req, res) => res.redirect('/leaderboard')); // Replace '/leaderboard' with your desired subpage
 router.use("/", leaderboardRoute);
 router.use("/", addLaptimeRoute);
 // router.use("/contact", contactRoutes);

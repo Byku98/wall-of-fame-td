@@ -104,13 +104,13 @@ export const addLaptimeRepository = {
         data.deviceRecordedLap || null,
       ];
 
-      console.log("Executing query:", query);
+      // console.log("Executing query:", query);
 
       const [result]: any = await pool.query(query, values);
 
-      console.log("Stored procedure result:", result);
-      console.log("Stored procedure result 0:", result[0]);
-      console.log("Stored procedure result 00:", result[0][0]);
+      // console.log("Stored procedure result:", result);
+      // console.log("Stored procedure result 0:", result[0]);
+      // console.log("Stored procedure result 00:", result[0][0]);
 
       // MySQL przy CALL zwraca tablicę, gdzie pierwszy element to zestaw danych z SELECTów wewnątrz procedury
       const procData = Array.isArray(result) ? result[0] : null;

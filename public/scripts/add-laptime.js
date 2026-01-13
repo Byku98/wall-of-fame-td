@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Vairables Declaration ---
+  // --- Variables Declaration ---
   const trackSelect = document.getElementById("trackSelect");
   const deviceSelect = document.getElementById("deviceSelect");
   const addLaptimeForm = document.getElementById("addLaptimeForm");
@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   const deviceRecordedLap = document.getElementById("deviceRecordedLap");
   const submitButton = addLaptimeForm.querySelector('button[type="submit"]');
+
+  // Global date reference for validation (today at midnight)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   if (!trackSelect || !addLaptimeForm) {
     console.error(
@@ -33,6 +37,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Validation Logic ---
   const validateForm = () => {
+    const proofImage = document.getElementById("proofImage");
+    const proofImageBadge = proofImage.parentElement.querySelector(".badge");
+    
+    // NEW: Conditional Requirement for Image Upload
+    if (deviceRecordedLap.value.trim() === "") {
+      proofImage.required = true;
+      proofImageBadge.textContent = "Wymagane";
+      proofImageBadge.classList.replace("bg-secondary", "bg-danger");
+    } else {
+      proofImage.required = false;
+      proofImageBadge.textContent = "Opcjonalne";
+      proofImageBadge.classList.replace("bg-danger", "bg-secondary");
+    }
+
     const requiredFields = addLaptimeForm.querySelectorAll("[required]");
     let isValid = true;
 
@@ -42,26 +60,44 @@ document.addEventListener("DOMContentLoaded", () => {
         isValid = false;
       }
       
-      // Check pattern for Lap Time (MM:SS.m to MM:SS.mmm)
+      // Check pattern for Lap Time (MM:SS.mmm, SS.mmm, or SS)
       if (field.id === "lapTime" && field.value) {
-        // Allows M:S.mmm, MM:SS.mmm, or even just SS.mmm
-        // ^([0-5]?\d:)? -> Optional minutes followed by colon
-        // [0-5]?\d      -> 1 or 2 digits for seconds
-        // \.\d{1,3}$    -> Dot followed by 1-3 digits
-        const pattern = /^([0-5]?\d:)?([0-5]?\d)\.\d{1,3}$/;
+        // ^([0-5]?\d:)? -> Optional minutes
+        // ([0-5]?\d)    -> Required seconds
+        // (\.\d{1,3})?$ -> Optional dot and 1-3 milliseconds
+        const pattern = /^([0-5]?\d:)?([0-5]?\d)(\.\d{1,3})?$/;
         if (!pattern.test(field.value)) {
           isValid = false;
         }
       }
 
-      // Check if datalist inputs have a valid selection (optional but recommended)
-      // If you want to force selection from list, you'd add logic here
+      // NEW: Date Validation using global 'today'
+      if (field.id === "lapDate" && field.value) {
+        const selectedDate = new Date(field.value);
+        // Allow today and past dates, block future dates
+        if (selectedDate > today) {
+          isValid = false;
+        }
+      }
     });
 
     submitButton.disabled = !isValid;
     return isValid;
   };
 
+  // NEW: Immediate feedback for invalid date using global 'today'
+  const lapDateField = document.getElementById("lapDate");
+  if (lapDateField) {
+    lapDateField.addEventListener("change", () => {
+      const selectedDate = new Date(lapDateField.value);
+      if (selectedDate > today) {
+        alert("Data nie może być z przyszłości!");
+        lapDateField.value = ""; // Clear the invalid date
+        validateForm(); // Re-validate
+      }
+    });
+  }
+  
   // Listen for any input change to re-validate
   addLaptimeForm.addEventListener("input", validateForm);
 
@@ -248,5 +284,9 @@ document.addEventListener("DOMContentLoaded", () => {
       alert('Wystąpił błąd podczas wysyłania formularza');
     }
   });
+
+  if (deviceRecordedLap) {
+    deviceRecordedLap.addEventListener("input", validateForm);
+  }
 
 }); // End of DOMContentLoaded

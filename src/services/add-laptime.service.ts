@@ -37,9 +37,11 @@ export const addLaptimeService = {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(originalName).toLowerCase();
     const filename = `evidence-${uniqueSuffix}${ext}`;
+    
+    const proof_image_path = `/evidences/${filename}`; 
 
-    // 2. Prepare data for Database (including the filename we intend to use)
-    const laptimeData = { ...formData, proof_image_path: filename };
+    // 2. Prepare data for Database
+    const laptimeData = { ...formData, proof_image_path};
 
     // 1. Call Repository
     const dbResult = await addLaptimeRepository.createLaptime(laptimeData);
@@ -51,14 +53,19 @@ export const addLaptimeService = {
 
     // 2. Only if DB was successful, process the image
     try {
-      const outputPath = path.join(__dirname, '../../..', evidencesPlaceholder, filename);
+
+      const outputPath = path.join(__dirname, '../..', evidencesPlaceholder, filename);
+      
+      console.log("Saving image to:", outputPath); // Debug log to verify path
+
       await sharp(fileBuffer)
         .resize(1920, 1920, { fit: 'inside', withoutEnlargement: true })
         .toFile(outputPath);
       
-      return dbResult; // Return the success object from DB
-    } catch (imageError) {
-      return { success: false, message: "Błąd podczas zapisywania zdjęcia." };
+      return dbResult; 
+    } catch (imageError: any) {
+      console.error("Sharp Error:", imageError.message);
+      return { success: false, message: `Błąd podczas zapisywania zdjęcia: ${imageError.message}` };
     }
   }
 };

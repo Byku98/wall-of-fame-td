@@ -55,7 +55,7 @@
         <!-- Display images for filepath variables if available -->
         <div class="mt-3">
             <% if (lapDetails.proof_picture_path !=null) { %>
-                <img src="<%= lapDetails.proof_picture_path %>.jpg" alt="Lap Image" class="img-fluid" style="max-width: 100%; max-height: 400px;">
+                <img src="<%= lapDetails.proof_picture_path %>" alt="Lap Image" class="img-fluid" style="max-width: 100%; max-height: 400px;">
                 <% } else { %>
                     Brak obrazu
                 <% } %>

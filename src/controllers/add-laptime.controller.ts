@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { addLaptimeService } from "../services/add-laptime.service";
-// import * as addLaptimeService from '../services/add-laptime.service'; // Uncomment when service is implemented
 
 export async function getAddLaptime(req: Request, res: Response) {
   try {
@@ -79,5 +78,41 @@ export async function getOrganizersByTrackJson(req: Request, res: Response) {
   } catch (error) {
     console.error("Error fetching organizers by track JSON:", error);
     res.status(500).json({ message: "Failed to fetch organizers for track" });
+  }
+}
+
+// Controller function to handle form submission
+export async function postAddLaptime(req: Request, res: Response) {
+  try {
+    const file = req.file;
+    const formData = req.body;
+
+    if (!file) {
+      return res.status(400).json({ success: false, message: 'Brak pliku zdjęcia' });
+    }
+
+    const result = await addLaptimeService.saveLaptime(req.body, file.buffer, file.originalname);
+
+    // CRITICAL: Check the success flag from the service
+    if (!result.success) {
+      console.error("Form submission failed:", result.message);
+      return res.status(500).json({
+        success: false,
+        message: result.message // This will now contain "Błąd uprawnień: Serwer nie pozwala..."
+      });
+    }
+
+    // Only if everything is truly successful
+    return res.status(200).json({
+      success: true,
+      message: 'Czas okrążenia został dodany pomyślnie'
+    });
+
+  } catch (error) {
+    console.error('Unexpected Controller Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Wystąpił nieoczekiwany błąd serwera.'
+    });
   }
 }

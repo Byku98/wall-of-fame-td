@@ -11,12 +11,17 @@ const PORT = process.env.PORT || 3000
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// Body parser middleware for form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // add external styling
 app.use("/static", express.static(path.join(__dirname, "../node_modules/bootstrap/dist")));
 
 // add external assets and images
 app.use("/images", express.static(path.join(__dirname, "../public/assets/images")));
 app.use('/client_scripts', express.static(path.join(__dirname, "../public/scripts")));
+app.use('/client_config', express.static(path.join(__dirname, "../public/scripts/config")));
 app.use('/scripts', express.static(path.join(__dirname, "../scripts")));
 app.use('/styles', express.static(path.join(__dirname, "../public/assets/css")));
 app.use('/evidences', express.static(path.join(__dirname, "../uploads/evidences")));

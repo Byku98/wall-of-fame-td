@@ -1,7 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // --- Vairables Declaration ---
   const trackSelect = document.getElementById("trackSelect");
   const deviceSelect = document.getElementById("deviceSelect");
   const addLaptimeForm = document.getElementById("addLaptimeForm");
+  const deviceRecordedLapContainer = document.getElementById(
+    "deviceRecordedLapContainer"
+  );
+  const deviceRecordedLap = document.getElementById("deviceRecordedLap");
+  const submitButton = addLaptimeForm.querySelector('button[type="submit"]');
 
   if (!trackSelect || !addLaptimeForm) {
     console.error(
@@ -14,13 +20,50 @@ document.addEventListener("DOMContentLoaded", () => {
     "input:not(#trackSelect), select:not(#trackSelect), button:not(#trackSelect)"
   );
 
-  console.log("Controls to toggle:", controlsToToggle);
-
   const toggleFormControls = (unlocked) => {
     controlsToToggle.forEach((field) => {
       field.disabled = !unlocked;
     });
+    if (!unlocked) {
+      submitButton.disabled = true;
+    } else {
+      validateForm(); // Check validation immediately when unlocked
+    }
   };
+
+  // --- Validation Logic ---
+  const validateForm = () => {
+    const requiredFields = addLaptimeForm.querySelectorAll("[required]");
+    let isValid = true;
+
+    requiredFields.forEach((field) => {
+      // Check if field is empty
+      if (!field.value.trim()) {
+        isValid = false;
+      }
+      
+      // Check pattern for Lap Time (MM:SS.m to MM:SS.mmm)
+      if (field.id === "lapTime" && field.value) {
+        // Allows M:S.mmm, MM:SS.mmm, or even just SS.mmm
+        // ^([0-5]?\d:)? -> Optional minutes followed by colon
+        // [0-5]?\d      -> 1 or 2 digits for seconds
+        // \.\d{1,3}$    -> Dot followed by 1-3 digits
+        const pattern = /^([0-5]?\d:)?([0-5]?\d)\.\d{1,3}$/;
+        if (!pattern.test(field.value)) {
+          isValid = false;
+        }
+      }
+
+      // Check if datalist inputs have a valid selection (optional but recommended)
+      // If you want to force selection from list, you'd add logic here
+    });
+
+    submitButton.disabled = !isValid;
+    return isValid;
+  };
+
+  // Listen for any input change to re-validate
+  addLaptimeForm.addEventListener("input", validateForm);
 
   // --- Datalist Population Logic ---
   const populateDatalist = (datalistId, dataArray, key) => {
@@ -61,6 +104,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
+
+  deviceSelect.addEventListener("change", () => {
+    if (deviceSelect.value !== "-- Wybierz urządzenie --") {
+      // Check if device requires lap record URL
+      if (devicesWithExternalRecord.includes(deviceSelect.value)) {
+        deviceRecordedLapContainer.style.display = "block";
+        deviceRecordedLap.disabled = false;
+      } else {
+        deviceRecordedLapContainer.style.display = "none";
+        deviceRecordedLap.disabled = true;
+        deviceRecordedLap.value = "";
+      }
+    }
+  });
 
   // Initial state: disable all controls except trackSelect
   toggleFormControls(false);
@@ -150,4 +207,46 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(`Error fetching data for ${selectId}:`, error);
     }
   };
-});
+
+  // Form submission handler
+  addLaptimeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Final validation check
+    if (!validateForm()) {
+      alert('Proszę poprawnie wypełnić wszystkie wymagane pola.');
+      return;
+    }
+
+    const formData = new FormData(addLaptimeForm);
+    const fileInput = document.getElementById('proofImage');
+    const file = fileInput.files[0];
+
+    // Client-side file size validation
+    if (file && file.size > 3 * 1024 * 1024) {
+      alert('Plik jest za duży. Maksymalny rozmiar to 3MB');
+      return;
+    }
+
+    try {
+      const response = await fetch('/add-laptime/api', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Czas okrążenia został dodany pomyślnie!');
+        addLaptimeForm.reset();
+        toggleFormControls(false);
+      } else {
+        alert(`Błąd: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Wystąpił błąd podczas wysyłania formularza');
+    }
+  });
+
+}); // End of DOMContentLoaded

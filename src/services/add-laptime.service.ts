@@ -25,7 +25,7 @@ export const addLaptimeService = {
   },
 
   getRidersFromTrack: async (trackName: string) => {
-    return addLaptimeRepository.getRidersFromTrack(trackName);
+    return addLaptimeRepository.getAllRiders(trackName);
   },
 
   getOrganizersFromTrack: async (trackName: string) => {
@@ -40,8 +40,22 @@ export const addLaptimeService = {
     
     const proof_image_path = `/evidences/${filename}`; 
 
+    // Format lapTime - prepend 00: only if minutes are present (contains a colon)
+    let formattedLapTime = formData.lapTime;
+    if (formattedLapTime.includes(':')) {
+      // Check if it already has hours (two colons)
+      const colonCount = (formattedLapTime.match(/:/g) || []).length;
+      if (colonCount === 1) {
+        formattedLapTime = `00:${formattedLapTime}`;
+      }
+    }
+
     // 2. Prepare data for Database
-    const laptimeData = { ...formData, proof_image_path};
+    const laptimeData = { 
+      ...formData, 
+      lapTime: formattedLapTime,
+      proof_image_path
+    };
 
     // 1. Call Repository
     const dbResult = await addLaptimeRepository.createLaptime(laptimeData);
@@ -56,7 +70,7 @@ export const addLaptimeService = {
 
       const outputPath = path.join(__dirname, '../..', evidencesPlaceholder, filename);
       
-      console.log("Saving image to:", outputPath); // Debug log to verify path
+      // console.log("Saving image to:", outputPath); // Debug log to verify path
 
       await sharp(fileBuffer)
         .resize(1920, 1920, { fit: 'inside', withoutEnlargement: true })

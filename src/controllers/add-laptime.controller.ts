@@ -61,7 +61,7 @@ export async function getRidersFromTrackJson(req: Request, res: Response) {
 
   try {
     const ridersList = await addLaptimeService.getRidersFromTrack(trackName);
-    console.log("Fetched riders for track", trackName, ":", ridersList);
+    // console.log("Fetched riders for track", trackName, ":", ridersList);
     res.json(ridersList);
   } catch (error) {
     console.error("Error fetching riders from track JSON:", error);

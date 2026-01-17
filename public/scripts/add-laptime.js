@@ -3,15 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const trackSelect = document.getElementById("trackSelect");
   const deviceSelect = document.getElementById("deviceSelect");
   const addLaptimeForm = document.getElementById("addLaptimeForm");
+  const successContainer = document.getElementById("successContainer");
+  const addAnotherBtn = document.getElementById("addAnotherBtn");
+  const formHeader = document.getElementById("formHeader"); // NEW
   const deviceRecordedLapContainer = document.getElementById(
     "deviceRecordedLapContainer"
   );
   const deviceRecordedLap = document.getElementById("deviceRecordedLap");
   const submitButton = addLaptimeForm.querySelector('button[type="submit"]');
 
-  // Global date reference for validation (today at midnight)
+  // Global date reference for validation (end of today)
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setHours(23, 59, 59, 999);
 
   if (!trackSelect || !addLaptimeForm) {
     console.error(
@@ -115,12 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Function to populate select options
-  const populateSelect = (selectId, dataArray, key) => {
+  const populateSelect = (selectId, dataArray, key, defaultText = "-- Wybierz --") => {
     const select = document.getElementById(selectId);
 
     if (!select) {
       console.error(`BŁĄD: Nie znaleziono elementu o ID: "${selectId}"`);
-      return; // Przerwij funkcję natychmiast
+      return;
     }
 
     if (!dataArray || !Array.isArray(dataArray)) {
@@ -128,8 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Jeśli tu dotarliśmy, select na pewno istnieje
-    select.innerHTML = '<option value="">-- Wybierz organizatora --</option>';
+    select.innerHTML = `<option value="">${defaultText}</option>`;
 
     dataArray.forEach((item) => {
       if (item[key]) {
@@ -167,50 +169,47 @@ document.addEventListener("DOMContentLoaded", () => {
       toggleFormControls(true);
       // console.log("Track selected. Fields enabled.");
 
-      // Fetch and populate datalists when a track is selected
-      await fetchAndPopulateDatalist(
-        "/add-laptime/api/motorcycles",
-        "motorcycleSuggestions",
-        "motorcycle_name"
-      );
-      await fetchAndPopulateDatalist(
-        "/add-laptime/api/tyres/front",
-        "tyreFrontSuggestions",
-        "tyre_name"
-      );
-      await fetchAndPopulateDatalist(
-        "/add-laptime/api/tyres/rear",
-        "tyreRearSuggestions",
-        "tyre_name"
-      );
-      await fetchAndPopulateDatalist(
-        "/add-laptime/api/riders/" + encodeURIComponent(trackSelect.value),
-        "riderSuggestions",
-        "rider_name"
-      );
-
       // Fetch and populate dropdown lists when a track is selected
+      await fetchAndPopulateSelect(
+        "/add-laptime/api/motorcycles",
+        "motorcycle",
+        "motorcycle_name",
+        "-- Wybierz motocykl --"
+      );
+      await fetchAndPopulateSelect(
+        "/add-laptime/api/tyres/front",
+        "tyreFront",
+        "tyre_name",
+        "-- Wybierz oponę (przód) --"
+      );
+      await fetchAndPopulateSelect(
+        "/add-laptime/api/tyres/rear",
+        "tyreRear",
+        "tyre_name",
+        "-- Wybierz oponę (tył) --"
+      );
+      await fetchAndPopulateSelect(
+        "/add-laptime/api/riders/" + encodeURIComponent(trackSelect.value),
+        "riderName",
+        "rider_name",
+        "-- Wybierz zawodnika --"
+      );
       await fetchAndPopulateSelect(
         "/add-laptime/api/organizers/" + encodeURIComponent(trackSelect.value),
         "organizerList",
-        "organizer_name"
+        "organizer_name",
+        "-- Wybierz organizatora --"
       );
     } else {
       toggleFormControls(false);
-      console.log("No track selected. Fields disabled.");
+      // console.log("No track selected. Fields disabled.");
 
-      // Clear datalists if no track is selected
-      populateDatalist("motorcycleSuggestions", [], "motorcycle_name");
-      populateDatalist("tyreFrontSuggestions", [], "tyre_name");
-      populateDatalist("tyreRearSuggestions", [], "tyre_name");
-      populateDatalist("riderSuggestions", [], "rider_name");
-
-      // Reset organizer select
-      const organizerSelect = document.getElementById("organizerList"); // UPDATED: Changed from "organizer" to "organizerList"
-      if (organizerSelect) {
-        organizerSelect.innerHTML =
-          '<option value="">-- Wybierz organizatora --</option>';
-      }
+      // Reset all selects
+      populateSelect("motorcycle", [], "", "-- Wybierz motocykl --");
+      populateSelect("tyreFront", [], "", "-- Wybierz oponę (przód) --");
+      populateSelect("tyreRear", [], "", "-- Wybierz oponę (tył) --");
+      populateSelect("riderName", [], "", "-- Wybierz zawodnika --");
+      populateSelect("organizerList", [], "", "-- Wybierz organizatora --");
     }
   });
 
@@ -230,15 +229,14 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Function to fetch data and populate select
-  const fetchAndPopulateSelect = async (url, selectId, key) => {
+  const fetchAndPopulateSelect = async (url, selectId, key, defaultText) => {
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      populateSelect(selectId, data, key);
-      // console.log(`Select '${selectId}' populated from ${url}`);
+      populateSelect(selectId, data, key, defaultText);
     } catch (error) {
       console.error(`Error fetching data for ${selectId}:`, error);
     }
@@ -248,7 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
   addLaptimeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Final validation check
     if (!validateForm()) {
       alert('Proszę poprawnie wypełnić wszystkie wymagane pola.');
       return;
@@ -265,6 +262,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
+      submitButton.disabled = true; // Prevent double submission
+      submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Wysyłanie...';
+
       const response = await fetch('/add-laptime/api', {
         method: 'POST',
         body: formData
@@ -273,17 +273,36 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (result.success) {
-        alert('Czas okrążenia został dodany pomyślnie!');
-        addLaptimeForm.reset();
-        toggleFormControls(false);
+        // NEW: Show success view
+        addLaptimeForm.style.display = "none";
+        formHeader.style.display = "none"; // NEW: Hide header
+        successContainer.style.display = "block";
+        window.scrollTo(0, 0);
       } else {
         alert(`Błąd: ${result.message}`);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Dodaj Czas';
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Wystąpił błąd podczas wysyłania formularza');
+      submitButton.disabled = false;
+      submitButton.textContent = 'Dodaj Czas';
     }
   });
+
+  // NEW: Logic for "Dodaj kolejny czas" button
+  if (addAnotherBtn) {
+    addAnotherBtn.addEventListener("click", () => {
+      addLaptimeForm.reset();
+      successContainer.style.display = "none";
+      addLaptimeForm.style.display = "block";
+      formHeader.style.display = "block"; // NEW: Show header again
+      submitButton.textContent = 'Dodaj Czas';
+      toggleFormControls(false); // Lock fields until track is selected again
+      window.scrollTo(0, 0);
+    });
+  }
 
   if (deviceRecordedLap) {
     deviceRecordedLap.addEventListener("input", validateForm);

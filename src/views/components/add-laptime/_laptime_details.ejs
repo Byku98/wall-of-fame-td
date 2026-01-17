@@ -1,6 +1,8 @@
 <div class="container py-5">
-    <h1>Dodaj Czas Okrążenia</h1>
-    <p>Wypełnij poniższe pola, aby dodać nowy czas okrążenia do bazy danych.</p>
+    <div id="formHeader">
+        <h1>Dodaj Czas Okrążenia</h1>
+        <p>Wypełnij poniższe pola, aby dodać nowy czas okrążenia do bazy danych.</p>
+    </div>
 
     <form id="addLaptimeForm">
 
@@ -37,13 +39,11 @@
         <!-- Rider Name -->
         <div class="mb-3">
             <label for="riderName" class="form-label">Imię Zawodnika</label>
-            <input type="text" class="form-control" id="riderName" name="riderName" placeholder="Wprowadź imię"
-                list="riderSuggestions" required disabled>
-            <datalist id="riderSuggestions"></datalist>
+            <select class="form-select" id="riderName" name="riderName" required disabled>
+                <option value="">-- Wybierz zawodnika --</option>
+            </select>
             <div class="form-text text-muted">
-                <span class="badge bg-danger me-1">Wymagane</span> Aby dodać kolejny wynik wprowadź nazwą istniejącego zawodnika.
-                Upewnij się że nazwa jest taka sama jak w istniejącej tabeli. Jeżeli zawodnik jest nowy, zostanie on
-                automatycznie utworzony.
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz zawodnika z listy. Jeśli zawodnika nie ma na liście, skontaktuj się z administratorem.
             </div>
         </div>
 
@@ -108,33 +108,33 @@
         <!-- Motorcycle -->
         <div class="mb-3">
             <label for="motorcycle" class="form-label">Motocykl</label>
-            <input type="text" class="form-control" id="motorcycle" name="motorcycle" placeholder="np. Yamaha R6"
-                list="motorcycleSuggestions" required disabled>
-            <datalist id="motorcycleSuggestions"></datalist>
+            <select class="form-select" id="motorcycle" name="motorcycle" required disabled>
+                <option value="">-- Wybierz motocykl --</option>
+            </select>
             <div class="form-text text-muted">
-                <span class="badge bg-danger me-1">Wymagane</span> Wprowadź markę i model motocykla.
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz markę i model motocykla.
             </div>
         </div>
 
         <!-- Tyre Front -->
         <div class="mb-3">
             <label for="tyreFront" class="form-label">Opona (przód)</label>
-            <input type="text" class="form-control" id="tyreFront" name="tyreFront"
-                placeholder="np. Pirelli Supercorsa SC1" list="tyreFrontSuggestions" disabled>
-            <datalist id="tyreFrontSuggestions"></datalist>
+            <select class="form-select" id="tyreFront" name="tyreFront" disabled>
+                <option value="">-- Wybierz oponę (przód) --</option>
+            </select>
             <div class="form-text text-muted">
-                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj markę i model opony przedniej.
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Wybierz markę i model opony przedniej.
             </div>
         </div>
 
         <!-- Tyre Rear -->
         <div class="mb-3">
             <label for="tyreRear" class="form-label">Opona (tył)</label>
-            <input type="text" class="form-control" id="tyreRear" name="tyreRear"
-                placeholder="np. Pirelli Supercorsa SC2" list="tyreRearSuggestions" disabled>
-            <datalist id="tyreRearSuggestions"></datalist>
+            <select class="form-select" id="tyreRear" name="tyreRear" disabled>
+                <option value="">-- Wybierz oponę (tył) --</option>
+            </select>
             <div class="form-text text-muted">
-                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj markę i model opony tylnej.
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Wybierz markę i model opony tylnej.
             </div>
         </div>
 
@@ -165,4 +165,17 @@
 
         <button type="submit" class="btn btn-primary" disabled>Dodaj Czas</button>
     </form>
+
+    <!-- NEW: Success Message Container -->
+    <div id="successContainer" class="text-center py-5" style="display: none;">
+        <div class="mb-4">
+            <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+        </div>
+        <h2 class="mb-3">Sukces!</h2>
+        <p class="lead mb-4">Twój czas okrążenia został pomyślnie dodany.</p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a href="/leaderboard" class="btn btn-primary btn-lg px-4">Przeglądaj wyniki</a>
+            <button type="button" id="addAnotherBtn" class="btn btn-primary btn-lg px-4">Dodaj kolejny czas</button>
+        </div>
+    </div>
 </div>

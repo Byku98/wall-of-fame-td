@@ -56,9 +56,9 @@ export const addLaptimeRepository = {
    * @param {string} trackName - The name of the track to filter riders by.
    * @returns {Promise<any[]>} Array of rider objects associated with the track.
    */
-  getRidersFromTrack: async (trackName: string) => {
+  getAllRiders: async (trackName: string) => {
     const [rows] = await pool.query(
-      "select * from riders_from_track where track_name = ?",
+      "select * from riders_all",
       [trackName]
     );
     return rows as any[];

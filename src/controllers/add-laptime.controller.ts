@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { addLaptimeService } from "../services/add-laptime.service";
+// import { ROUTES } from "../config/routes.config";
 
 export async function getAddLaptime(req: Request, res: Response) {
   try {
@@ -12,7 +13,10 @@ export async function getAddLaptime(req: Request, res: Response) {
       devicesList
     };
 
-    res.render("add-laptime", dynamicContent);
+    res.render("add-laptime", { 
+      ...dynamicContent, 
+      // ROUTES // Pass the config to EJS
+    });
   } catch (error) {
     console.error("Error rendering add-laptime page:", error);
     res

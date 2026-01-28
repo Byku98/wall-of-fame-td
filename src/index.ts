@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 // import helmet from 'helmet';
 import path from "path";
 import pagesRoute from "./routes/pages.route";
+import { ROUTES } from "./config/routes.config"; // NEW
 
 const app = express();
 
@@ -10,6 +11,12 @@ const PORT = process.env.PORT || 3000
 // Set view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// NEW: Global middleware to make ROUTES available in all EJS templates
+app.use((req, res, next) => {
+  res.locals.ROUTES = ROUTES;
+  next();
+});
 
 // Body parser middleware for form data
 app.use(express.json());

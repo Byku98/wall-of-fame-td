@@ -1,85 +1,75 @@
-import { convertDateToMySQL} from './utils.js';
+import { convertDateToMySQL } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("lap-details.js loaded");
-
-  // Add click handler for rider history table to dynamically reload left div
+  
+  // ==========================================
+  // 1. VARIABLES & INITIALIZATION
+  // ==========================================
   const riderHistoryTable = document.getElementById("rider-history-table");
+  const detailsContainer = document.getElementById("lap-details-left");
 
-  console.log("Rider History Table found:", riderHistoryTable);
+  if (!riderHistoryTable) return;
 
-  if (riderHistoryTable) {
-    console.log("Attaching event listener to table");
+  // ==========================================
+  // 2. HELPER FUNCTIONS
+  // ==========================================
 
-    riderHistoryTable.addEventListener("click", async (event) => {
-      const target = event.target.closest("tr");
+  /**
+   * Fetches new lap details and updates the UI with animation.
+   */
+  const updateLapDetails = async (data) => {
+    try {
+      const url = `/lap-details/${encodeURIComponent(data.lapTime)}/${encodeURIComponent(data.riderName)}/${encodeURIComponent(data.motorcycle)}/${encodeURIComponent(data.lapDate)}/${encodeURIComponent(data.trackName)}`;
       
-      console.log("Row clicked:", target);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Fetch failed");
       
-      if (target && target.rowIndex > 0) { // Skip header row
-        const lapTime = target.getAttribute("data-lap-time")?.trim();
-        const riderName = target.getAttribute("data-rider-name")?.trim();
-        const motorcycle = target.getAttribute("data-motorcycle")?.trim();
-        const lapDate = convertDateToMySQL(target.getAttribute("data-lap-date")?.trim());
-        const trackName = target.getAttribute("data-track-name")?.trim();
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const newContent = doc.getElementById("lap-details-left");
 
-        console.log("Extracted data:", { lapTime, riderName, motorcycle, lapDate, trackName });
+      if (newContent && detailsContainer) {
+        // Animation Out
+        detailsContainer.style.transition = 'opacity 200ms ease, transform 200ms ease';
+        detailsContainer.style.opacity = '0';
+        detailsContainer.style.transform = 'translateY(10px)';
 
-        if (lapTime && riderName && motorcycle && lapDate && trackName) {
-          try {
-            // Construct URL for the new lap details
-            const url = `/lap-details/${encodeURIComponent(lapTime)}/${encodeURIComponent(riderName)}/${encodeURIComponent(motorcycle)}/${encodeURIComponent(lapDate)}/${encodeURIComponent(trackName)}`;
-
-            console.log("Fetching URL:", url);
-
-            // Fetch the full page HTML
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
-
-            const html = await response.text();
-
-            // Parse the HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-
-            // Extract the left div content
-            const newLeftDiv = doc.getElementById("lap-details-left");
-            if (newLeftDiv) {
-              // Replace the current left div content with animation
-              const currentLeftDiv = document.getElementById("lap-details-left");
-              if (currentLeftDiv) {
-                // prepare animation: fade out/slide slightly
-                currentLeftDiv.style.transition = 'opacity 250ms ease, transform 250ms ease';
-                currentLeftDiv.style.opacity = '0';
-                currentLeftDiv.style.transform = 'translateY(8px)';
-
-                // replace content
-                currentLeftDiv.innerHTML = newLeftDiv.innerHTML;
-
-                // force reflow and then animate in
-                void currentLeftDiv.offsetWidth;
-                currentLeftDiv.style.opacity = '1';
-                currentLeftDiv.style.transform = 'translateY(0)';
-
-                // Smooth scroll page to the left div top
-                const top = Math.max(window.scrollY + currentLeftDiv.getBoundingClientRect().top - 20, 0);
-                window.scrollTo({ top, behavior: 'smooth' });
-
-                console.log("Left div updated and animated successfully");
-              }
-            } else {
-              console.error("New left div not found in fetched HTML");
-            }
-          } catch (error) {
-            console.error("Error reloading lap details:", error);
-            alert("Nie udało się załadować szczegółów okrążenia.");
-          }
-        } else {
-          console.error("Missing required data attributes");
-        }
+        setTimeout(() => {
+          detailsContainer.innerHTML = newContent.innerHTML;
+          // Animation In
+          detailsContainer.style.opacity = '1';
+          detailsContainer.style.transform = 'translateY(0)';
+          
+          const top = Math.max(window.scrollY + detailsContainer.getBoundingClientRect().top - 20, 0);
+          window.scrollTo({ top, behavior: 'smooth' });
+        }, 200);
       }
-    });
-  } else {
-    console.error("Rider history table not found");
-  }
+    } catch (error) {
+      console.error("Error updating details:", error);
+      alert("Nie udało się załadować danych.");
+    }
+  };
+
+  // ==========================================
+  // 3. EVENT LISTENERS
+  // ==========================================
+
+  riderHistoryTable.addEventListener("click", (e) => {
+    const row = e.target.closest("tr");
+    if (!row || row.rowIndex === 0) return;
+
+    const data = {
+      lapTime: row.dataset.lapTime?.trim(),
+      riderName: row.dataset.riderName?.trim(),
+      motorcycle: row.dataset.motorcycle?.trim(),
+      lapDate: convertDateToMySQL(row.dataset.lapDate?.trim()),
+      trackName: row.dataset.trackName?.trim()
+    };
+
+    if (Object.values(data).every(val => val)) {
+      updateLapDetails(data);
+    }
+  });
+
 });

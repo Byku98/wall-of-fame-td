@@ -28,7 +28,7 @@ export const addLaptimeRepository = {
    * @returns {Promise<any[]>} Array of front tyre objects.
    */
   getAllTyresFront: async () => {
-    const [rows] = await pool.query("select * from tyres_front_all");
+    const [rows] = await pool.query("select * from tyres_front_all where status = true");
     return rows as any[];
   },
 
@@ -37,7 +37,7 @@ export const addLaptimeRepository = {
    * @returns {Promise<any[]>} Array of rear tyre objects.
    */
   getAllTyresRear: async () => {
-    const [rows] = await pool.query("select * from tyres_rear_all");
+    const [rows] = await pool.query("select * from tyres_rear_all where status = true");
     return rows as any[];
   },
 
@@ -46,7 +46,7 @@ export const addLaptimeRepository = {
    * @returns {Promise<any[]>} Array of motorcycle objects.
    */
   getAllMotorcycles: async () => {
-    const [rows] = await pool.query("select * from motorcycles_all");
+    const [rows] = await pool.query("select * from motorcycles_all where status = true");
     return rows as any[];
   },
 
@@ -57,10 +57,7 @@ export const addLaptimeRepository = {
    * @returns {Promise<any[]>} Array of rider objects associated with the track.
    */
   getAllRiders: async (trackName: string) => {
-    const [rows] = await pool.query(
-      "select * from riders_all",
-      [trackName]
-    );
+    const [rows] = await pool.query("select * from riders_all", [trackName]);
     return rows as any[];
   },
 
@@ -72,7 +69,7 @@ export const addLaptimeRepository = {
   getOrganizersFromTrack: async (trackName: string) => {
     const [rows] = await pool.query(
       "select * from track_organizers where track_name = ?",
-      [trackName]
+      [trackName],
     );
     return rows as any[];
   },
@@ -85,9 +82,14 @@ export const addLaptimeRepository = {
   createLaptime: async (data: any) => {
     console.log("Creating new lap time with data:", data);
 
+    let connection;
+    
     try {
-      const query = `CALL insert_new_lap(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      // 1. Get a dedicated connection from the pool
+      connection = await pool.getConnection();
 
+      // 2. Execute the CALL (this sets @out_id on THIS connection only)
+      const callQuery = `CALL insert_new_lap(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @out_id)`;
       const values = [
         data.lapTime,
         data.lapDate,
@@ -99,25 +101,22 @@ export const addLaptimeRepository = {
         data.motorcycle,
         data.tyreFront || null,
         data.tyreRear || null,
-        data.youtubeProof || null,
-        data.proof_image_path,
         data.deviceRecordedLap || null,
+        data.proof_image_path,
+        data.youtubeProof || null,
+        data.status
       ];
 
-      // console.log("Executing query:", query);
+      const [callResult]: any = await connection.query(callQuery, values);
 
-      const [result]: any = await pool.query(query, values);
+      // 3. Retrieve the ID (guaranteed to be from the CALL above because it's the same connection)
+      const [idResult]: any = await connection.query(
+        "SELECT @out_id AS insertedId",
+      );
 
-      // console.log("Stored procedure result:", result);
-      // console.log("Stored procedure result 0:", result[0]);
-      // console.log("Stored procedure result 00:", result[0][0]);
-
-      // MySQL przy CALL zwraca tablicę, gdzie pierwszy element to zestaw danych z SELECTów wewnątrz procedury
-      const procData = Array.isArray(result) ? result[0] : null;
-
-      if (procData && Array.isArray(procData) && procData[0]) {
-        const statusInfo = procData[0]; // Pierwszy wiersz z pierwszego SELECTa
-
+      // Check for procedure-level errors
+      if (callResult && callResult[0] && callResult[0][0]) {
+        const statusInfo = callResult[0][0];
         if (statusInfo.error || statusInfo.status === "error") {
           return {
             success: false,
@@ -127,25 +126,41 @@ export const addLaptimeRepository = {
         }
       }
 
+      const insertedId =
+        idResult && idResult[0] ? idResult[0].insertedId : null;
+
       return {
         success: true,
+        insertedId: insertedId,
         message: "New lap time entry created successfully.",
       };
     } catch (error: any) {
-      console.error("Database Error in createLaptime:", error);
 
-      // Map technical errors MySQL to readable messages
+      console.error("Database Error in createLaptime:", error);
       let friendlyMessage = "Wystąpił nieoczekiwany błąd bazy danych.";
 
       if (error.code === "ER_PROCACCESS_DENIED_ERROR") {
-        friendlyMessage = "Błąd uprawnień: Serwer nie pozwala na zapis danych (EXECUTE DENIED). Skontaktuj się z administratorem.";
+        friendlyMessage =
+          "Błąd uprawnień: Serwer nie pozwala na zapis danych (EXECUTE DENIED).";
       }
-      
+
       return {
         success: false,
         message: friendlyMessage,
-        technicalDetails: error.message
+        technicalDetails: error.message,
       };
+
+    } finally {
+      // 4. CRITICAL: Release the connection back to the pool
+      if (connection) connection.release();
     }
+  },
+
+  /**
+   * Saves a unique edit token for a specific lap entry.
+   */
+  saveLapToken: async (lapId: number, contact: string, submissionToken: string) => {
+    const query = `CALL insert_new_token(?, ?, ?)`;
+    await pool.query(query, [lapId, contact, submissionToken]);
   },
 };

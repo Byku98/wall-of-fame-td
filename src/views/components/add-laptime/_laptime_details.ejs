@@ -108,20 +108,44 @@
         <!-- Motorcycle -->
         <div class="mb-3">
             <label for="motorcycle" class="form-label">Motocykl</label>
-            <select class="form-select" id="motorcycle" name="motorcycle" required disabled>
+            
+            <!-- Dropdown Selection -->
+            <select class="form-select mb-2" id="motorcycle" name="motorcycle" required disabled>
                 <option value="">-- Wybierz motocykl --</option>
             </select>
+
+            <!-- Manual Input (Hidden by default) -->
+            <input type="text" class="form-control mb-2" id="motorcycleManual" name="motorcycleManual" 
+                placeholder="Wprowadź producenta i model (np. Honda CBR 600RR)" style="display: none;">
+
+            <!-- Toggle Checkbox -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noMotorcycleOnList" disabled>
+                <label class="form-check-label text-muted small" for="noMotorcycleOnList">
+                    Mojego motocykla nie ma na liście
+                </label>
+            </div>
+
             <div class="form-text text-muted">
-                <span class="badge bg-danger me-1">Wymagane</span> Wybierz markę i model motocykla.
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz markę i model motocykla lub wprowadź go ręcznie.
             </div>
         </div>
 
         <!-- Tyre Front -->
         <div class="mb-3">
             <label for="tyreFront" class="form-label">Opona (przód)</label>
-            <select class="form-select" id="tyreFront" name="tyreFront" disabled>
+            <select class="form-select mb-2" id="tyreFront" name="tyreFront" disabled>
                 <option value="">-- Wybierz oponę (przód) --</option>
             </select>
+            <input type="text" class="form-control mb-2" id="tyreFrontManual" name="tyreFrontManual" 
+                placeholder="Wprowadź producenta i model opony przedniej" style="display: none;">
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noTyreFrontOnList" disabled>
+                <label class="form-check-label text-muted small" for="noTyreFrontOnList">
+                    Tej opony nie ma na liście
+                </label>
+            </div>
             <div class="form-text text-muted">
                 <span class="badge bg-secondary me-1">Opcjonalne</span> Wybierz markę i model opony przedniej.
             </div>
@@ -130,9 +154,18 @@
         <!-- Tyre Rear -->
         <div class="mb-3">
             <label for="tyreRear" class="form-label">Opona (tył)</label>
-            <select class="form-select" id="tyreRear" name="tyreRear" disabled>
+            <select class="form-select mb-2" id="tyreRear" name="tyreRear" disabled>
                 <option value="">-- Wybierz oponę (tył) --</option>
             </select>
+            <input type="text" class="form-control mb-2" id="tyreRearManual" name="tyreRearManual" 
+                placeholder="Wprowadź markę i model opony tylnej" style="display: none;">
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noTyreRearOnList" disabled>
+                <label class="form-check-label text-muted small" for="noTyreRearOnList">
+                    Tej opony nie ma na liście
+                </label>
+            </div>
             <div class="form-text text-muted">
                 <span class="badge bg-secondary me-1">Opcjonalne</span> Wybierz markę i model opony tylnej.
             </div>
@@ -145,6 +178,15 @@
                 disabled>
             <div class="form-text text-muted">
                 <span class="badge bg-secondary me-1">Opcjonalne</span> Prześlij zdjęcie laptimera jako dowód. Nie jest wymagane jeżeli posiadasz udokumentowany przejazd na platformie RaceBox, RaceChrono, LapTrophy itp.
+            </div>
+        </div>
+
+        <!-- Contact Email -->
+        <div class="mb-3">
+            <label for="contactEmail" class="form-label">Dane kontaktowe</label>
+            <input type="email" class="form-control" id="contactEmail" name="contactEmail" placeholder="np. jan.kowalski@gmail.com" disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj swój adres e-mail. Poinformujemy Cię o statusie zgłoszenia.
             </div>
         </div>
 
@@ -174,7 +216,7 @@
         <h2 class="mb-3">Sukces!</h2>
         <p class="lead mb-4">Twój czas okrążenia został pomyślnie dodany.</p>
         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-            <a href="/leaderboard" class="btn btn-primary btn-lg px-4">Przeglądaj wyniki</a>
+            <a href="<%= ROUTES.PAGES.LEADERBOARD %>" class="btn btn-primary btn-lg px-4">Przeglądaj wyniki</a>
             <button type="button" id="addAnotherBtn" class="btn btn-primary btn-lg px-4">Dodaj kolejny czas</button>
         </div>
     </div>

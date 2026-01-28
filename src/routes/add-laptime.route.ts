@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { ROUTES } from "../config/routes.config";
 import {
   getAddLaptime,
   getMotorcyclesJson,
@@ -13,16 +14,16 @@ import { upload } from "../middlewares/upload.middleware";
 const router = Router();
 
 // GET request to display the add laptime form
-router.get("/add-laptime", getAddLaptime);
+router.get(ROUTES.PAGES.ADD_LAPTIME, getAddLaptime);
 
-// NEW: API endpoints for fetching data as JSON
-router.get("/add-laptime/api/motorcycles", getMotorcyclesJson);
-router.get("/add-laptime/api/tyres/front", getTyresFrontJson);
-router.get("/add-laptime/api/tyres/rear", getTyresRearJson);
-router.get("/add-laptime/api/riders/:trackName", getRidersFromTrackJson);
-router.get("/add-laptime/api/organizers/:trackName", getOrganizersByTrackJson);
+// API endpoints for fetching data as JSON
+router.get(ROUTES.API.LAPS.MOTORCYCLES, getMotorcyclesJson);
+router.get(ROUTES.API.LAPS.TYRES_FRONT, getTyresFrontJson);
+router.get(ROUTES.API.LAPS.TYRES_REAR, getTyresRearJson);
+router.get(`${ROUTES.API.LAPS.RIDERS}/:trackName`, getRidersFromTrackJson);
+router.get(`${ROUTES.API.LAPS.ORGANIZERS}/:trackName`, getOrganizersByTrackJson);
 
 // POST request to handle form submission with file upload
-router.post("/add-laptime/api", upload.single("proofImage"), postAddLaptime);
+router.post(ROUTES.API.LAPS.CREATE, upload.single("proofImage"), postAddLaptime);
 
 export default router;

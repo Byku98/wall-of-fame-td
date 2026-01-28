@@ -1,687 +1,230 @@
-import {
-  convertMysqlToDate,
-  convertDateToMySQL,
-  formatLapTime,
-} from "./utils.js";
-import { translate } from "./translations.js"; // Import translations
+import { convertMysqlToDate, convertDateToMySQL, formatLapTime } from "./utils.js";
+import { translate } from "./translations.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("lap-details.js loaded");
 
-  // Constants for DOM elements
+  // ==========================================
+  // 1. VARIABLES DECLARATION
+  // ==========================================
+
+  // --- Main Table Elements ---
   const trackSelect = document.getElementById("trackSelect");
   const filterButton = document.getElementById("filterLeaderboard");
-  const leaderboardTableContainer = document.getElementById(
-    "leaderboardTableContainer"
-  );
   const leaderboardTableBody = document.getElementById("leaderboardTableBody");
 
-  // Constants for dropdown filters
-  const toggleFiltersDropdownButton = document.getElementById(
-    "toggleFiltersDropdown"
-  );
-  const filtersDropdownContainer = document.getElementById(
-    "filtersDropdownContainer"
-  );
-  const applyFiltersDropdown = document.getElementById("applyFiltersDropdown");
-  const clearFiltersDropdown = document.getElementById("clearFiltersDropdown");
+  // --- Filter Dropdown Elements ---
+  const toggleFiltersBtn = document.getElementById("toggleFiltersDropdown");
+  const filtersContainer = document.getElementById("filtersDropdownContainer");
+  const applyFiltersBtn = document.getElementById("applyFiltersDropdown");
+  const clearFiltersBtn = document.getElementById("clearFiltersDropdown");
 
-  // Constants for virtual lap time
-  const virtualLapTimeButton = document.getElementById("virtualLapTime");
-  const virtualLapTimeContainer = document.getElementById(
-    "virtualLapTimeContainer"
-  );
-  const virtualMinutes = document.getElementById("virtualMinutes");
-  const virtualSeconds = document.getElementById("virtualSeconds");
-  const virtualMiliSeconds = document.getElementById("virtualMiliSeconds");
-  const applyVirtualLaptime = document.getElementById("applyVirtualLaptime");
-  const clearVirtualLaptime = document.getElementById("clearVirtualLaptime");
+  // --- Virtual Lap Elements ---
+  const virtualLapBtn = document.getElementById("virtualLapTime");
+  const virtualContainer = document.getElementById("virtualLapTimeContainer");
+  const virtualMin = document.getElementById("virtualMinutes");
+  const virtualSec = document.getElementById("virtualSeconds");
+  const virtualMs = document.getElementById("virtualMiliSeconds");
+  const applyVirtualBtn = document.getElementById("applyVirtualLaptime");
+  const clearVirtualBtn = document.getElementById("clearVirtualLaptime");
 
-  // Constants for autocomplete filtering inputs and datalists
-  const motorcycleNameFilter = document.getElementById("motorcycleNameFilter");
+  // --- Autocomplete & Inputs ---
+  const motorcycleFilter = document.getElementById("motorcycleNameFilter");
   const tyreFrontFilter = document.getElementById("tyreFrontFilter");
   const tyreRearFilter = document.getElementById("tyreRearFilter");
-  const motorcycleSuggestionsDatalist = document.getElementById(
-    "motorcycleSuggestions"
-  );
-  const tyreFrontSuggestionsDatalist = document.getElementById(
-    "tyreFrontSuggestions"
-  );
-  const tyreRearSuggestionsDatalist = document.getElementById(
-    "tyreRearSuggestions"
-  );
+  const dateFrom = document.getElementById("dateFromFilter");
+  const dateTo = document.getElementById("dateToFilter");
 
-  // Constants to validate date order
-  const dateFromFilter = document.getElementById("dateFromFilter");
-  const dateToFilter = document.getElementById("dateToFilter");
-  const clearFiltersDateFrom = document.getElementById("clearFiltersDateFrom");
-  const clearFiltersDateTo = document.getElementById("clearFiltersDateTo");
+  // --- Checkboxes & Radios ---
+  const expCheckboxes = [
+    "expFreshman", "expBeginner", "expMedium", "expAdvanced", "expSemipro", "expProfessional"
+  ].map(id => document.getElementById(id));
 
-  // Constants to validate laptime order
-  const fasterThanMinutes = document.getElementById("fasterThanMinutes");
-  const fasterThanSeconds = document.getElementById("fasterThanSeconds");
-  const slowerThanMinutes = document.getElementById("slowerThanMinutes");
-  const slowerThanSeconds = document.getElementById("slowerThanSeconds");
-  const clearFiltersFasterThan = document.getElementById(
-    "clearFiltersFasterThan"
-  );
-  const clearFiltersSlowerThan = document.getElementById(
-    "clearFiltersSlowerThan"
-  );
+  const sexRadios = {
+    male: document.getElementById("sexMale"),
+    female: document.getElementById("sexFemale"),
+    all: document.getElementById("sexAll")
+  };
 
-  // Constants for checkboxes
-  const expFreshman = document.getElementById("expFreshman");
-  const expBeginner = document.getElementById("expBeginner");
-  const expMedium = document.getElementById("expMedium");
-  const expAdvanced = document.getElementById("expAdvanced");
-  const expSemipro = document.getElementById("expSemipro");
-  const expProfessional = document.getElementById("expProfessional");
-  const accVeryHigh = document.getElementById("accVeryHigh");
-  const accHigh = document.getElementById("accHigh");
-  const accMedium = document.getElementById("accMedium");
-  const accLow = document.getElementById("accLow");
-  const sexMale = document.getElementById("sexMale");
-  const sexFemale = document.getElementById("sexFemale");
-  const sexAll = document.getElementById("sexAll");
-
-  // Constants for hints (if present in EJS)
-  const fasterThanHint = document.getElementById("fasterThanHint");
-  const slowerThanHint = document.getElementById("slowerThanHint");
-
-  // Variables to store data
-  let allTrackLapsData = []; // Full unfiltered data for the selected track
+  // --- State ---
+  let allTrackLapsData = [];
   const MISSING_DATA_TEXT = "Brak danych";
 
-  // Unified helper function to get total seconds from either DOM elements or a time string
+  // ==========================================
+  // 2. HELPER FUNCTIONS
+  // ==========================================
+
+  /**
+   * Converts time string or DOM elements to total seconds.
+   */
   const getTotalSeconds = (input) => {
     if (typeof input === "string") {
-      // Parse from time string (e.g., "00:00:41.76")
       const parts = input.split(":");
-      const hours = parseInt(parts[0] || 0, 10);
-      const minutes = parseInt(parts[1] || 0, 10);
-      const seconds = parseFloat(parts[2] || 0);
-      return hours * 3600 + minutes * 60 + seconds;
-    } else if (input.length === 2) {
-      // Parse from DOM elements (minElement, secElement)
-      const min = parseInt(input[0].value || 0, 10);
-      const sec = parseInt(input[1].value || 0, 10);
-      return min * 60 + sec;
+      const h = parseInt(parts[0] || 0, 10);
+      const m = parseInt(parts[1] || 0, 10);
+      const s = parseFloat(parts[2] || 0);
+      return h * 3600 + m * 60 + s;
+    } else if (Array.isArray(input) && input.length === 2) {
+      const m = parseInt(input[0]?.value || 0, 10);
+      const s = parseInt(input[1]?.value || 0, 10);
+      return m * 60 + s;
     }
-    return 0; // Default for invalid input
+    return 0;
   };
 
-  // Function to validate date range order
+  /**
+   * Validates that 'from' date is before 'to' date.
+   */
   const validateDateRange = () => {
-    if (dateFromFilter && dateToFilter) {
-      const fromDate = new Date(dateFromFilter.value);
-      const toDate = new Date(dateToFilter.value);
-      if (dateFromFilter.value && dateToFilter.value && fromDate >= toDate) {
-        return false; // Invalid: "Data - od" is not earlier than "Data - do"
-      }
-      return true; // Valid
-    }
-    return true; // If fields are not set, consider valid
+    if (!dateFrom?.value || !dateTo?.value) return true;
+    return new Date(dateFrom.value) < new Date(dateTo.value);
   };
 
-  // Function to validate lap time range
+  /**
+   * Validates that 'faster' time is actually faster (smaller) than 'slower' time.
+   */
   const validateLapTimeRange = () => {
-    const fasterTotal = getTotalSeconds([fasterThanMinutes, fasterThanSeconds]);
-    const slowerTotal = getTotalSeconds([slowerThanMinutes, slowerThanSeconds]);
-    console.log(fasterTotal, slowerTotal);
-    if (fasterTotal > 0 && slowerTotal > 0 && fasterTotal <= slowerTotal) {
-      return false; // Invalid: "Szybciej niż" must be grater (bigger than) "Wolniej niż"
-    }
-    return true; // Valid or one/both filters not set
+    const faster = getTotalSeconds([document.getElementById("fasterThanMinutes"), document.getElementById("fasterThanSeconds")]);
+    const slower = getTotalSeconds([document.getElementById("slowerThanMinutes"), document.getElementById("slowerThanSeconds")]);
+    if (faster > 0 && slower > 0 && faster >= slower) return false;
+    return true;
   };
 
-  // Function to render table rows
+  /**
+   * Populates datalists for motorcycle and tyre filters based on current table data.
+   */
+  const populateFilterDatalists = () => {
+    const updateList = (id, key) => {
+      const dl = document.getElementById(id);
+      if (!dl) return;
+      dl.innerHTML = "";
+      [...new Set(allTrackLapsData.map(l => l[key]))].sort().forEach(val => {
+        if (val) dl.innerHTML += `<option value="${val}">`;
+      });
+    };
+    updateList("motorcycleSuggestions", "motorcycle");
+    updateList("tyreFrontSuggestions", "tyre_front");
+    updateList("tyreRearSuggestions", "tyre_rear");
+  };
+
+  /**
+   * Renders the leaderboard table rows.
+   */
   const renderTable = (laps) => {
-    leaderboardTableBody.innerHTML = ""; // Clear existing rows
+    leaderboardTableBody.innerHTML = laps.length === 0 
+      ? '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>'
+      : "";
 
-    if (laps.length === 0) {
-      leaderboardTableBody.innerHTML =
-        '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>';
-    } else {
-      laps.forEach((lap, index) => {
-        const row = leaderboardTableBody.insertRow();
+    laps.forEach((lap, index) => {
+      const row = leaderboardTableBody.insertRow();
+      row.className = lap.isVirtual ? "virtual-lap-row" : "";
+      
+      // Set Data Attributes
+      row.dataset.lapTime = lap.lap_time || "";
+      row.dataset.riderName = lap.rider_name || "";
+      row.dataset.motorcycle = lap.motorcycle || "";
+      row.dataset.lapDate = lap.isVirtual ? "" : convertMysqlToDate(lap.lap_date);
+      row.dataset.sex = lap.sex_name || "";
+      row.dataset.riderLevel = lap.rider_level || "";
+      row.dataset.tyreFront = lap.tyre_front || "";
+      row.dataset.tyreRear = lap.tyre_rear || "";
 
-        // Extract date-only from lap.lap_date (e.g., "2020-07-19" from "2020-07-19T22:00:00.000Z")
-        const dateOnly = lap.lap_date
-          ? new Date(lap.lap_date).toISOString().split("T")[0]
-          : ""; // YYYY-MM-DD
-
-        // Add data attributes for later use
-        row.setAttribute("data-lap-time", lap.lap_time || "");
-        row.setAttribute("data-rider-name", lap.rider_name || "");
-        row.setAttribute("data-motorcycle", lap.motorcycle || "");
-        if (!lap.isVirtual) {
-          row.setAttribute(
-            "data-lap-date",
-            convertMysqlToDate(lap.lap_date) || ""
-          );
-        }
-        row.setAttribute("data-sex", lap.sex_name || "");
-        row.setAttribute("data-rider-level", lap.rider_level || "");
-        row.setAttribute("data-validity", lap.validity || "");
-        row.setAttribute("data-tyre-front", lap.tyre_front || "");
-        row.setAttribute("data-tyre-rear", lap.tyre_rear || "");
-
-        // Populate row cells
-        row.insertCell().textContent = index + 1; // Position
-        row.insertCell().textContent =
-          formatLapTime(lap.lap_time) || MISSING_DATA_TEXT; // Lap time
-        if (lap.isVirtual) {
-          // For virtual row, only show position and time, blanks for others
-          row.classList.add("virtual-lap-row"); // Keep this class for styling
-          row.insertCell().textContent = "Twój czas"; // Rider name
-          row.insertCell().textContent = ""; // Rider level
-          row.insertCell().textContent = ""; // Motorcycle
-          row.insertCell().textContent = ""; // Tyre front
-          row.insertCell().textContent = ""; // Tyre rear
-          row.insertCell().textContent = ""; // Date
-        } else {
-          row.insertCell().textContent = lap.rider_name || MISSING_DATA_TEXT; // Rider name
-          row.insertCell().textContent =
-            translate("rider_level", lap.rider_level) || MISSING_DATA_TEXT; // Translated Rider level
-          row.insertCell().textContent = lap.motorcycle || MISSING_DATA_TEXT; // Motorcycle
-          row.insertCell().textContent = lap.tyre_front || MISSING_DATA_TEXT; // Tyre front
-          row.insertCell().textContent = lap.tyre_rear || MISSING_DATA_TEXT; // Tyre rear
-          row.insertCell().textContent = convertMysqlToDate(lap.lap_date); // Use custom formatter for DD.MM.YYYY
-        }
-      });
-    }
-    populateFilterAutofillDatalist(); // Update datalists after rendering table
+      // Cells
+      row.insertCell().textContent = index + 1;
+      row.insertCell().textContent = formatLapTime(lap.lap_time) || MISSING_DATA_TEXT;
+      row.insertCell().textContent = lap.isVirtual ? "Twój czas" : (lap.rider_name || MISSING_DATA_TEXT);
+      row.insertCell().textContent = lap.isVirtual ? "" : (translate("rider_level", lap.rider_level) || MISSING_DATA_TEXT);
+      row.insertCell().textContent = lap.isVirtual ? "" : (lap.motorcycle || MISSING_DATA_TEXT);
+      row.insertCell().textContent = lap.isVirtual ? "" : (lap.tyre_front || MISSING_DATA_TEXT);
+      row.insertCell().textContent = lap.isVirtual ? "" : (lap.tyre_rear || MISSING_DATA_TEXT);
+      row.insertCell().textContent = lap.isVirtual ? "" : convertMysqlToDate(lap.lap_date);
+    });
+    populateFilterDatalists();
   };
 
-  // Function to populate the autofill datalists
-  const populateFilterAutofillDatalist = () => {
-    motorcycleSuggestionsDatalist.innerHTML = ""; // Clear existing options
-    tyreFrontSuggestionsDatalist.innerHTML = ""; // Clear existing options
-    tyreRearSuggestionsDatalist.innerHTML = ""; // Clear existing options
-
-    if (allTrackLapsData.length > 0) {
-      const uniqueMotorcycles = [
-        ...new Set(allTrackLapsData.map((lap) => lap.motorcycle)),
-      ].sort();
-      const uniqueTyresFront = [
-        ...new Set(allTrackLapsData.map((lap) => lap.tyre_front)),
-      ].sort();
-      const uniqueTyresRear = [
-        ...new Set(allTrackLapsData.map((lap) => lap.tyre_rear)),
-      ].sort();
-
-      uniqueMotorcycles.forEach((motorcycle) => {
-        if (motorcycle) {
-          const option = document.createElement("option");
-          option.value = motorcycle;
-          motorcycleSuggestionsDatalist.appendChild(option);
-        }
-      });
-
-      uniqueTyresFront.forEach((tyre_front) => {
-        if (tyre_front) {
-          const option = document.createElement("option");
-          option.value = tyre_front;
-          tyreFrontSuggestionsDatalist.appendChild(option);
-        }
-      });
-
-      uniqueTyresRear.forEach((tyre_rear) => {
-        if (tyre_rear) {
-          const option = document.createElement("option");
-          option.value = tyre_rear;
-          tyreRearSuggestionsDatalist.appendChild(option);
-        }
-      });
-    }
-  };
-
-  // Function to filter table rows based on current filter values (client-side on DOM)
+  /**
+   * Filters visible table rows based on UI inputs.
+   */
   const filterTableRows = () => {
     const rows = leaderboardTableBody.querySelectorAll("tr");
-    rows.forEach((row) => {
-      if (row.cells.length === 0) return; // Skip empty or header rows
+    const expChecked = expCheckboxes.filter(cb => cb?.checked).map(cb => cb.value.toLowerCase());
 
-      const lapTime = row.getAttribute("data-lap-time") || "";
-      const motorcycle = row.getAttribute("data-motorcycle") || "";
-      const tyreFront = row.getAttribute("data-tyre-front") || "";
-      const tyreRear = row.getAttribute("data-tyre-rear") || "";
-      const riderLevel = row.getAttribute("data-rider-level") || "";
-      // const validity = row.getAttribute("data-validity") || "";
-      const sex = row.getAttribute("data-sex") || "";
-      const lapDateStr = row.getAttribute("data-lap-date") || "";
+    rows.forEach(row => {
+      if (row.cells.length === 0) return;
+      let show = true;
 
-      console.log("Filtering row - sex:", sex, "riderLevel:", riderLevel); // Debug log
+      const d = row.dataset;
+      const lapSec = getTotalSeconds(d.lapTime);
 
-      let showRow = true;
+      if (motorcycleFilter?.value && !d.motorcycle.toLowerCase().includes(motorcycleFilter.value.toLowerCase())) show = false;
+      if (tyreFrontFilter?.value && !d.tyreFront.toLowerCase().includes(tyreFrontFilter.value.toLowerCase())) show = false;
+      if (tyreRearFilter?.value && !d.tyreRear.toLowerCase().includes(tyreRearFilter.value.toLowerCase())) show = false;
+      
+      if (dateFrom?.value && new Date(d.lapDate.split(".").reverse().join("-")) < new Date(dateFrom.value)) show = false;
+      if (dateTo?.value && new Date(d.lapDate.split(".").reverse().join("-")) > new Date(dateTo.value)) show = false;
 
-      // Motorcycle filter
-      if (
-        motorcycleNameFilter &&
-        motorcycleNameFilter.value &&
-        !motorcycle
-          .toLowerCase()
-          .includes(motorcycleNameFilter.value.toLowerCase())
-      ) {
-        showRow = false;
-      }
+      if (expChecked.length > 0 && !expChecked.includes(d.riderLevel.toLowerCase())) show = false;
 
-      // Tyre front filter
-      if (
-        tyreFrontFilter &&
-        tyreFrontFilter.value &&
-        !tyreFront.toLowerCase().includes(tyreFrontFilter.value.toLowerCase())
-      ) {
-        showRow = false;
-      }
+      if (sexRadios.male?.checked && d.sex.toLowerCase() !== "male") show = false;
+      if (sexRadios.female?.checked && d.sex.toLowerCase() !== "female") show = false;
 
-      // Tyre rear filter
-      if (
-        tyreRearFilter &&
-        tyreRearFilter.value &&
-        !tyreRear.toLowerCase().includes(tyreRearFilter.value.toLowerCase())
-      ) {
-        showRow = false;
-      }
-
-      // Faster than filter
-      if (fasterThanMinutes && fasterThanSeconds) {
-        const fasterTotal = getTotalSeconds([
-          fasterThanMinutes,
-          fasterThanSeconds,
-        ]);
-        if (fasterTotal > 0) {
-          const lapTotal = getTotalSeconds(lapTime);
-          if (lapTotal >= fasterTotal) showRow = false;
-        }
-      }
-
-      // Slower than filter
-      if (slowerThanMinutes && slowerThanSeconds) {
-        const slowerTotal = getTotalSeconds([
-          slowerThanMinutes,
-          slowerThanSeconds,
-        ]);
-        if (slowerTotal > 0) {
-          const lapTotal = getTotalSeconds(lapTime);
-          if (lapTotal <= slowerTotal) showRow = false;
-        }
-      }
-
-      // Date from filter
-      if (dateFromFilter && dateFromFilter.value) {
-        const fromDate = new Date(dateFromFilter.value);
-        const lapDate = new Date(lapDateStr.split(".").reverse().join("-")); // Convert DD.MM.YYYY to YYYY-MM-DD
-        if (lapDate < fromDate) showRow = false;
-      }
-
-      // Date to filter
-      if (dateToFilter && dateToFilter.value) {
-        const toDate = new Date(dateToFilter.value);
-        const lapDate = new Date(lapDateStr.split(".").reverse().join("-"));
-        if (lapDate > toDate) showRow = false;
-      }
-
-      // Experience checkboxes
-      const expChecked = [
-        expFreshman,
-        expBeginner,
-        expMedium,
-        expAdvanced,
-        expSemipro,
-        expProfessional,
-      ]
-        .filter((cb) => cb && cb.checked)
-        .map((cb) => cb.value.toLowerCase());
-      if (
-        expChecked.length > 0 &&
-        (!riderLevel || !expChecked.includes(riderLevel.toLowerCase()))
-      ) {
-        showRow = false;
-      }
-
-      // Accuracy checkboxes (uncomment if needed)
-      // const accChecked = [accVeryHigh, accHigh, accMedium, accLow]
-      //   .filter((cb) => cb && cb.checked)
-      //   .map((cb) => cb.value.toLowerCase());
-      // if (
-      //   accChecked.length > 0 &&
-      //   (!validity || !accChecked.includes(validity.toLowerCase()))
-      // ) {
-      //   showRow = false;
-      // }
-
-      // Gender radio
-      if (sexMale && sexFemale && sexAll) {
-        if (sexMale.checked && (!sex || sex.toLowerCase() !== "male"))
-          showRow = false;
-        if (sexFemale.checked && (!sex || sex.toLowerCase() !== "female"))
-          showRow = false;
-        // sexAll.checked means no filter
-      }
-
-      console.log("Row showRow:", showRow); // Debug log
-
-      row.style.display = showRow ? "" : "none";
+      row.style.display = show ? "" : "none";
     });
   };
 
-  // Event listeners for clearing individual filters
-  if (clearFiltersFasterThan) {
-    clearFiltersFasterThan.addEventListener("click", () => {
-      if (fasterThanMinutes) fasterThanMinutes.value = "0";
-      if (fasterThanSeconds) fasterThanSeconds.value = "0";
-    });
-  }
-  if (clearFiltersSlowerThan) {
-    clearFiltersSlowerThan.addEventListener("click", () => {
-      if (slowerThanMinutes) slowerThanMinutes.value = "0";
-      if (slowerThanSeconds) slowerThanSeconds.value = "0";
-    });
-  }
-  if (clearFiltersDateFrom) {
-    clearFiltersDateFrom.addEventListener("click", () => {
-      if (dateFromFilter) dateFromFilter.value = "";
-    });
-  }
-  if (clearFiltersDateTo) {
-    clearFiltersDateTo.addEventListener("click", () => {
-      if (dateToFilter) dateToFilter.value = "";
-    });
-  }
+  // ==========================================
+  // 3. EVENT LISTENERS
+  // ==========================================
 
-  // Event listener for clearing all filters and resetting the table
-  if (clearFiltersDropdown) {
-    clearFiltersDropdown.addEventListener("click", () => {
-      // Reset all filter inputs
-      if (motorcycleNameFilter) motorcycleNameFilter.value = "";
-      if (tyreFrontFilter) tyreFrontFilter.value = "";
-      if (tyreRearFilter) tyreRearFilter.value = "";
-      if (fasterThanMinutes) fasterThanMinutes.value = "0";
-      if (fasterThanSeconds) fasterThanSeconds.value = "0";
-      if (slowerThanMinutes) slowerThanMinutes.value = "0";
-      if (slowerThanSeconds) slowerThanSeconds.value = "0";
-      if (dateFromFilter) dateFromFilter.value = "";
-      if (dateToFilter) dateToFilter.value = "";
-      // Reset checkboxes
-      if (expFreshman) expFreshman.checked = false;
-      if (expBeginner) expBeginner.checked = false;
-      if (expMedium) expMedium.checked = false;
-      if (expAdvanced) expAdvanced.checked = false;
-      if (expSemipro) expSemipro.checked = false;
-      if (expProfessional) expProfessional.checked = false;
-      if (accVeryHigh) accVeryHigh.checked = false;
-      if (accHigh) accHigh.checked = false;
-      if (accMedium) accMedium.checked = false;
-      if (accLow) accLow.checked = false;
-      // Reset radios
-      if (sexAll) sexAll.checked = true;
-      if (sexMale) sexMale.checked = false;
-      if (sexFemale) sexFemale.checked = false;
-      // Reset hints
-      if (fasterThanHint) fasterThanHint.style.display = "none";
-      if (slowerThanHint) slowerThanHint.style.display = "none";
-      // Show all rows
-      const rows = leaderboardTableBody.querySelectorAll("tr");
-      rows.forEach((row) => (row.style.display = ""));
-    });
-  }
-
-  // Event listener for track selection and initial data fetch
-  if (filterButton) {
-    filterButton.addEventListener("click", async () => {
-      const selectedTrackName = trackSelect.value;
-      if (!selectedTrackName) {
-        leaderboardTableBody.innerHTML =
-          '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>';
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `/leaderboard/filter?trackName=${selectedTrackName}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const laps = await response.json();
-        allTrackLapsData = laps; // Store the full unfiltered data
-        renderTable(laps); // Render the full data
-      } catch (error) {
-        console.error("Error fetching leaderboard data:", error);
-        leaderboardTableBody.innerHTML =
-          '<tr><td colspan="8" class="text-center text-danger">Failed to load leaderboard data.</td></tr>';
-      }
-    });
-  }
-
-  // Event listener for applying filters (with validation)
-  if (applyFiltersDropdown) {
-    applyFiltersDropdown.addEventListener("click", () => {
-      // Validate date range
-      if (!validateDateRange()) {
-        alert("Data - od musi być wcześniejsza niż Data - do.");
-        return;
-      }
-      // Validate lap time range
-      if (!validateLapTimeRange()) {
-        alert("Czas 'Szybciej niż' musi być krótszy niż 'Wolniej niż'.");
-        return;
-      }
-      // Proceed with filtering
-      filterTableRows();
-    });
-  }
-
-  // Initialize Bootstrap Collapse instance
-  const bsCollapse = new bootstrap.Collapse(filtersDropdownContainer, {
-    toggle: false,
+  // --- Data Fetching ---
+  filterButton?.addEventListener("click", async () => {
+    if (!trackSelect.value) return;
+    try {
+      const res = await fetch(`/leaderboard/filter?trackName=${encodeURIComponent(trackSelect.value)}`);
+      allTrackLapsData = await res.json();
+      renderTable(allTrackLapsData);
+    } catch (e) {
+      console.error("Fetch error:", e);
+    }
   });
 
-  // Event listener for the toggle button
-  if (toggleFiltersDropdownButton) {
-    toggleFiltersDropdownButton.addEventListener("click", () => {
-      bsCollapse.toggle();
-      virtualCollapse.hide(); // Hide virtual lap time when filters dropdown is toggled
-    });
-  }
-
-  // Listen for Bootstrap collapse events to change button text
-  if (filtersDropdownContainer) {
-    filtersDropdownContainer.addEventListener("show.bs.collapse", () => {
-      if (toggleFiltersDropdownButton)
-        toggleFiltersDropdownButton.textContent = "Zwiń";
-    });
-    filtersDropdownContainer.addEventListener("hide.bs.collapse", () => {
-      if (toggleFiltersDropdownButton)
-        toggleFiltersDropdownButton.textContent = "Filtry";
-    });
-  }
-
-  // Initialize Bootstrap Collapse for virtual lap time
-  const virtualCollapse = new bootstrap.Collapse(virtualLapTimeContainer, {
-    toggle: false,
+  // --- Filter Controls ---
+  applyFiltersBtn?.addEventListener("click", () => {
+    if (!validateDateRange()) return alert("Błędny zakres dat.");
+    if (!validateLapTimeRange()) return alert("Błędny zakres czasu.");
+    filterTableRows();
   });
 
-  // Event listener for virtual lap time button
-  if (virtualLapTimeButton) {
-    virtualLapTimeButton.addEventListener("click", () => {
-      virtualCollapse.toggle();
-      bsCollapse.hide(); // Hide filters dropdown when virtual lap time is toggled
-    });
-  }
+  clearFiltersBtn?.addEventListener("click", () => {
+    filtersContainer.querySelectorAll("input").forEach(i => i.type === "checkbox" ? i.checked = false : i.value = "");
+    if (sexRadios.all) sexRadios.all.checked = true;
+    leaderboardTableBody.querySelectorAll("tr").forEach(r => r.style.display = "");
+  });
 
-  // Event listener for applying virtual lap time
-  if (applyVirtualLaptime) {
-    console.log("Function Applying virtual lap time");
+  // --- Virtual Lap ---
+  applyVirtualBtn?.addEventListener("click", () => {
+    const time = `00:${virtualMin.value}:${virtualSec.value}.${virtualMs.value}`;
+    allTrackLapsData = allTrackLapsData.filter(l => !l.isVirtual);
+    allTrackLapsData.push({ lap_time: time, isVirtual: true });
+    allTrackLapsData.sort((a, b) => getTotalSeconds(a.lap_time) - getTotalSeconds(b.lap_time));
+    renderTable(allTrackLapsData);
+    document.querySelector(".virtual-lap-row")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 
-    applyVirtualLaptime.addEventListener("click", () => {
-      const min = virtualMinutes.value;
-      const sec = virtualSeconds.value;
-      const ms = virtualMiliSeconds.value;
+  // --- Navigation ---
+  leaderboardTableBody.addEventListener("click", (e) => {
+    const row = e.target.closest("tr");
+    if (!row || row.rowIndex === 0 || row.classList.contains("virtual-lap-row")) return;
+    
+    const d = row.dataset;
+    const url = `/lap-details/${encodeURIComponent(d.lapTime)}/${encodeURIComponent(d.riderName)}/${encodeURIComponent(d.motorcycle)}/${encodeURIComponent(convertDateToMySQL(d.lapDate))}/${encodeURIComponent(trackSelect.value)}`;
+    window.location.href = url;
+  });
 
-      if (min === "00" && sec === "00" && ms === "00") {
-        alert("Wprowadź prawidłowy czas.");
-        return;
-      }
+  // --- UI Toggles ---
+  const filterCollapse = new bootstrap.Collapse(filtersContainer, { toggle: false });
+  const virtualCollapse = new bootstrap.Collapse(virtualContainer, { toggle: false });
 
-      const lapTime = `00:${min}:${sec}.${ms}`;
+  toggleFiltersBtn?.addEventListener("click", () => { filterCollapse.toggle(); virtualCollapse.hide(); });
+  virtualLapBtn?.addEventListener("click", () => { virtualCollapse.toggle(); filterCollapse.hide(); });
 
-      // Remove existing virtual lap if present
-      allTrackLapsData = allTrackLapsData.filter((lap) => !lap.isVirtual);
-      // Add new virtual lap
-      const virtualLap = {
-        lap_time: lapTime,
-        isVirtual: true,
-      };
-      allTrackLapsData.push(virtualLap);
-      // Sort by lap time (fastest first)
-      allTrackLapsData.sort(
-        (a, b) => getTotalSeconds(a.lap_time) - getTotalSeconds(b.lap_time)
-      );
-      renderTable(allTrackLapsData);
-
-      // Scroll to the virtual lap row
-      const virtualRow = document.querySelector(".virtual-lap-row");
-      if (virtualRow) {
-        virtualRow.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    });
-  }
-
-  // Event listener for clearing virtual lap time
-  if (clearVirtualLaptime) {
-    clearVirtualLaptime.addEventListener("click", () => {
-      // Reset selects
-      if (virtualMinutes) virtualMinutes.value = "0";
-      if (virtualSeconds) virtualSeconds.value = "0";
-      if (virtualMiliSeconds) virtualMiliSeconds.value = "0";
-      // Remove virtual lap
-      allTrackLapsData = allTrackLapsData.filter((lap) => !lap.isVirtual);
-      renderTable(allTrackLapsData);
-    });
-  }
-
-  // Add event listener for table row clicks to fetch lap details
-  if (leaderboardTableBody) {
-    leaderboardTableBody.addEventListener("click", (event) => {
-      const target = event.target.closest("tr");
-      if (target && target.rowIndex > 0) {
-        // Skip header row
-        const lapTime = target.getAttribute("data-lap-time")?.trim(); // Use data attributes instead of cells
-        const riderName = target.getAttribute("data-rider-name")?.trim();
-        const motorcycle = target.getAttribute("data-motorcycle")?.trim();
-        const displayedDate = target
-          .querySelectorAll("td")[7]
-          ?.textContent?.trim();
-        const lapDate = convertDateToMySQL(displayedDate);
-        const selectedTrackName = trackSelect.value;
-
-        console.log("Extracted data:", {
-          lapTime,
-          riderName,
-          motorcycle,
-          lapDate,
-          selectedTrackName,
-        });
-
-        if (
-          lapTime &&
-          riderName &&
-          motorcycle &&
-          lapDate &&
-          selectedTrackName
-        ) {
-          // Navigate to the lap details page with query parameters including track name
-          const url = `/lap-details/${encodeURIComponent(
-            lapTime
-          )}/${encodeURIComponent(riderName)}/${encodeURIComponent(
-            motorcycle
-          )}/${encodeURIComponent(lapDate)}/${encodeURIComponent(
-            selectedTrackName
-          )}`;
-          window.location.href = url;
-        } else {
-          alert("Nie można pobrać szczegółów okrążenia. Spróbuj ponownie.");
-        }
-      }
-    });
-  }
-
-  // Add click handler for rider history table to dynamically reload left div
-  const riderHistoryTable = document.getElementById("rider-history-table");
-
-  console.log("Rider History Table found:", riderHistoryTable);
-
-  if (riderHistoryTable) {
-    console.log("Attaching event listener to table");
-
-    riderHistoryTable.addEventListener("click", async (event) => {
-      const target = event.target.closest("tr");
-
-      console.log("Row clicked:", target);
-
-      if (target && target.rowIndex > 0) {
-        // Skip header row
-        const lapTime = target.getAttribute("data-lap-time")?.trim();
-        const riderName = target.getAttribute("data-rider-name")?.trim();
-        const motorcycle = target.getAttribute("data-motorcycle")?.trim();
-        const lapDate = target.getAttribute("data-lap-date")?.trim();
-        const trackName = target.getAttribute("data-track-name")?.trim();
-
-        console.log("Extracted data:", {
-          lapTime,
-          riderName,
-          motorcycle,
-          lapDate,
-          trackName,
-        });
-
-        if (lapTime && riderName && motorcycle && lapDate && trackName) {
-          try {
-            // Construct URL for the new lap details
-            const url = `/lap-details/${encodeURIComponent(
-              lapTime
-            )}/${encodeURIComponent(riderName)}/${encodeURIComponent(
-              motorcycle
-            )}/${encodeURIComponent(lapDate)}/${encodeURIComponent(trackName)}`;
-
-            console.log("Fetching URL:", url);
-
-            // Fetch the full page HTML
-            const response = await fetch(url);
-            if (!response.ok)
-              throw new Error(`Failed to fetch: ${response.status}`);
-
-            const html = await response.text();
-
-            // Parse the HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-
-            // Extract the left div content
-            const newLeftDiv = doc.getElementById("lap-details-left");
-            if (newLeftDiv) {
-              // Replace the current left div content
-              const currentLeftDiv =
-                document.getElementById("lap-details-left");
-              if (currentLeftDiv) {
-                currentLeftDiv.innerHTML = newLeftDiv.innerHTML;
-                console.log("Left div updated successfully");
-              }
-            } else {
-              console.error("New left div not found in fetched HTML");
-            }
-          } catch (error) {
-            console.error("Error reloading lap details:", error);
-            alert("Nie udało się załadować szczegółów okrążenia.");
-          }
-        } else {
-          console.error("Missing required data attributes");
-        }
-      }
-    });
-  } else {
-    console.error("Rider history table not found");
-  }
 });

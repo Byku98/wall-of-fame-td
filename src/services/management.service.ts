@@ -43,7 +43,7 @@ export const managementService = {
     }
 
     // Update status to 'rejected' and store the reason
-    await managementRepository.updateStatus(id, 'rejected', reason);
+    await managementRepository.updateStatus(id, 'rejected');
 
     if (lap.contact_email) {
       try {

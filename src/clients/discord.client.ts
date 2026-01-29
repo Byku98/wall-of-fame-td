@@ -1,4 +1,4 @@
-import { ROUTES } from '../config/routes.config'; // NEW
+import { ROUTES } from '../config/routes.config';
 
 /**
  * DiscordClient handles all communication with Discord Webhooks.
@@ -20,8 +20,8 @@ export const discordClient = {
     const val = (value: any) => (value && value.toString().trim() !== "") ? value : "---";
 
     // Construct URLs using the centralized ROUTES config
-    const modifyUrl = `${baseUrl}${ROUTES.API.LAPS.MODIFY}/${insertedId}?token=${submissionToken}`;
     const approveUrl = `${baseUrl}${ROUTES.API.LAPS.APPROVE}/${insertedId}?token=${submissionToken}`;
+    const rejectUrl = `${baseUrl}${ROUTES.API.LAPS.REJECT}/${insertedId}?token=${submissionToken}`;
 
     const payload = {
       username: "Leaderboard Notifier",
@@ -35,15 +35,15 @@ export const discordClient = {
           { name: "📅 Data", value: val(lapData.lapDate), inline: true },
           { name: "🏍️ Motocykl", value: val(lapData.motorcycle), inline: true },
           { name: "🤝 Organizator", value: val(lapData.organizer), inline: true },
-          { name: "📱 Urządzenie", value: val(lapData.device), inline: true },
+          { name: "📱 Urządzenie pomiarowe", value: val(lapData.device), inline: true },
           { name: "📧 Kontakt", value: val(lapData.contactEmail), inline: true },
           { name: "📊 Telemetria", value: val(lapData.deviceRecordedLap), inline: false },
           { name: "🔘 Opona Przód", value: val(lapData.tyreFront), inline: true },
           { name: "🔘 Opona Tył", value: val(lapData.tyreRear), inline: true },
           { name: "📺 Link YouTube", value: val(lapData.youtubeProof), inline: false },
           { name: "🖼️ Zdjęcie przejazdu", value: `${baseUrl}${lapData.proof_image_path}`, inline: false },
-          { name: "🔍 Modyfikacja przejazdu", value: `[Kliknij aby zmodyfikować](${modifyUrl})`, inline: true },
-          { name: "✅ Akceptuj", value: `[Kliknij aby zaakceptować](${approveUrl})`, inline: true }
+          { name: "✅ Akceptuj", value: `[Kliknij aby zaakceptować](${approveUrl})`, inline: true },
+          { name: "❌ Odrzuć", value: `[Kliknij aby odrzucić](${rejectUrl})`, inline: true }
         ],
         footer: { text: `ID Systemowe: ${insertedId}` },
         timestamp: new Date().toISOString()

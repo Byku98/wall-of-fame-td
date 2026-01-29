@@ -1,3 +1,5 @@
+import { ROUTES } from '../config/routes.config'; // NEW
+
 /**
  * DiscordClient handles all communication with Discord Webhooks.
  */
@@ -17,9 +19,9 @@ export const discordClient = {
     // Helper to handle empty values
     const val = (value: any) => (value && value.toString().trim() !== "") ? value : "---";
 
-    // Construct URLs for verification/activation
-    const validateUrl = `${baseUrl}/api/laps/validate/${insertedId}?token=${submissionToken}`;
-    const activateUrl = `${baseUrl}/api/laps/activate/${insertedId}?token=${submissionToken}`;
+    // Construct URLs using the centralized ROUTES config
+    const modifyUrl = `${baseUrl}${ROUTES.API.LAPS.MODIFY}/${insertedId}?token=${submissionToken}`;
+    const approveUrl = `${baseUrl}${ROUTES.API.LAPS.APPROVE}/${insertedId}?token=${submissionToken}`;
 
     const payload = {
       username: "Leaderboard Notifier",
@@ -40,8 +42,8 @@ export const discordClient = {
           { name: "🔘 Opona Tył", value: val(lapData.tyreRear), inline: true },
           { name: "📺 Link YouTube", value: val(lapData.youtubeProof), inline: false },
           { name: "🖼️ Zdjęcie przejazdu", value: `${baseUrl}${lapData.proof_image_path}`, inline: false },
-          { name: "🔍 Modyfikacja przejazdu", value: `[Kliknij aby zmodyfikować](${validateUrl})`, inline: true },
-          { name: "✅ Aktywacja", value: `[Kliknij aby aktywować](${activateUrl})`, inline: true }
+          { name: "🔍 Modyfikacja przejazdu", value: `[Kliknij aby zmodyfikować](${modifyUrl})`, inline: true },
+          { name: "✅ Akceptuj", value: `[Kliknij aby zaakceptować](${approveUrl})`, inline: true }
         ],
         footer: { text: `ID Systemowe: ${insertedId}` },
         timestamp: new Date().toISOString()

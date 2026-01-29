@@ -6,27 +6,33 @@ export const managementService = {
    * Approves a lap time after verifying the token.
    */
   approveLap: async (id: string, token: string) => {
-    // 1. Verify token and get lap data
     const lap = await managementRepository.getLapWithToken(id, token);
     
     if (!lap) {
       throw new Error("Nieprawidłowy token lub ID okrążenia.");
     }
 
-    // 2. Update status in DB to 'approved'
-    await managementRepository.updateStatus(id, 'approved');
+    // NEW: Handle potential errors during status update
+    const dbResult = await managementRepository.updateStatus(id, 'approved');
 
-    // 3. Send Email Notification to the rider
-    if (lap.contact_email) {
-      try {
-        await mailClient.sendApprovalEmail(lap.contact_email, lap.rider_name, lap.lap_time);
-      } catch (mailError) {
-        console.error("Failed to send approval email:", mailError);
-        // We don't throw here because the DB update was already successful
-      }
+    if (!dbResult.success) {
+      throw new Error(dbResult.message); // Propagate the DB error message
     }
 
-    return { success: true, riderName: lap.rider_name };
+    // if (lap.contact_email) {
+    //   try {
+    //     await mailClient.sendApprovalEmail(lap.contact_email, lap.rider_name, lap.lap_time);
+    //   } catch (mailError) {
+    //     console.error("Failed to send approval email:", mailError);
+    //   }
+    // }
+
+    // Return details for the controller to display
+    return { 
+      success: true, 
+      lap_id: lap.lap_id, 
+      contact: lap.contact 
+    };
   },
 
   rejectLap: async (id: string, token: string, reason: string) => {

@@ -17,13 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const filtersContainer = document.getElementById("filtersDropdownContainer");
   const applyFiltersBtn = document.getElementById("applyFiltersDropdown");
   const clearFiltersBtn = document.getElementById("clearFiltersDropdown");
+  const fasterThanInput = document.getElementById("fasterThanInput");
+  const slowerThanInput = document.getElementById("slowerThanInput");
+  const clearFiltersFasterThan = document.getElementById("clearFiltersFasterThan"); // NEW
+  const clearFiltersSlowerThan = document.getElementById("clearFiltersSlowerThan"); // NEW
 
   // --- Virtual Lap Elements ---
   const virtualLapBtn = document.getElementById("virtualLapTime");
   const virtualContainer = document.getElementById("virtualLapTimeContainer");
-  const virtualMin = document.getElementById("virtualMinutes");
-  const virtualSec = document.getElementById("virtualSeconds");
-  const virtualMs = document.getElementById("virtualMiliSeconds");
+  const virtualInput = document.getElementById("virtualLapInput"); // UPDATED
   const applyVirtualBtn = document.getElementById("applyVirtualLaptime");
   const clearVirtualBtn = document.getElementById("clearVirtualLaptime");
 
@@ -33,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const tyreRearFilter = document.getElementById("tyreRearFilter");
   const dateFrom = document.getElementById("dateFromFilter");
   const dateTo = document.getElementById("dateToFilter");
+  const clearFiltersDateFrom = document.getElementById("clearFiltersDateFrom"); // NEW
+  const clearFiltersDateTo = document.getElementById("clearFiltersDateTo");     // NEW
 
   // --- Checkboxes & Radios ---
   const expCheckboxes = [
@@ -83,10 +87,31 @@ document.addEventListener("DOMContentLoaded", () => {
    * Validates that 'faster' time is actually faster (smaller) than 'slower' time.
    */
   const validateLapTimeRange = () => {
-    const faster = getTotalSeconds([document.getElementById("fasterThanMinutes"), document.getElementById("fasterThanSeconds")]);
-    const slower = getTotalSeconds([document.getElementById("slowerThanMinutes"), document.getElementById("slowerThanSeconds")]);
-    if (faster > 0 && slower > 0 && faster >= slower) return false;
+    const fasterRaw = fasterThanInput?.value.trim();
+    const slowerRaw = slowerThanInput?.value.trim();
+
+    if (!fasterRaw || !slowerRaw) return true;
+
+    const faster = getTotalSeconds(formatToHHMMSS(fasterRaw));
+    const slower = getTotalSeconds(formatToHHMMSS(slowerRaw));
+
+    if (faster > 0 && slower > 0 && faster <= slower) return false;
     return true;
+  };
+
+  /**
+   * Helper to ensure time string is in HH:MM:SS.mmm format for getTotalSeconds.
+   */
+  const formatToHHMMSS = (raw) => {
+    if (!raw) return "00:00:00";
+    let formatted = raw;
+    if (formatted.includes(':')) {
+      const colonCount = (formatted.match(/:/g) || []).length;
+      if (colonCount === 1) formatted = `00:${formatted}`;
+    } else {
+      formatted = `00:00:${formatted}`;
+    }
+    return formatted;
   };
 
   /**
@@ -148,12 +173,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const rows = leaderboardTableBody.querySelectorAll("tr");
     const expChecked = expCheckboxes.filter(cb => cb?.checked).map(cb => cb.value.toLowerCase());
 
+    // Pre-calculate limits
+    const fasterLimit = fasterThanInput?.value ? getTotalSeconds(formatToHHMMSS(fasterThanInput.value)) : 0;
+    const slowerLimit = slowerThanInput?.value ? getTotalSeconds(formatToHHMMSS(slowerThanInput.value)) : 0;
+
     rows.forEach(row => {
       if (row.cells.length === 0) return;
       let show = true;
 
       const d = row.dataset;
       const lapSec = getTotalSeconds(d.lapTime);
+
+      // Faster than filter
+      if (fasterLimit > 0 && lapSec >= fasterLimit) show = false;
+
+      // Slower than filter
+      if (slowerLimit > 0 && lapSec <= slowerLimit) show = false;
 
       if (motorcycleFilter?.value && !d.motorcycle.toLowerCase().includes(motorcycleFilter.value.toLowerCase())) show = false;
       if (tyreFrontFilter?.value && !d.tyreFront.toLowerCase().includes(tyreFrontFilter.value.toLowerCase())) show = false;
@@ -195,28 +230,74 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   clearFiltersBtn?.addEventListener("click", () => {
-    filtersContainer.querySelectorAll("input").forEach(i => i.type === "checkbox" ? i.checked = false : i.value = "");
+    // Clear all filter inputs except trackSelect
+    filtersContainer.querySelectorAll("input").forEach(i => {
+      if (i.type === "checkbox") {
+        i.checked = false;
+      } else {
+        i.value = "";
+      }
+    });
     if (sexRadios.all) sexRadios.all.checked = true;
-    leaderboardTableBody.querySelectorAll("tr").forEach(r => r.style.display = "");
+    filterTableRows(); // Re-apply filters (shows all rows)
+  });
+
+  // NEW: Event listeners for individual clear buttons
+  clearFiltersFasterThan?.addEventListener("click", () => {
+    if (fasterThanInput) fasterThanInput.value = "";
+    filterTableRows();
+  });
+
+  clearFiltersSlowerThan?.addEventListener("click", () => {
+    if (slowerThanInput) slowerThanInput.value = "";
+    filterTableRows();
+  });
+
+  clearFiltersDateFrom?.addEventListener("click", () => {
+    if (dateFrom) dateFrom.value = "";
+    filterTableRows();
+  });
+
+  clearFiltersDateTo?.addEventListener("click", () => {
+    if (dateTo) dateTo.value = "";
+    filterTableRows();
   });
 
   // --- Virtual Lap ---
   applyVirtualBtn?.addEventListener("click", () => {
-    const time = `00:${virtualMin.value}:${virtualSec.value}.${virtualMs.value}`;
+    const rawValue = virtualInput.value.trim();
+    
+    // Validate format using the same regex as the form
+    const pattern = /^([0-5]?\d:)?([0-5]?\d)(\.\d{1,3})?$/;
+    if (!pattern.test(rawValue)) {
+      alert("Wprowadź prawidłowy format czasu (np. 1:05.12 lub 45).");
+      return;
+    }
+
+    // Format the time to HH:MM:SS.mmm for consistent sorting/display
+    let formattedTime = rawValue;
+    if (formattedTime.includes(':')) {
+      const colonCount = (formattedTime.match(/:/g) || []).length;
+      if (colonCount === 1) formattedTime = `00:${formattedTime}`;
+    } else {
+      formattedTime = `00:00:${formattedTime}`;
+    }
+
+    // Remove existing virtual lap if present
     allTrackLapsData = allTrackLapsData.filter(l => !l.isVirtual);
-    allTrackLapsData.push({ lap_time: time, isVirtual: true });
+    
+    // Add new virtual lap
+    allTrackLapsData.push({ lap_time: formattedTime, isVirtual: true });
+    
+    // Sort by lap time (fastest first)
     allTrackLapsData.sort((a, b) => getTotalSeconds(a.lap_time) - getTotalSeconds(b.lap_time));
+    
     renderTable(allTrackLapsData);
     document.querySelector(".virtual-lap-row")?.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
   clearVirtualBtn?.addEventListener("click", () => {
-    // Reset input values to default
-    if (virtualMin) virtualMin.value = "00";
-    if (virtualSec) virtualSec.value = "00";
-    if (virtualMs) virtualMs.value = "000";
-
-    // Remove virtual lap from data and re-render
+    if (virtualInput) virtualInput.value = ""; // UPDATED
     allTrackLapsData = allTrackLapsData.filter(l => !l.isVirtual);
     renderTable(allTrackLapsData);
   });

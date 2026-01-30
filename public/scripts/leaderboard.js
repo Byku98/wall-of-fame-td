@@ -210,6 +210,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".virtual-lap-row")?.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
+  clearVirtualBtn?.addEventListener("click", () => {
+    // Reset input values to default
+    if (virtualMin) virtualMin.value = "00";
+    if (virtualSec) virtualSec.value = "00";
+    if (virtualMs) virtualMs.value = "000";
+
+    // Remove virtual lap from data and re-render
+    allTrackLapsData = allTrackLapsData.filter(l => !l.isVirtual);
+    renderTable(allTrackLapsData);
+  });
+
   // --- Navigation ---
   leaderboardTableBody.addEventListener("click", (e) => {
     const row = e.target.closest("tr");

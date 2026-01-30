@@ -38,7 +38,6 @@ export async function approveLap(req: Request, res: Response) {
         <div style="background: #fff3f3; color: #721c24; padding: 10px; border: 1px solid #f5c6cb; border-radius: 4px; display: inline-block;">
           <strong>Powód:</strong> ${error.message}
         </div>
-        <p style="margin-top: 20px;"><a href="javascript:history.back()">Wróć i spróbuj ponownie</a></p>
       </div>
     `);
   }

@@ -2,9 +2,7 @@ import { Router } from "express";
 import { ROUTES } from "../config/routes.config";
 import { 
   approveLap, 
-  rejectLap, 
-  getModifyLapPage, 
-  postModifyLap 
+  rejectLap
 } from "../controllers/management.controller";
 
 const router = Router();
@@ -21,15 +19,5 @@ router.get(`${ROUTES.API.LAPS.APPROVE}/:id`, approveLap);
  */
 router.get(`${ROUTES.API.LAPS.REJECT}/:id`, rejectLap);
 
-/**
- * Route to display the modification page.
- * URL: /api/laps/modify/:id?token=...
- */
-router.get(`${ROUTES.API.LAPS.MODIFY}/:id`, getModifyLapPage);
-
-/**
- * Route to handle the submission of modified data.
- */
-router.post(`${ROUTES.API.LAPS.MODIFY}/:id`, postModifyLap);
 
 export default router;

@@ -42,17 +42,28 @@ export const managementService = {
       throw new Error("Nieprawidłowy token lub ID okrążenia.");
     }
 
-    // Update status to 'rejected' and store the reason
-    await managementRepository.updateStatus(id, 'rejected');
+    // NEW: Handle potential errors during status update
+    const dbResult = await managementRepository.updateStatus(id, 'rejected');
 
-    if (lap.contact_email) {
-      try {
-        await mailClient.sendRejectionEmail(lap.contact_email, lap.rider_name, reason);
-      } catch (mailError) {
-        console.error("Failed to send rejection email:", mailError);
-      }
+    if (!dbResult.success) {
+      throw new Error(dbResult.message); // Propagate the DB error message
     }
 
-    return { success: true };
+    // Send Rejection Email
+    // if (lap.contact) {
+    //   try {
+    //     // Note: Using lap.contact and lap.lap_id based on your getLapWithToken return structure
+    //     await mailClient.sendRejectionEmail(lap.contact, lap.rider_name || "Zawodnik", reason);
+    //   } catch (mailError) {
+    //     console.error("Failed to send rejection email:", mailError);
+    //   }
+    // }
+
+    // Return details for the controller to display
+    return { 
+      success: true, 
+      lap_id: lap.lap_id, 
+      contact: lap.contact 
+    };
   }
 };

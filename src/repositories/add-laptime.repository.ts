@@ -80,8 +80,6 @@ export const addLaptimeRepository = {
    * @returns {Promise<{success: boolean, insertedId?: number, message: string}>} Result of the insertion.
    */
   createLaptime: async (data: any) => {
-    console.log("Creating new lap time with data:", data);
-
     let connection;
     
     try {
@@ -135,7 +133,6 @@ export const addLaptimeRepository = {
         message: "New lap time entry created successfully.",
       };
     } catch (error: any) {
-
       console.error("Database Error in createLaptime:", error);
       let friendlyMessage = "Wystąpił nieoczekiwany błąd bazy danych.";
 
@@ -149,7 +146,6 @@ export const addLaptimeRepository = {
         message: friendlyMessage,
         technicalDetails: error.message,
       };
-
     } finally {
       // 4. CRITICAL: Release the connection back to the pool
       if (connection) connection.release();
@@ -162,5 +158,57 @@ export const addLaptimeRepository = {
   saveLapToken: async (lapId: number, contact: string, submissionToken: string) => {
     const query = `CALL insert_new_token(?, ?, ?)`;
     await pool.query(query, [lapId, contact, submissionToken]);
+  },
+
+  /**
+   * Inserts a motorcycle into the pending list with token hash.
+   * @param name Motorcycle name
+   * @param year Motorcycle year
+   * @param type Motorcycle type
+   * @param tokenHash The submission token hash
+   * @returns The ID of the new motorcycle.
+   */
+  insertPendingMotorcycle: async (name: string, year: number, type: string, tokenHash: string) => {
+    let connection;
+    try {
+      connection = await pool.getConnection();
+      
+      // 1. Execute the CALL with token parameter
+      await connection.query(`CALL insert_pending_motorcycle(?, ?, ?, ?, @o_id)`, [name, year, type, tokenHash]);
+      
+      // 2. Retrieve the ID from the session variable
+      const [idResult]: any = await connection.query("SELECT @o_id AS insertedId");
+      
+      return idResult && idResult[0] ? idResult[0].insertedId : null;
+    } finally {
+      if (connection) connection.release();
+    }
+  },
+
+  /**
+   * Inserts front and/or rear tyres into pending list with token hash.
+   * @param frontName Front tyre name (or null)
+   * @param rearName Rear tyre name (or null)
+   * @param tokenHash The submission token hash
+   * @returns Object containing the IDs of the inserted/existing tyres.
+   */
+  insertPendingTyres: async (frontName: string | null, rearName: string | null, tokenHash: string) => {
+    let connection;
+    try {
+      connection = await pool.getConnection();
+      
+      // 1. Execute the CALL with token parameter
+      await connection.query(`CALL insert_pending_tyres(?, ?, ?, @o_tf_id, @o_tr_id)`, [frontName, rearName, tokenHash]);
+      
+      // 2. Retrieve the IDs from the session variables
+      const [idResult]: any = await connection.query("SELECT @o_tf_id AS tfId, @o_tr_id AS trId");
+      
+      return {
+        tfId: idResult && idResult[0] ? idResult[0].tfId : null,
+        trId: idResult && idResult[0] ? idResult[0].trId : null
+      };
+    } finally {
+      if (connection) connection.release();
+    }
   },
 };

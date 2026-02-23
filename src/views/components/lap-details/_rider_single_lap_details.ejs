@@ -9,9 +9,9 @@
                 <p><strong>Poziom Kierowcy:</strong>
                     <%= lapDetails.rider_level %>
                 </p>
-                <p><strong>Jakość pomiaru:</strong>
+                <!-- <p><strong>Jakość pomiaru:</strong>
                     <%= lapDetails.validity %>
-                </p>
+                </p> -->
                 <p><strong>Motocykl:</strong>
                     <%= lapDetails.motorcycle %>
                 </p>
@@ -41,7 +41,7 @@
                             Brak wideo
                             <% } %>
                 </p>
-                <p><strong>Pomiar z laptimera:</strong>
+                <p><strong>Dane z telemetrii:</strong>
                     <% if (lapDetails.proof_url !=null) { %>
                         <a href="<%= lapDetails.proof_url %>" target="_blank">Kliknij aby
                             zobaczyć</a>

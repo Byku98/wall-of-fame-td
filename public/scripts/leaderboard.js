@@ -1,4 +1,9 @@
-import { convertMysqlToDate, convertDateToMySQL, formatLapTime } from "./utils.js";
+import { 
+  convertMysqlToDate, 
+  convertDateToMySQL, 
+  formatLapTime, 
+  parseFlexibleTime 
+} from "./utils.js";
 import { translate } from "./translations.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,26 +22,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const filtersContainer = document.getElementById("filtersDropdownContainer");
   const applyFiltersBtn = document.getElementById("applyFiltersDropdown");
   const clearFiltersBtn = document.getElementById("clearFiltersDropdown");
+  
+  // --- Time Filters ---
   const fasterThanInput = document.getElementById("fasterThanInput");
   const slowerThanInput = document.getElementById("slowerThanInput");
-  const clearFiltersFasterThan = document.getElementById("clearFiltersFasterThan"); // NEW
-  const clearFiltersSlowerThan = document.getElementById("clearFiltersSlowerThan"); // NEW
+  const clearFiltersFasterThan = document.getElementById("clearFiltersFasterThan");
+  const clearFiltersSlowerThan = document.getElementById("clearFiltersSlowerThan");
 
   // --- Virtual Lap Elements ---
   const virtualLapBtn = document.getElementById("virtualLapTime");
   const virtualContainer = document.getElementById("virtualLapTimeContainer");
-  const virtualInput = document.getElementById("virtualLapInput"); // UPDATED
+  const virtualInput = document.getElementById("virtualLapInput");
   const applyVirtualBtn = document.getElementById("applyVirtualLaptime");
   const clearVirtualBtn = document.getElementById("clearVirtualLaptime");
 
-  // --- Autocomplete & Inputs ---
+  // --- Autocomplete & Date Inputs ---
   const motorcycleFilter = document.getElementById("motorcycleNameFilter");
   const tyreFrontFilter = document.getElementById("tyreFrontFilter");
   const tyreRearFilter = document.getElementById("tyreRearFilter");
   const dateFrom = document.getElementById("dateFromFilter");
   const dateTo = document.getElementById("dateToFilter");
-  const clearFiltersDateFrom = document.getElementById("clearFiltersDateFrom"); // NEW
-  const clearFiltersDateTo = document.getElementById("clearFiltersDateTo");     // NEW
+  const clearFiltersDateFrom = document.getElementById("clearFiltersDateFrom");
+  const clearFiltersDateTo = document.getElementById("clearFiltersDateTo");
 
   // --- Checkboxes & Radios ---
   const expCheckboxes = [
@@ -58,21 +65,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
 
   /**
-   * Converts time string or DOM elements to total seconds.
+   * Converts time string to total seconds.
    */
   const getTotalSeconds = (input) => {
-    if (typeof input === "string") {
-      const parts = input.split(":");
-      const h = parseInt(parts[0] || 0, 10);
-      const m = parseInt(parts[1] || 0, 10);
-      const s = parseFloat(parts[2] || 0);
-      return h * 3600 + m * 60 + s;
-    } else if (Array.isArray(input) && input.length === 2) {
-      const m = parseInt(input[0]?.value || 0, 10);
-      const s = parseInt(input[1]?.value || 0, 10);
-      return m * 60 + s;
-    }
-    return 0;
+    if (!input || typeof input !== "string") return 0;
+    const parts = input.split(":");
+    const h = parseInt(parts[0] || 0, 10);
+    const m = parseInt(parts[1] || 0, 10);
+    const s = parseFloat(parts[2] || 0);
+    return h * 3600 + m * 60 + s;
   };
 
   /**
@@ -85,33 +86,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Validates that 'faster' time is actually faster (smaller) than 'slower' time.
+   * This means the 'fasterThanInput' (upper bound) should be a numerically larger time
+   * than 'slowerThanInput' (lower bound) if both are used to define a range.
    */
   const validateLapTimeRange = () => {
-    const fasterRaw = fasterThanInput?.value.trim();
-    const slowerRaw = slowerThanInput?.value.trim();
+    const fasterRaw = fasterThanInput?.value.trim(); // This is the upper bound (e.g., 50s)
+    const slowerRaw = slowerThanInput?.value.trim(); // This is the lower bound (e.g., 45s)
 
-    if (!fasterRaw || !slowerRaw) return true;
+    if (!fasterRaw || !slowerRaw) return true; // If only one or none are set, no conflict
 
-    const faster = getTotalSeconds(formatToHHMMSS(fasterRaw));
-    const slower = getTotalSeconds(formatToHHMMSS(slowerRaw));
+    const fasterLimitSec = getTotalSeconds(parseFlexibleTime(fasterRaw)); // e.g., 50
+    const slowerLimitSec = getTotalSeconds(parseFlexibleTime(slowerRaw)); // e.g., 45
 
-    if (faster > 0 && slower > 0 && faster <= slower) return false;
-    return true;
-  };
-
-  /**
-   * Helper to ensure time string is in HH:MM:SS.mmm format for getTotalSeconds.
-   */
-  const formatToHHMMSS = (raw) => {
-    if (!raw) return "00:00:00";
-    let formatted = raw;
-    if (formatted.includes(':')) {
-      const colonCount = (formatted.match(/:/g) || []).length;
-      if (colonCount === 1) formatted = `00:${formatted}`;
-    } else {
-      formatted = `00:00:${formatted}`;
+    // If both are set, the "faster than" limit (upper bound) must be numerically greater
+    // than the "slower than" limit (lower bound) to define a valid range.
+    // For example, "faster than 50s" AND "slower than 45s" is a valid range (45s < lap < 50s).
+    // If fasterLimitSec is 0, it means the input was invalid or empty, so we don't validate against it.
+    if (fasterLimitSec > 0 && slowerLimitSec > 0 && slowerLimitSec >= fasterLimitSec) {
+      return false; // Invalid range: "slower than X" is not faster than "faster than Y"
     }
-    return formatted;
+    return true;
   };
 
   /**
@@ -123,7 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!dl) return;
       dl.innerHTML = "";
       [...new Set(allTrackLapsData.map(l => l[key]))].sort().forEach(val => {
-        if (val) dl.innerHTML += `<option value="${val}">`;
+        if (val) {
+          const option = document.createElement("option");
+          option.value = val;
+          dl.appendChild(option);
+        }
       });
     };
     updateList("motorcycleSuggestions", "motorcycle");
@@ -149,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.dataset.motorcycle = lap.motorcycle || "";
       row.dataset.lapDate = lap.isVirtual ? "" : convertMysqlToDate(lap.lap_date);
       row.dataset.sex = lap.sex_name || "";
-      row.dataset.riderLevel = lap.rider_level || "";
+      // row.dataset.riderLevel = lap.rider_level || ""; // Not needed for now
       row.dataset.tyreFront = lap.tyre_front || "";
       row.dataset.tyreRear = lap.tyre_rear || "";
 
@@ -157,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.insertCell().textContent = index + 1;
       row.insertCell().textContent = formatLapTime(lap.lap_time) || MISSING_DATA_TEXT;
       row.insertCell().textContent = lap.isVirtual ? "Twój czas" : (lap.rider_name || MISSING_DATA_TEXT);
-      row.insertCell().textContent = lap.isVirtual ? "" : (translate("rider_level", lap.rider_level) || MISSING_DATA_TEXT);
+      // row.insertCell().textContent = lap.isVirtual ? "" : (translate("rider_level", lap.rider_level) || MISSING_DATA_TEXT); // Not needed for now
       row.insertCell().textContent = lap.isVirtual ? "" : (lap.motorcycle || MISSING_DATA_TEXT);
       row.insertCell().textContent = lap.isVirtual ? "" : (lap.tyre_front || MISSING_DATA_TEXT);
       row.insertCell().textContent = lap.isVirtual ? "" : (lap.tyre_rear || MISSING_DATA_TEXT);
@@ -171,11 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const filterTableRows = () => {
     const rows = leaderboardTableBody.querySelectorAll("tr");
-    const expChecked = expCheckboxes.filter(cb => cb?.checked).map(cb => cb.value.toLowerCase());
+    // const expChecked = expCheckboxes.filter(cb => cb?.checked).map(cb => cb.value.toLowerCase()); // Not needed for now
 
-    // Pre-calculate limits
-    const fasterLimit = fasterThanInput?.value ? getTotalSeconds(formatToHHMMSS(fasterThanInput.value)) : 0;
-    const slowerLimit = slowerThanInput?.value ? getTotalSeconds(formatToHHMMSS(slowerThanInput.value)) : 0;
+    const fasterLimit = fasterThanInput?.value ? getTotalSeconds(parseFlexibleTime(fasterThanInput.value)) : 0;
+    const slowerLimit = slowerThanInput?.value ? getTotalSeconds(parseFlexibleTime(slowerThanInput.value)) : 0;
 
     rows.forEach(row => {
       if (row.cells.length === 0) return;
@@ -184,10 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const d = row.dataset;
       const lapSec = getTotalSeconds(d.lapTime);
 
-      // Faster than filter
+      // Corrected logic for filtering times
+      // If fasterLimit is set, hide laps that are NOT faster than it (i.e., lapSec >= fasterLimit)
       if (fasterLimit > 0 && lapSec >= fasterLimit) show = false;
-
-      // Slower than filter
+      // If slowerLimit is set, hide laps that are NOT slower than it (i.e., lapSec <= slowerLimit)
       if (slowerLimit > 0 && lapSec <= slowerLimit) show = false;
 
       if (motorcycleFilter?.value && !d.motorcycle.toLowerCase().includes(motorcycleFilter.value.toLowerCase())) show = false;
@@ -197,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (dateFrom?.value && new Date(d.lapDate.split(".").reverse().join("-")) < new Date(dateFrom.value)) show = false;
       if (dateTo?.value && new Date(d.lapDate.split(".").reverse().join("-")) > new Date(dateTo.value)) show = false;
 
-      if (expChecked.length > 0 && !expChecked.includes(d.riderLevel.toLowerCase())) show = false;
+      // if (expChecked.length > 0 && !expChecked.includes(d.riderLevel.toLowerCase())) show = false; // Not needed for now
 
       if (sexRadios.male?.checked && d.sex.toLowerCase() !== "male") show = false;
       if (sexRadios.female?.checked && d.sex.toLowerCase() !== "female") show = false;
@@ -230,19 +227,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   clearFiltersBtn?.addEventListener("click", () => {
-    // Clear all filter inputs except trackSelect
-    filtersContainer.querySelectorAll("input").forEach(i => {
-      if (i.type === "checkbox") {
-        i.checked = false;
-      } else {
-        i.value = "";
-      }
-    });
+    filtersContainer.querySelectorAll("input").forEach(i => i.type === "checkbox" ? i.checked = false : i.value = "");
     if (sexRadios.all) sexRadios.all.checked = true;
-    filterTableRows(); // Re-apply filters (shows all rows)
+    filterTableRows();
   });
 
-  // NEW: Event listeners for individual clear buttons
   clearFiltersFasterThan?.addEventListener("click", () => {
     if (fasterThanInput) fasterThanInput.value = "";
     filterTableRows();
@@ -266,30 +255,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Virtual Lap ---
   applyVirtualBtn?.addEventListener("click", () => {
     const rawValue = virtualInput.value.trim();
+    const formattedTime = parseFlexibleTime(rawValue);
     
-    // Validate format using the same regex as the form
-    const pattern = /^([0-5]?\d:)?([0-5]?\d)(\.\d{1,3})?$/;
-    if (!pattern.test(rawValue)) {
-      alert("Wprowadź prawidłowy format czasu (np. 1:05.12 lub 45).");
+    if (formattedTime === "00:00:00.000") {
+      alert("Wprowadź prawidłowy format czasu.");
       return;
     }
 
-    // Format the time to HH:MM:SS.mmm for consistent sorting/display
-    let formattedTime = rawValue;
-    if (formattedTime.includes(':')) {
-      const colonCount = (formattedTime.match(/:/g) || []).length;
-      if (colonCount === 1) formattedTime = `00:${formattedTime}`;
-    } else {
-      formattedTime = `00:00:${formattedTime}`;
-    }
-
-    // Remove existing virtual lap if present
     allTrackLapsData = allTrackLapsData.filter(l => !l.isVirtual);
-    
-    // Add new virtual lap
     allTrackLapsData.push({ lap_time: formattedTime, isVirtual: true });
-    
-    // Sort by lap time (fastest first)
     allTrackLapsData.sort((a, b) => getTotalSeconds(a.lap_time) - getTotalSeconds(b.lap_time));
     
     renderTable(allTrackLapsData);
@@ -297,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   clearVirtualBtn?.addEventListener("click", () => {
-    if (virtualInput) virtualInput.value = ""; // UPDATED
+    if (virtualInput) virtualInput.value = "";
     allTrackLapsData = allTrackLapsData.filter(l => !l.isVirtual);
     renderTable(allTrackLapsData);
   });

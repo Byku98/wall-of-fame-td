@@ -11,6 +11,10 @@ export const ROUTES = {
       RIDERS: '/add-laptime/api/riders',
       ORGANIZERS: '/add-laptime/api/organizers'
     },
+    MANAGEMENT: {
+      MOTORCYCLE: '/api/management/motorcycle',
+      TYRE: '/api/management/tyres'
+    },
     LEADERBOARD: {
       FILTER: '/leaderboard/filter'
     }

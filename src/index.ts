@@ -2,7 +2,8 @@ import express, { Request, Response } from "express";
 // import helmet from 'helmet';
 import path from "path";
 import pagesRoute from "./routes/pages.route";
-import { ROUTES } from "./config/routes.config"; // NEW
+import { ROUTES } from "./config/routes.config";
+import { MOTORCYCLE_TYPES } from "./config/add-laptime.enums"; // NEW
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.set("views", path.join(__dirname, "views"));
 // NEW: Global middleware to make ROUTES available in all EJS templates
 app.use((req, res, next) => {
   res.locals.ROUTES = ROUTES;
+  res.locals.MOTORCYCLE_TYPES = MOTORCYCLE_TYPES; // NEW: Make types available in EJS
   next();
 });
 

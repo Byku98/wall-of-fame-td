@@ -1,3 +1,5 @@
+import { parseFlexibleTime } from "./utils.js"; // NEW: Import the utility
+
 document.addEventListener("DOMContentLoaded", () => {
   
   // ==========================================
@@ -16,7 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // --- Motorcycle Fields ---
   const motorcycleSelect = document.getElementById("motorcycle");
-  const motorcycleManual = document.getElementById("motorcycleManual");
+  const motorcycleManualGroup = document.getElementById("motorcycleManualGroup");
+  const motorcycleNameManual = document.getElementById("motorcycleNameManual");
+  const motorcycleYearManual = document.getElementById("motorcycleYearManual");
+  const motorcycleTypeManual = document.getElementById("motorcycleTypeManual");
   const noMotorcycleCheckbox = document.getElementById("noMotorcycleOnList");
 
   // --- Tyre Fields ---
@@ -61,10 +66,19 @@ document.addEventListener("DOMContentLoaded", () => {
     select.innerHTML = `<option value="">${defaultText}</option>`;
     if (dataArray && Array.isArray(dataArray)) {
       dataArray.forEach((item) => {
-        if (item[key]) {
+        let value = item[key];
+        let text = item[key];
+
+        // NEW: Special handling for motorcycle formatting (Motorcycle - Year)
+        if (selectId === "motorcycle" && item.motorcycle_name) {
+          text = item.year ? `${item.motorcycle_name} - ${item.year}` : item.motorcycle_name;
+          value = text; // Use the formatted string as the value for submission
+        }
+
+        if (text) {
           const option = document.createElement("option");
-          option.value = item[key];
-          option.textContent = item[key];
+          option.value = value;
+          option.textContent = text;
           select.appendChild(option);
         }
       });
@@ -118,18 +132,24 @@ document.addEventListener("DOMContentLoaded", () => {
       field.disabled = !unlocked;
     });
     
-    // Handle checkboxes and manual inputs
+    // Handle checkboxes
     [noMotorcycleCheckbox, noTyreFrontCheckbox, noTyreRearCheckbox].forEach(cb => {
       if (cb) cb.disabled = !unlocked;
     });
 
+    // Handle manual inputs based on checkbox state
     if (unlocked) {
-      if (noMotorcycleCheckbox?.checked) motorcycleManual.disabled = false;
+      // Motorcycle group
+      const isMotorcycleManual = noMotorcycleCheckbox?.checked;
+      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual].forEach(input => {
+        if (input) input.disabled = !isMotorcycleManual;
+      });
+
       if (noTyreFrontCheckbox?.checked) tyreFrontManual.disabled = false;
       if (noTyreRearCheckbox?.checked) tyreRearManual.disabled = false;
       validateForm();
     } else {
-      [motorcycleManual, tyreFrontManual, tyreRearManual].forEach(m => {
+      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual, tyreFrontManual, tyreRearManual].forEach(m => {
         if (m) m.disabled = true;
       });
       submitButton.disabled = true;
@@ -164,12 +184,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let isValid = true;
 
     requiredFields.forEach((field) => {
+      // Skip validation for hidden/disabled fields (like the dropdown when manual is active)
+      if (field.offsetParent === null || field.disabled) return;
+
       if (!field.value.trim()) isValid = false;
       
-      // Lap Time Pattern (MM:SS.mmm, SS.mmm, or SS)
+      // UPDATED: Flexible Lap Time Pattern
+      // Allows digits and any separators. The parser will handle the rest.
       if (field.id === "lapTime" && field.value) {
-        const pattern = /^([0-5]?\d:)?([0-5]?\d)(\.\d{1,3})?$/;
-        if (!pattern.test(field.value)) isValid = false;
+        const flexiblePattern = /^[\d\s.,:]+$/; 
+        if (!flexiblePattern.test(field.value)) isValid = false;
       }
 
       // Date Validation (No future dates)
@@ -188,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
 
   // --- Initialize Toggles ---
-  setupManualToggle(noMotorcycleCheckbox, motorcycleSelect, motorcycleManual);
+  setupManualToggle(noMotorcycleCheckbox, motorcycleSelect, motorcycleManualGroup);
   setupManualToggle(noTyreFrontCheckbox, tyreFrontSelect, tyreFrontManual);
   setupManualToggle(noTyreRearCheckbox, tyreRearSelect, tyreRearManual);
 
@@ -242,6 +266,43 @@ document.addEventListener("DOMContentLoaded", () => {
     validateForm();
   });
 
+  // --- Updated Lap Time Format Warning
+  const lapTimeField = document.getElementById("lapTime");
+  if (lapTimeField) {
+    lapTimeField.addEventListener("change", () => {
+      const flexiblePattern = /^[\d\s.,:]+$/;
+      if (lapTimeField.value && !flexiblePattern.test(lapTimeField.value)) {
+        alert("Niepoprawny format! Użyj cyfr i dowolnych separatorów (np. 1.05.12, 45.2).");
+        lapTimeField.scrollIntoView({ behavior: "smooth", block: "center" });
+        lapTimeField.classList.add("is-invalid");
+      } else {
+        lapTimeField.classList.remove("is-invalid");
+      }
+    });
+  }
+
+  // --- Initialize Motorcycle Toggle ---
+  if (noMotorcycleCheckbox) {
+    noMotorcycleCheckbox.addEventListener("change", () => {
+      const isChecked = noMotorcycleCheckbox.checked;
+      
+      motorcycleSelect.style.display = isChecked ? "none" : "block";
+      motorcycleSelect.required = !isChecked;
+      motorcycleSelect.value = "";
+
+      motorcycleManualGroup.style.display = isChecked ? "block" : "none";
+      
+      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual].forEach(input => {
+        input.required = isChecked;
+        input.disabled = !isChecked;
+        if (!isChecked) input.value = "";
+      });
+
+      if (isChecked) motorcycleNameManual.focus();
+      validateForm();
+    });
+  }
+
   // --- Form Submission ---
   addLaptimeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -249,11 +310,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formData = new FormData(addLaptimeForm);
 
-    // NEW: Logic to pick values from either Select or Manual input
+    // Normalize Lap Time
+    const rawLapTime = lapTimeField.value.trim();
+    formData.set('lapTime', parseFlexibleTime(rawLapTime));
+
+    // NEW: Handle Structured Motorcycle Data
     if (noMotorcycleCheckbox?.checked) {
-      formData.set('motorcycle', motorcycleManual.value.trim());
+      // We send the specific fields for the pending motorcycle procedure
+      formData.set('motorcycleName', motorcycleNameManual.value.trim());
+      formData.set('motorcycleYear', motorcycleYearManual.value);
+      formData.set('motorcycleType', motorcycleTypeManual.value);
+      // Clear the main 'motorcycle' field so the backend knows to use the manual ones
+      formData.delete('motorcycle'); 
     }
     
+    // NEW: Logic to pick values from either Select or Manual input
     if (noTyreFrontCheckbox?.checked) {
       formData.set('tyreFront', tyreFrontManual.value.trim());
     }

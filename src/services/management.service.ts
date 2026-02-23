@@ -6,64 +6,148 @@ export const managementService = {
    * Approves a lap time after verifying the token.
    */
   approveLap: async (id: string, token: string) => {
-    const lap = await managementRepository.getLapWithToken(id, token);
-    
-    if (!lap) {
-      throw new Error("Nieprawidłowy token lub ID okrążenia.");
+    const lap = await managementRepository.getPendingLapWithToken(id, token);
+    if (!lap) throw new Error("Nieprawidłowy token lub ID okrążenia.");
+
+    const dbResult = await managementRepository.managePendingLapStatus(
+      id,
+      "approved",
+    );
+    if (!dbResult.success) throw new Error(dbResult.message);
+
+    // Send Email using data from DB
+    if (lap.contact) {
+      await mailClient.sendApprovalEmail(lap.contact);
     }
 
-    // NEW: Handle potential errors during status update
-    const dbResult = await managementRepository.updateStatus(id, 'approved');
-
-    if (!dbResult.success) {
-      throw new Error(dbResult.message); // Propagate the DB error message
-    }
-
-    // if (lap.contact_email) {
-    //   try {
-    //     await mailClient.sendApprovalEmail(lap.contact_email, lap.rider_name, lap.lap_time);
-    //   } catch (mailError) {
-    //     console.error("Failed to send approval email:", mailError);
-    //   }
-    // }
-
-    // Return details for the controller to display
-    return { 
-      success: true, 
-      lap_id: lap.lap_id, 
-      contact: lap.contact 
-    };
+    return { success: true, lap_id: lap.lap_id, contact: lap.contact };
   },
 
   rejectLap: async (id: string, token: string, reason: string) => {
-    const lap = await managementRepository.getLapWithToken(id, token);
-    
-    if (!lap) {
-      throw new Error("Nieprawidłowy token lub ID okrążenia.");
+    const lap = await managementRepository.getPendingLapWithToken(id, token);
+    if (!lap) throw new Error("Nieprawidłowy token lub ID okrążenia.");
+
+    const dbResult = await managementRepository.managePendingLapStatus(
+      id,
+      "rejected",
+    );
+    if (!dbResult.success) throw new Error(dbResult.message);
+
+    // Send Email using data from DB
+    if (lap.contact) {
+      await mailClient.sendRejectionEmail(lap.contact, reason);
     }
 
-    // NEW: Handle potential errors during status update
-    const dbResult = await managementRepository.updateStatus(id, 'rejected');
+    return { success: true, lap_id: lap.lap_id, contact: lap.contact };
+  },
 
-    if (!dbResult.success) {
-      throw new Error(dbResult.message); // Propagate the DB error message
+  /**
+   * Manages pending motorcycle (approve/delete) after verifying the token.
+   */
+  managePendingMotorcycle: async (
+    id: string,
+    token: string,
+    action: "approve" | "delete",
+    newName?: string,
+    newYear?: number,
+    newType?: string,
+  ) => {
+    const motorcycle = await managementRepository.getPendingMotorcycleWithToken(
+      id,
+      token,
+    );
+    if (!motorcycle) throw new Error("Nieprawidłowy token lub ID motocykla.");
+
+    const dbResult = await managementRepository.managePendingMotorcycle(
+      id,
+      action,
+      newName !== undefined ? newName : null, // Pass null if undefined
+      newYear !== undefined ? newYear : null, // Pass null if undefined
+      newType !== undefined ? newType : null  // Pass null if undefined
+    );
+    if (!dbResult.success) throw new Error(dbResult.message);
+
+    // TODO: Send email notification for motorcycle approval/rejection
+
+    return { success: true, id: motorcycle.id };
+  },
+
+  /**
+   * Manages pending front and/or rear tyres (approve/reject/modify) after verifying the token.
+   */
+  managePendingTyres: async (
+    tfId: string | null,
+    trId: string | null,
+    token: string,
+    action: "approve" | "delete" | "modify", // Added 'modify'
+    newNameTf?: string | null,
+    newNameTr?: string | null,
+  ) => {
+    let contactEmail: string | null = null;
+    let currentTfName: string | null = null;
+    let currentTrName: string | null = null;
+
+    if (tfId) {
+      const tyreFront = await managementRepository.getPendingTyreFrontWithToken(tfId, token);
+      if (!tyreFront) throw new Error("Nieprawidłowy token lub ID opony przedniej.");
+      contactEmail = tyreFront.contact_email;
+      currentTfName = tyreFront.name;
     }
 
-    // Send Rejection Email
-    // if (lap.contact) {
-    //   try {
-    //     // Note: Using lap.contact and lap.lap_id based on your getLapWithToken return structure
-    //     await mailClient.sendRejectionEmail(lap.contact, lap.rider_name || "Zawodnik", reason);
-    //   } catch (mailError) {
-    //     console.error("Failed to send rejection email:", mailError);
-    //   }
-    // }
+    if (trId) {
+      const tyreRear = await managementRepository.getPendingTyreRearWithToken(trId, token);
+      if (!tyreRear) throw new Error("Nieprawidłowy token lub ID opony tylnej.");
+      // If both are present, ensure contact emails match or handle appropriately
+      if (contactEmail && contactEmail !== tyreRear.contact_email) {
+        console.warn("Contact emails for front and rear tyres do not match.");
+      }
+      contactEmail = tyreRear.contact_email;
+      currentTrName = tyreRear.name;
+    }
 
-    // Return details for the controller to display
-    return { 
-      success: true, 
-      lap_id: lap.lap_id, 
-      contact: lap.contact 
-    };
-  }
+    if (!tfId && !trId) {
+      throw new Error("Brak ID opony przedniej lub tylnej do zarządzania.");
+    }
+
+    // Determine actions for front and rear based on overall action
+    let actionTf: "approve" | "delete" | null = null;
+    let actionTr: "approve" | "delete" | null = null;
+
+    if (action === "approve") {
+      actionTf = tfId ? "approve" : null;
+      actionTr = trId ? "approve" : null;
+    } else if (action === "delete") {
+      actionTf = tfId ? "delete" : null;
+      actionTr = trId ? "delete" : null;
+    } else if (action === "modify") {
+      // For modify, the action passed to SP is null, and names are used for update
+      actionTf = null;
+      actionTr = null;
+
+      // Validation for modify action
+      if (tfId && !newNameTf) {
+        throw new Error("Brak nowej nazwy dla opony przedniej do modyfikacji.");
+      }
+      if (trId && !newNameTr) {
+        throw new Error("Brak nowej nazwy dla opony tylnej do modyfikacji.");
+      }
+    } else {
+      throw new Error("Nieprawidłowa akcja dla zarządzania oponami.");
+    }
+
+    const dbResult = await managementRepository.managePendingTyres(
+      tfId,
+      trId,
+      actionTf,
+      actionTr,
+      newNameTf !== undefined ? newNameTf : null, // Pass null if undefined
+      newNameTr !== undefined ? newNameTr : null  // Pass null if undefined
+    );
+    if (!dbResult.success) throw new Error(dbResult.message);
+
+    // TODO: Send email notification for tyre approval/rejection
+
+    // Return the ID of the first available tyre for consistency, and the contact email
+    return { success: true, id: (tfId || trId), contact: contactEmail, currentTfName, currentTrName };
+  },
 };

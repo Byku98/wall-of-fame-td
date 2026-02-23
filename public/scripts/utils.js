@@ -34,4 +34,60 @@ const formatLapTime = (timeString) => {
   }
 };
 
-export { convertDateToMySQL, convertMysqlToDate, formatLapTime };
+/**
+ * Helper to parse flexible time inputs with ANY non-digit delimiter.
+ * Normalizes everything into standard HH:MM:SS.mmm
+ * Handles overflows (e.g., 63 seconds -> 1 minute 3 seconds)
+ */
+const parseFlexibleTime = (raw) => {
+  if (!raw) return "00:00:00.000";
+
+  const parts = raw.split(/[^0-9]/).filter((p) => p !== "");
+
+  let h = 0,
+    m = 0,
+    s = 0,
+    ms = 0;
+
+  // 1. Extract raw numbers from right to left
+  switch (parts.length) {
+    case 1:
+      s = parseInt(parts[0], 10) || 0;
+      break;
+    case 2:
+      s = parseInt(parts[0], 10) || 0;
+      ms = parseInt(parts[1].padEnd(3, "0").substring(0, 3), 10) || 0;
+      break;
+    case 3:
+      m = parseInt(parts[0], 10) || 0;
+      s = parseInt(parts[1], 10) || 0;
+      ms = parseInt(parts[2].padEnd(3, "0").substring(0, 3), 10) || 0;
+      break;
+    case 4:
+      h = parseInt(parts[0], 10) || 0;
+      m = parseInt(parts[1], 10) || 0;
+      s = parseInt(parts[2], 10) || 0;
+      ms = parseInt(parts[3].padEnd(3, "0").substring(0, 3), 10) || 0;
+      break;
+  }
+
+  // 2. Handle Overflows (e.g., 70 seconds -> 1 min 10 sec)
+  if (s >= 60) {
+    m += Math.floor(s / 60);
+    s = s % 60;
+  }
+  if (m >= 60) {
+    h += Math.floor(m / 60);
+    m = m % 60;
+  }
+
+  // 3. Format back to string with padding
+  const hh = String(h).padStart(2, "0");
+  const mm = String(m).padStart(2, "0");
+  const ss = String(s).padStart(2, "0");
+  const mss = String(ms).padStart(3, "0");
+
+  return `${hh}:${mm}:${ss}.${mss}`;
+};
+
+export { convertDateToMySQL, convertMysqlToDate, formatLapTime, parseFlexibleTime };

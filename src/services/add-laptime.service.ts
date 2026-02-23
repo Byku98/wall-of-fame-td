@@ -3,7 +3,7 @@ import sharp from 'sharp';
 import crypto from 'crypto';
 import { addLaptimeRepository } from "../repositories/add-laptime.repository";
 import { evidencesPlaceholder } from '../config/add-laptime.enums';
-import { discordClient } from '../clients/discord.client'; // NEW
+import { discordClient } from '../clients/discord.client';
 
 export const addLaptimeService = {
   getAllTracks: async () => {
@@ -34,18 +34,92 @@ export const addLaptimeService = {
     return addLaptimeRepository.getOrganizersFromTrack(trackName);
   },
 
+  /**
+   * Handles the insertion of a new motorcycle into the pending list with token.
+   */
+  saveNewMotorcycle: async (name: string, year: string, type: string, submissionToken: string) => {
+    try {
+      const yearInt = parseInt(year, 10);
+      return await addLaptimeRepository.insertPendingMotorcycle(name, yearInt, type, submissionToken);
+    } catch (error) {
+      console.error("Error in saveNewMotorcycle service:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Handles the insertion of new tyres into the pending list with token.
+   */
+  saveNewTyres: async (frontName: string | null, rearName: string | null, submissionToken: string) => {
+    try {
+      return await addLaptimeRepository.insertPendingTyres(frontName, rearName, submissionToken);
+    } catch (error) {
+      console.error("Error in saveNewTyres service:", error);
+      throw error;
+    }
+  },
+
   saveLaptime: async (formData: any, fileBuffer: Buffer, originalName: string) => {
-    // 1. Generate Unique Filename
+    // 1. GENERATE TOKEN FIRST - will be used for lap, motorcycle, and tyres
+    const submissionToken = crypto.randomBytes(32).toString('hex');
+
+    // 2. Handle Pending Motorcycle if manual fields are provided
+    let motorcycleValue = formData.motorcycle;
+    let newMotorcycleId: number | null = null;
+    
+    if (formData.motorcycleNameManual) {
+      try {
+        newMotorcycleId = await addLaptimeService.saveNewMotorcycle(
+          formData.motorcycleNameManual,
+          formData.motorcycleYearManual,
+          formData.motorcycleTypeManual,
+          submissionToken
+        );
+        motorcycleValue = formData.motorcycleNameManual;
+      } catch (err: any) {
+        console.error("Failed to save pending motorcycle:", err.message);
+        return { 
+          success: false, 
+          message: `Błąd podczas dodawania nowego motocykla: ${err.message}` 
+        };
+      }
+    }
+
+    // 3. Handle Pending Tyres if manual fields are provided
+    let tyreFrontValue = formData.tyreFrontManual;
+    let tyreRearValue = formData.tyreRearManual;
+    let newTyreFrontId: number | null = null;
+    let newTyreRearId: number | null = null;
+
+    // // Only insert tyres if at least one is provided manually
+    // if (formData.tyreFrontNameManual || formData.tyreRearNameManual) {
+    //   try {
+    //     const tyreResult = await addLaptimeService.saveNewTyres(
+    //       formData.tyreFrontNameManual || null,
+    //       formData.tyreRearNameManual || null,
+    //       submissionToken
+    //     );
+    //     newTyreFrontId = tyreResult.tfId;
+    //     newTyreRearId = tyreResult.trId;
+        
+    //     if (formData.tyreFrontNameManual) tyreFrontValue = formData.tyreFrontNameManual;
+    //     if (formData.tyreRearNameManual) tyreRearValue = formData.tyreRearNameManual;
+    //   } catch (err: any) {
+    //     console.error("Failed to save pending tyres:", err.message);
+    //     return { 
+    //       success: false, 
+    //       message: `Błąd podczas dodawania nowych opon: ${err.message}` 
+    //     };
+    //   }
+    // }
+
+    // 4. Generate Unique Filename
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(originalName).toLowerCase();
     const filename = `evidence-${uniqueSuffix}${ext}`;
-    const proof_image_path = `/evidences/${filename}`; 
-    const status = null;
+    const proof_image_path = `/evidences/${filename}`;
 
-    // Generate a secure random token for this lap
-    const submissionToken = crypto.randomBytes(32).toString('hex');
-
-    // Format lapTime
+    // 5. Format lapTime
     let formattedLapTime = formData.lapTime;
     if (formattedLapTime.includes(':')) {
       const colonCount = (formattedLapTime.match(/:/g) || []).length;
@@ -54,47 +128,50 @@ export const addLaptimeService = {
       }
     }
 
-    let contactEmail = formData.contactEmail || null;
-
-    // 2. Prepare data for Database
+    // 6. Prepare data for Database (NO IDs in laptimeData)
     const laptimeData = { 
       ...formData, 
+      motorcycle: motorcycleValue,
+      tyreFront: tyreFrontValue, // Still passing, but will be default if manual is commented
+      tyreRear: tyreRearValue,   // Still passing, but will be default if manual is commented
       lapTime: formattedLapTime,
       proof_image_path,
-      status
+      status: 'pending'
     };
 
-    // 3. Call Repository to save the Lap
+    // 7. Call Repository to save the Lap
     const dbResult = await addLaptimeRepository.createLaptime(laptimeData);
 
-    if (!dbResult.success) {
-      return dbResult; 
-    }
+    if (!dbResult.success) return dbResult;
 
-    // 4. Save the token and Notify Discord
-    if (dbResult.insertedId) {
-      try {
-        await addLaptimeRepository.saveLapToken(dbResult.insertedId, contactEmail, submissionToken);
-        
-        // NEW: Send Discord Notification (Background task)
-        discordClient.sendLapNotification(laptimeData, submissionToken, dbResult.insertedId);
-        
-      } catch (tokenError) {
-        console.error("Error in background tasks (token/discord):", tokenError);
-      }
-    }
-
-    // 5. Process the image
+    // 8. PROCESS IMAGE FIRST
     try {
       const outputPath = path.join(__dirname, '../..', evidencesPlaceholder, filename);
       await sharp(fileBuffer)
         .resize(1920, 1920, { fit: 'inside', withoutEnlargement: true })
         .toFile(outputPath);
-      
-      return { ...dbResult, submissionToken }; 
     } catch (imageError: any) {
       console.error("Sharp Error:", imageError.message);
       return { success: false, message: `Błąd podczas zapisywania zdjęcia: ${imageError.message}` };
     }
+
+    // 9. THEN SAVE TOKEN & NOTIFY DISCORD
+    if (dbResult.insertedId) {
+      try {
+        await addLaptimeRepository.saveLapToken(dbResult.insertedId, formData.contactEmail, submissionToken);
+        discordClient.sendLapNotification(
+          laptimeData,
+          submissionToken,
+          dbResult.insertedId,
+          newMotorcycleId,
+          null, // newTyreFrontId (COMMENTED OUT)
+          null  // newTyreRearId (COMMENTED OUT)
+        );
+      } catch (bgError) {
+        console.error("Error in background tasks:", bgError);
+      }
+    }
+
+    return { ...dbResult, submissionToken }; 
   }
 };

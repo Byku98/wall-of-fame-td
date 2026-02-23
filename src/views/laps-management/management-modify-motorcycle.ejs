@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modyfikuj Motocykl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .card {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 class="card-title text-center mb-4">Modyfikuj Motocykl (ID: <%= id %>)</h2>
+        
+        <form action="/api/management/motorcycle/<%= id %>" method="POST">
+            <input type="hidden" name="token" value="<%= token %>">
+            <input type="hidden" name="action" value="modify">
+
+            <div class="mb-3">
+                <label for="motorcycleName" class="form-label">Nazwa Motocykla</label>
+                <input type="text" class="form-control" id="motorcycleName" name="motorcycleName" value="<%= motorcycleName %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="motorcycleYear" class="form-label">Rok Produkcji</label>
+                <input type="number" class="form-control" id="motorcycleYear" name="motorcycleYear" value="<%= motorcycleYear %>" min="1900" max="<%= new Date().getFullYear() + 1 %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="motorcycleType" class="form-label">Typ Motocykla</label>
+                <select class="form-select" id="motorcycleType" name="motorcycleType" required>
+                    <option value="">Wybierz typ</option>
+                    <% motorcycleTypes.forEach(type => { %>
+                        <option value="<%= type %>" <%= type === motorcycleType ? 'selected' : '' %>><%= type %></option>
+                    <% }); %>
+                </select>
+            </div>
+            
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                <a href="javascript:history.back()" class="btn btn-secondary">Anuluj</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -79,7 +79,7 @@ export const managementService = {
     tfId: string | null,
     trId: string | null,
     token: string,
-    action: "approve" | "delete" | "modify", // Added 'modify'
+    action: "approve" | "delete",
     newNameTf?: string | null,
     newNameTr?: string | null,
   ) => {

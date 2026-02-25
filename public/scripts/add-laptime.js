@@ -326,11 +326,11 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // NEW: Logic to pick values from either Select or Manual input
     if (noTyreFrontCheckbox?.checked) {
-      formData.set('tyreFront', tyreFrontManual.value.trim());
+      formData.set('tyreFrontNameManual', tyreFrontManual.value.trim());
     }
 
     if (noTyreRearCheckbox?.checked) {
-      formData.set('tyreRear', tyreRearManual.value.trim());
+      formData.set('tyreRearNameManual', tyreRearManual.value.trim());
     }
     
     try {

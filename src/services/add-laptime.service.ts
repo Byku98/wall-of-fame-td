@@ -86,32 +86,34 @@ export const addLaptimeService = {
     }
 
     // 3. Handle Pending Tyres if manual fields are provided
-    let tyreFrontValue = formData.tyreFrontManual;
-    let tyreRearValue = formData.tyreRearManual;
+    let tyreFrontValue = formData.tyreFront;
+    let tyreRearValue = formData.tyreRear;
     let newTyreFrontId: number | null = null;
     let newTyreRearId: number | null = null;
 
-    // // Only insert tyres if at least one is provided manually
-    // if (formData.tyreFrontNameManual || formData.tyreRearNameManual) {
-    //   try {
-    //     const tyreResult = await addLaptimeService.saveNewTyres(
-    //       formData.tyreFrontNameManual || null,
-    //       formData.tyreRearNameManual || null,
-    //       submissionToken
-    //     );
-    //     newTyreFrontId = tyreResult.tfId;
-    //     newTyreRearId = tyreResult.trId;
+    // Only insert tyres if at least one is provided manually
+    if (formData.tyreFrontNameManual || formData.tyreRearNameManual) {
+      console.log("Manual tyre data detected, attempting to save pending tyres with token:");
+
+      try {
+        const tyreResult = await addLaptimeService.saveNewTyres(
+          formData.tyreFrontNameManual || null,
+          formData.tyreRearNameManual || null,
+          submissionToken
+        );
+        newTyreFrontId = tyreResult.tfId;
+        newTyreRearId = tyreResult.trId;
         
-    //     if (formData.tyreFrontNameManual) tyreFrontValue = formData.tyreFrontNameManual;
-    //     if (formData.tyreRearNameManual) tyreRearValue = formData.tyreRearNameManual;
-    //   } catch (err: any) {
-    //     console.error("Failed to save pending tyres:", err.message);
-    //     return { 
-    //       success: false, 
-    //       message: `Błąd podczas dodawania nowych opon: ${err.message}` 
-    //     };
-    //   }
-    // }
+        if (formData.tyreFrontNameManual) tyreFrontValue = formData.tyreFrontNameManual;
+        if (formData.tyreRearNameManual) tyreRearValue = formData.tyreRearNameManual;
+      } catch (err: any) {
+        console.error("Failed to save pending tyres:", err.message);
+        return { 
+          success: false, 
+          message: `Błąd podczas dodawania nowych opon: ${err.message}` 
+        };
+      }
+    }
 
     // 4. Generate Unique Filename
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -132,8 +134,8 @@ export const addLaptimeService = {
     const laptimeData = { 
       ...formData, 
       motorcycle: motorcycleValue,
-      tyreFront: tyreFrontValue, // Still passing, but will be default if manual is commented
-      tyreRear: tyreRearValue,   // Still passing, but will be default if manual is commented
+      tyreFront: tyreFrontValue,
+      tyreRear: tyreRearValue,
       lapTime: formattedLapTime,
       proof_image_path,
       status: 'pending'
@@ -164,8 +166,8 @@ export const addLaptimeService = {
           submissionToken,
           dbResult.insertedId,
           newMotorcycleId,
-          null, // newTyreFrontId (COMMENTED OUT)
-          null  // newTyreRearId (COMMENTED OUT)
+          newTyreFrontId,
+          newTyreRearId
         );
       } catch (bgError) {
         console.error("Error in background tasks:", bgError);

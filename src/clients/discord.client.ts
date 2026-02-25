@@ -71,12 +71,11 @@ export const discordClient = {
 
       // Add separators for better visibility
       fields.push(
-        { name: "---", value: "---", inline: false }, // Separator line
         {
-          name: `🏍️ NOWY MOTOCYKL DO ZATWIERDZENIA: ${motorcycleDetails}`, // More prominent title
-          value: `[✅ Zatwierdź](${motorcycleApproveUrl})\n[❌ Usuń](${motorcycleDeleteUrl})\n[✏️ Modyfikuj](${motorcycleModifyUrl})`, // Changed to use \n for new lines
+          name: `---\n🏍️ NOWY MOTOCYKL DO ZATWIERDZENIA: ${motorcycleDetails}\n\u200b`, // Combined padding and separator
+          value: `[✅ Zatwierdź](${motorcycleApproveUrl})\n[❌ Usuń](${motorcycleDeleteUrl})\n[✏️ Modyfikuj](${motorcycleModifyUrl})`,
           inline: false
-        }
+        },
       );
     }
 
@@ -98,12 +97,11 @@ export const discordClient = {
       const tyreDetails = `${val(lapData.tyreFrontNameManual)} / ${val(lapData.tyreRearNameManual)}`;
 
       fields.push(
-        { name: "---", value: "---", inline: false }, // Separator
         {
-          name: `🔘 NOWE OPONY DO ZATWIERDZENIA: ${tyreDetails}`,
-          value: `[✅ Zatwierdź](${tyreApproveUrl})\n[❌ Usuń](${tyreRejectUrl})\n[✏️ Modyfikuj](${tyreModifyUrl})`, // Split into lines
+          name: `---\n🔘 NOWE OPONY DO ZATWIERDZENIA: ${tyreDetails}\n\u200b`, // Combined padding and separator
+          value: `[✅ Zatwierdź](${tyreApproveUrl})\n[❌ Usuń](${tyreRejectUrl})\n[✏️ Modyfikuj](${tyreModifyUrl})`,
           inline: false
-        }
+        },
       );
     }
 

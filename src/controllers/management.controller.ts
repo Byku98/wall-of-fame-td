@@ -212,7 +212,7 @@ async function postModifyMotorcycle(req: Request, res: Response) {
     const result = await managementService.managePendingMotorcycle(
       id,
       token as string,
-      "approve", // Action is 'approve' with new values for modification
+      "approve", // CORRECTED: Action is 'modify'
       motorcycleName as string,
       parseInt(motorcycleYear as string, 10),
       motorcycleType as string
@@ -235,7 +235,9 @@ async function postModifyMotorcycle(req: Request, res: Response) {
  * GET /api/management/tyre/:tfId?/:trId??token=...&action=...&nameTf=...&nameTr=...
  */
 async function getManageTyrePage(req: Request, res: Response) {
-  const { tfId, trId } = req.params;
+  // Convert "null" string from URL params to actual null
+  const tfId = req.params.tfId === 'null' ? null : req.params.tfId;
+  const trId = req.params.trId === 'null' ? null : req.params.trId;
   const { token, action, nameTf, nameTr } = req.query;
 
   if (!token) {
@@ -266,8 +268,8 @@ async function getManageTyrePage(req: Request, res: Response) {
     if (action === "modify") {
       // Render modification form
       return res.render("laps-management/management-modify-tyre", {
-        tfId: tfId || null,
-        trId: trId || null,
+        tfId: tfId, // Pass the converted null/string
+        trId: trId, // Pass the converted null/string
         token,
         tyreFrontName: nameTf || "",
         tyreRearName: nameTr || "",
@@ -275,19 +277,18 @@ async function getManageTyrePage(req: Request, res: Response) {
     } else { // action is 'approve' or 'delete'
       // Perform action directly
       const result = await managementService.managePendingTyres(
-        tfId || null,
-        trId || null,
+        tfId, // Pass the converted null/string
+        trId, // Pass the converted null/string
         token as string,
         action as "approve" | "delete" // Pass 'approve' or 'delete'
       );
       const tyreType = (tfId && trId) ? "Opony" : (tfId ? "Opona Przednia" : "Opona Tylna");
       const actionText = action === "approve" ? "Zatwierdzone" : "Usunięte";
-      const actionMessage = action === "approve" ? "zatwierdzono" : "usunięto";
 
       res.render("laps-management/management-success", {
         title: `${tyreType} ${actionText}`,
         header: `🔘 ${tyreType} ${actionText}`,
-        message: `Pomyślnie ${actionMessage} ${tyreType.toLowerCase()}.`,
+        message: `Pomyślnie ${action === "approve" ? "zatwierdzono" : "usunięto"} ${tyreType.toLowerCase()}.`,
         lap_id: result.id, 
         contact: result.contact,
       });
@@ -304,7 +305,9 @@ async function getManageTyrePage(req: Request, res: Response) {
  * POST /api/management/tyre/:tfId?/:trId?
  */
 async function postManageTyre(req: Request, res: Response) {
-  const { tfId, trId } = req.params;
+  // Convert "null" string from URL params to actual null
+  const tfId = req.params.tfId === 'null' ? null : req.params.tfId;
+  const trId = req.params.trId === 'null' ? null : req.params.trId;
   const { token, action, tyreFrontName, tyreRearName } = req.body;
 
   if (!token) {
@@ -315,11 +318,11 @@ async function postManageTyre(req: Request, res: Response) {
       });
   }
 
-  if (!action || action !== "modify") { // Ensure action is 'modify' for POST
+  if (!action || action !== "approve") { // CORRECTED: Action is 'approve' for this form submission
     return res
       .status(400)
       .render("laps-management/management-error", {
-        error: "Nieprawidłowa akcja POST dla opon. Oczekiwano 'modify'."
+        error: "Nieprawidłowa akcja POST dla opon. Oczekiwano 'approve'."
       });
   }
 
@@ -334,14 +337,14 @@ async function postManageTyre(req: Request, res: Response) {
 
   try {
     const result = await managementService.managePendingTyres(
-      tfId || null,
-      trId || null,
+      tfId, // Pass the converted null/string
+      trId, // Pass the converted null/string
       token as string,
-      action as "modify",
+      "approve", // CORRECTED: Action is 'approve'
       tyreFrontName as string,
       tyreRearName as string
     );
-    const tyreType = (tfId && trId) ? "Opony" : (tfId ? "Opona Przednia" : "Opona Tylna");
+    const tyreType = (tfId && trId) ? "obie opony" : (tfId ? "oponę przednią" : "oponę tylną");
 
     res.render("laps-management/management-success", {
       title: `${tyreType} Zmodyfikowane`,

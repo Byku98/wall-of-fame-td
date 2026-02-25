@@ -200,9 +200,13 @@ export const addLaptimeRepository = {
       // 1. Execute the CALL with token parameter
       await connection.query(`CALL insert_pending_tyres(?, ?, ?, @o_tf_id, @o_tr_id)`, [frontName, rearName, tokenHash]);
       
+      // console.log("Tyres insertion procedure executed with params:", { frontName, rearName, tokenHash });
+
       // 2. Retrieve the IDs from the session variables
       const [idResult]: any = await connection.query("SELECT @o_tf_id AS tfId, @o_tr_id AS trId");
       
+      // console.log("Tyres insertion procedure output:", idResult);
+
       return {
         tfId: idResult && idResult[0] ? idResult[0].tfId : null,
         trId: idResult && idResult[0] ? idResult[0].trId : null

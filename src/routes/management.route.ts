@@ -5,7 +5,9 @@ import {
   getRejectLapPage, 
   postRejectLap,
   manageMotorcycle,
-  postModifyMotorcycle // NEW: Import the new controller function
+  postModifyMotorcycle,
+  getManageTyrePage,
+  postManageTyre
 } from "../controllers/management.controller";
 
 const router = Router();
@@ -34,6 +36,12 @@ router.get(`${ROUTES.API.MANAGEMENT.MOTORCYCLE}/:id`, manageMotorcycle); // Chan
 // NEW: POST route for handling motorcycle modification form submission
 router.post(`${ROUTES.API.MANAGEMENT.MOTORCYCLE}/:id`, postModifyMotorcycle);
 
-// router.post(`${ROUTES.API.MANAGEMENT.TYRE}/:tfId?/:trId?`, manageTyre); // New combined tyre route
+/**
+ * Routes to manage tyres.
+ * GET /api/management/tyre/:tfId?/:trId??token=...&action=...&nameTf=...&nameTr=...
+ * POST /api/management/tyre/:tfId?/:trId? (for modify form submission)
+ */
+router.get(`${ROUTES.API.MANAGEMENT.TYRE}/:tfId?/:trId?`, getManageTyrePage);
+router.post(`${ROUTES.API.MANAGEMENT.TYRE}/:tfId?/:trId?`, postManageTyre);
 
 export default router;

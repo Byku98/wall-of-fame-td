@@ -16,11 +16,12 @@ export const discordClient = {
     newTyreFrontId: number | null = null,
     newTyreRearId: number | null = null
   ) => {
-    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    const lapWebhookUrl = process.env.LAP_DISCORD_WEBHOOK_URL;
+    const userWebhookUrl = process.env.USER_DISCORD_WEBHOOK_URL;
     const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
-    if (!webhookUrl) {
-      console.warn("DISCORD_WEBHOOK_URL is missing in .env. Skipping notification.");
+    if (!lapWebhookUrl) {
+      console.warn("LAP_DISCORD_WEBHOOK_URL is missing in .env. Skipping notification.");
       return;
     }
 
@@ -41,6 +42,7 @@ export const discordClient = {
       { name: "🤝 Organizator", value: val(lapData.organizer), inline: true },
       { name: "📱 Urządzenie pomiarowe", value: val(lapData.device), inline: true },
       { name: "📧 Kontakt", value: val(lapData.contactEmail), inline: true },
+      { name: "🔗 Profil Społecznościowy", value: lapData.socialProfile ? `[Link](${lapData.socialProfile})` : 'Brak', inline: false }, // NEW
       { name: "📊 Telemetria", value: val(lapData.deviceRecordedLap), inline: false },
       { name: "🔘 Opona Przód", value: val(lapData.tyreFront), inline: true },
       { name: "🔘 Opona Tył", value: val(lapData.tyreRear), inline: true },
@@ -117,7 +119,7 @@ export const discordClient = {
     };
 
     try {
-      await fetch(webhookUrl, {
+      await fetch(lapWebhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

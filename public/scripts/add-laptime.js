@@ -1,4 +1,4 @@
-import { parseFlexibleTime } from "./utils.js";
+import { parseFlexibleTime } from "./utils.js"; // NEW: Import the utility
 
 document.addEventListener("DOMContentLoaded", () => {
   
@@ -6,48 +6,41 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. VARIABLES DECLARATION
   // ==========================================
 
-  // --- Global References ---
+  // --- Main Form Elements ---
   const addLaptimeForm = document.getElementById("addLaptimeForm");
   const trackSelect = document.getElementById("trackSelect");
-  const submitButton = document.getElementById("submitButton");
-  const successContainer = document.getElementById("successContainer");
-  const formHeader = document.getElementById("formHeader");
-
-  // Manual input fields
+  const deviceSelect = document.getElementById("deviceSelect");
+  const submitButton = addLaptimeForm.querySelector('button[type="submit"]');
+  
+  // --- Conditional Fields (Device/YouTube) ---
+  const deviceRecordedLapContainer = document.getElementById("deviceRecordedLapContainer");
+  const deviceRecordedLap = document.getElementById("deviceRecordedLap");
+  
+  // --- Motorcycle Fields ---
   const motorcycleSelect = document.getElementById("motorcycle");
-  const noMotorcycleCheckbox = document.getElementById("noMotorcycleOnList");
   const motorcycleManualGroup = document.getElementById("motorcycleManualGroup");
   const motorcycleNameManual = document.getElementById("motorcycleNameManual");
   const motorcycleYearManual = document.getElementById("motorcycleYearManual");
   const motorcycleTypeManual = document.getElementById("motorcycleTypeManual");
+  const noMotorcycleCheckbox = document.getElementById("noMotorcycleOnList");
 
+  // --- Tyre Fields ---
   const tyreFrontSelect = document.getElementById("tyreFront");
-  const noTyreFrontCheckbox = document.getElementById("noTyreFrontOnList");
   const tyreFrontManual = document.getElementById("tyreFrontManual");
+  const noTyreFrontCheckbox = document.getElementById("noTyreFrontOnList");
 
   const tyreRearSelect = document.getElementById("tyreRear");
-  const noTyreRearCheckbox = document.getElementById("noTyreRearOnList");
   const tyreRearManual = document.getElementById("tyreRearManual");
+  const noTyreRearCheckbox = document.getElementById("noTyreRearOnList");
 
-  const riderSelect = document.getElementById("riderName");
-  const noRiderOnListCheckbox = document.getElementById("noRiderOnList");
-  const riderManualGroup = document.getElementById("riderManualGroup");
-  const riderNameManual = document.getElementById("riderNameManual");
-  const riderSexMaleManual = document.getElementById("riderSexMaleManual");
-  const riderSexFemaleManual = document.getElementById("riderSexFemaleManual");
-  const riderInstagramManual = document.getElementById("riderInstagramManual");
-  const riderFacebookManual = document.getElementById("riderFacebookManual");
+  // --- Success View Elements ---
+  const successContainer = document.getElementById("successContainer");
+  const addAnotherBtn = document.getElementById("addAnotherBtn");
+  const formHeader = document.getElementById("formHeader");
 
-  const deviceSelect = document.getElementById("device");
-  const deviceRecordedLapContainer = document.getElementById("deviceRecordedLapContainer");
-  const deviceRecordedLap = document.getElementById("deviceRecordedLap");
-
-  const socialProfileInput = document.getElementById("socialProfile"); // Assuming this is the social profile for the submitter
-
+  // --- Global References ---
   const today = new Date();
   today.setHours(23, 59, 59, 999); // End of today for validation
-
-  let currentRiderNames = []; // To store current rider names for validation
 
   // List of all inputs that should be locked until a track is selected
   const controlsToToggle = addLaptimeForm.querySelectorAll(
@@ -71,12 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!select) return;
 
     select.innerHTML = `<option value="">${defaultText}</option>`;
-    
-    // FIX: Store rider names for validation when the rider list is loaded
-    if (selectId === "riderName" && dataArray) {
-      currentRiderNames = dataArray.map(item => item[key].toLowerCase());
-    }
-
     if (dataArray && Array.isArray(dataArray)) {
       dataArray.forEach((item) => {
         let value = item[key];
@@ -85,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // NEW: Special handling for motorcycle formatting (Motorcycle - Year)
         if (selectId === "motorcycle" && item.motorcycle_name) {
           text = item.year ? `${item.motorcycle_name} - ${item.year}` : item.motorcycle_name;
-          value = text;
+          value = text; // Use the formatted string as the value for submission
         }
 
         if (text) {
@@ -103,11 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const fetchAndPopulateSelect = async (url, selectId, key, defaultText) => {
     try {
-      console.log(`Fetching data from: ${url} for ${selectId}`); // Debug log
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
-      console.log(`Data received for ${selectId}:`, data); // Debug log
       populateSelect(selectId, data, key, defaultText);
     } catch (error) {
       console.error(`Error fetching data for ${selectId}:`, error);
@@ -144,12 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const toggleFormControls = (unlocked) => {
     controlsToToggle.forEach((field) => {
-      if (field) field.disabled = !unlocked;
+      field.disabled = !unlocked;
     });
     
     // Handle checkboxes
-    [noMotorcycleCheckbox, noTyreFrontCheckbox, noTyreRearCheckbox, noRiderOnListCheckbox]
-      .forEach(cb => { if (cb) cb.disabled = !unlocked; });
+    [noMotorcycleCheckbox, noTyreFrontCheckbox, noTyreRearCheckbox].forEach(cb => {
+      if (cb) cb.disabled = !unlocked;
+    });
 
     // Handle manual inputs based on checkbox state
     if (unlocked) {
@@ -159,27 +145,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (input) input.disabled = !isMotorcycleManual;
       });
 
-      if (noTyreFrontCheckbox?.checked && tyreFrontManual) tyreFrontManual.disabled = false;
-      if (noTyreRearCheckbox?.checked && tyreRearManual) tyreRearManual.disabled = false;
-
-      // new‑rider manual inputs
-      if (noRiderOnListCheckbox?.checked) {
-        [riderNameManual, riderSexMaleManual, riderSexFemaleManual,
-         riderInstagramManual, riderFacebookManual].forEach(i => {
-           if (i) i.disabled = false;
-        });
-      }
-
-      if (socialProfileInput) socialProfileInput.disabled = false;
+      if (noTyreFrontCheckbox?.checked) tyreFrontManual.disabled = false;
+      if (noTyreRearCheckbox?.checked) tyreRearManual.disabled = false;
       validateForm();
     } else {
-      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual,
-       tyreFrontManual, tyreRearManual, socialProfileInput,
-       riderNameManual, riderSexMaleManual, riderSexFemaleManual,
-       riderInstagramManual, riderFacebookManual].forEach(m => {
-         if (m) m.disabled = true;
+      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual, tyreFrontManual, tyreRearManual].forEach(m => {
+        if (m) m.disabled = true;
       });
-      if (submitButton) submitButton.disabled = true;
+      submitButton.disabled = true;
     }
   };
 
@@ -219,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // UPDATED: Flexible Lap Time Pattern
       // Allows digits and any separators. The parser will handle the rest.
       if (field.id === "lapTime" && field.value) {
-        const flexiblePattern = /^[\d\\s.,:]+$/; 
+        const flexiblePattern = /^[\d\s.,:]+$/; 
         if (!flexiblePattern.test(field.value)) isValid = false;
       }
 
@@ -262,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Track Selection Logic ---
   trackSelect.addEventListener("change", async () => {
-    console.log("Track selection changed to:", trackSelect.value); // Debug log
     if (trackSelect.value !== "") {
       toggleFormControls(true);
 
@@ -275,22 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ]);
     } else {
       toggleFormControls(false);
-      ["motorcycle", "tyreFront", "tyreRear", "riderName", "organizerList"]
-        .forEach(id => populateSelect(id, [], "", "-- Wybierz --"));
-
-      // reset new‑rider section as well
-      if (noRiderOnListCheckbox) {
-        noRiderOnListCheckbox.checked = false;
-        riderManualGroup.style.display = "none";
-        [riderNameManual, riderSexMaleManual, riderSexFemaleManual,
-         riderInstagramManual, riderFacebookManual].forEach(i => {
-           if (!i) return;
-           if (i.type === "radio") i.checked = false;
-           else i.value = "";
-           i.disabled = true;
-           i.required = false;
-        });
-      }
+      ["motorcycle", "tyreFront", "tyreRear", "riderName", "organizerList"].forEach(id => populateSelect(id, [], "", "-- Wybierz --"));
     }
   });
 
@@ -309,11 +266,11 @@ document.addEventListener("DOMContentLoaded", () => {
     validateForm();
   });
 
-  // --- Updated Lap Time Format Warning ---
+  // --- Updated Lap Time Format Warning
   const lapTimeField = document.getElementById("lapTime");
   if (lapTimeField) {
     lapTimeField.addEventListener("change", () => {
-      const flexiblePattern = /^[\d\\s.,:]+$/;
+      const flexiblePattern = /^[\d\s.,:]+$/;
       if (lapTimeField.value && !flexiblePattern.test(lapTimeField.value)) {
         alert("Niepoprawny format! Użyj cyfr i dowolnych separatorów (np. 1.05.12, 45.2).");
         lapTimeField.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -346,50 +303,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Initialize Rider Toggle ---
-  if (noRiderOnListCheckbox) {
-    noRiderOnListCheckbox.addEventListener("change", () => {
-      const isChecked = noRiderOnListCheckbox.checked;
-
-      riderSelect.style.display = isChecked ? "none" : "block";
-      riderSelect.required = !isChecked;
-      riderSelect.value = "";
-
-      riderManualGroup.style.display = isChecked ? "block" : "none";
-
-      // FIX: Set required status for mandatory fields
-      riderNameManual.required = isChecked;
-      riderSexMaleManual.required = isChecked;
-      riderSexFemaleManual.required = isChecked;
-
-      [riderNameManual, riderSexMaleManual, riderSexFemaleManual].forEach(input => {
-        input.required = isChecked;
-        input.disabled = !isChecked;
-        if (!isChecked) {
-          if (input.type === "radio") input.checked = false;
-          else input.value = "";
-        }
-      });
-
-      if (isChecked) riderNameManual.focus();
-      validateForm();
-    });
-  }
-
   // --- Form Submission ---
   addLaptimeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
-    // FIX: Add the duplicate name check before submission
-    if (noRiderOnListCheckbox?.checked && riderNameManual.value.trim()) {
-      const newRiderName = riderNameManual.value.trim().toLowerCase();
-      if (currentRiderNames.includes(newRiderName)) {
-        alert(`Błąd: Zawodnik o imieniu "${riderNameManual.value.trim()}" już istnieje na liście. Proszę wybrać go z listy lub podać inne imię.`);
-        riderNameManual.focus();
-        return;
-      }
-    }
 
     const formData = new FormData(addLaptimeForm);
 
@@ -414,17 +331,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (noTyreRearCheckbox?.checked) {
       formData.set('tyreRearNameManual', tyreRearManual.value.trim());
-    }
-
-    // NEW: handle manual rider entry
-    if (noRiderOnListCheckbox?.checked) {
-      formData.set('riderNameManual', riderNameManual.value.trim());
-      const sex = riderSexMaleManual.checked ? 'M' :
-                  riderSexFemaleManual.checked ? 'F' : '';
-      if (sex) formData.set('riderSex', sex);
-      formData.set('riderInstagram', riderInstagramManual.value.trim());
-      formData.set('riderFacebook', riderFacebookManual.value.trim());
-      formData.delete('riderName');
     }
     
     try {

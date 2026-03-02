@@ -59,18 +59,6 @@ export const addLaptimeService = {
     }
   },
 
-  /**
-   * Handles the insertion of a new rider into the pending list with token.
-   */
-  // saveNewRider: async (name: string, sex: string, instagram: string | null, facebook: string | null, submissionToken: string) => {
-  //   try {
-  //     return await addLaptimeRepository.insertPendingRider(name, sex, instagram, facebook, submissionToken);
-  //   } catch (error) {
-  //     console.error("Error in saveNewRider service:", error);
-  //     throw error;
-  //   }
-  // },
-
   saveLaptime: async (formData: any, fileBuffer: Buffer, originalName: string) => {
     // 1. GENERATE TOKEN FIRST - will be used for lap, motorcycle, and tyres
     const submissionToken = crypto.randomBytes(32).toString('hex');
@@ -127,36 +115,13 @@ export const addLaptimeService = {
       }
     }
 
-    // 4. Handle Pending Rider if manual fields are provided
-    let riderValue = formData.riderName;
-    let newRiderId: number | null = null;
-
-    // if (formData.riderNameManual) {
-    //   try {
-    //     newRiderId = await addLaptimeService.saveNewRider(
-    //       formData.riderNameManual,
-    //       formData.riderSex,
-    //       formData.riderInstagram || null,
-    //       formData.riderFacebook || null,
-    //       submissionToken
-    //     );
-    //     riderValue = formData.riderNameManual;
-    //   } catch (err: any) {
-    //     console.error("Failed to save pending rider:", err.message);
-    //     return {
-    //       success: false,
-    //       message: `Błąd podczas dodawania nowego zawodnika: ${err.message}`
-    //     };
-    //   }
-    // }
-
-    // 5. Generate Unique Filename
+    // 4. Generate Unique Filename
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(originalName).toLowerCase();
     const filename = `evidence-${uniqueSuffix}${ext}`;
     const proof_image_path = `/evidences/${filename}`;
 
-    // 6. Format lapTime
+    // 5. Format lapTime
     let formattedLapTime = formData.lapTime;
     if (formattedLapTime.includes(':')) {
       const colonCount = (formattedLapTime.match(/:/g) || []).length;
@@ -165,24 +130,23 @@ export const addLaptimeService = {
       }
     }
 
-    // 7. Prepare data for Database (NO IDs in laptimeData)
+    // 6. Prepare data for Database (NO IDs in laptimeData)
     const laptimeData = { 
       ...formData, 
       motorcycle: motorcycleValue,
       tyreFront: tyreFrontValue,
       tyreRear: tyreRearValue,
-      riderName: riderValue, // Use the potentially new rider name
       lapTime: formattedLapTime,
       proof_image_path,
       status: 'pending'
     };
 
-    // 8. Call Repository to save the Lap
+    // 7. Call Repository to save the Lap
     const dbResult = await addLaptimeRepository.createLaptime(laptimeData);
 
     if (!dbResult.success) return dbResult;
 
-    // 9. PROCESS IMAGE FIRST
+    // 8. PROCESS IMAGE FIRST
     try {
       const outputPath = path.join(__dirname, '../..', evidencesPlaceholder, filename);
       await sharp(fileBuffer)
@@ -193,7 +157,7 @@ export const addLaptimeService = {
       return { success: false, message: `Błąd podczas zapisywania zdjęcia: ${imageError.message}` };
     }
 
-    // 10. THEN SAVE TOKEN & NOTIFY DISCORD
+    // 9. THEN SAVE TOKEN & NOTIFY DISCORD
     if (dbResult.insertedId) {
       try {
         await addLaptimeRepository.saveLapToken(dbResult.insertedId, formData.contactEmail, submissionToken);
@@ -203,8 +167,7 @@ export const addLaptimeService = {
           dbResult.insertedId,
           newMotorcycleId,
           newTyreFrontId,
-          newTyreRearId,
-          // newRiderId // Pass newRiderId to Discord notification
+          newTyreRearId
         );
       } catch (bgError) {
         console.error("Error in background tasks:", bgError);

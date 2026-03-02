@@ -18,23 +18,23 @@
                 <p class="mb-0"><strong>Opony:</strong></p>
                 <ul class="mt-0">
                     <li><strong>Przednia:</strong>
-                        <%= lapDetails.tyre_front || 'Brak danych'%>
+                        <%= lapDetails.tyre_front %>
                     </li>
                     <li><strong>Tylna:</strong>
-                        <%= lapDetails.tyre_rear || 'Brak danych'%>
+                        <%= lapDetails.tyre_rear %>
                     </li>
                 </ul>
                 <p><strong>Data Okrążenia:</strong>
                     <%= lapDetails.lap_date %>
                 </p>
                 <p><strong>Organizator:</strong>
-                    <%= lapDetails.organizer || 'Brak danych' %>
+                    <%= lapDetails.organizer || 'Brak' %>
                 </p>
-                <p><strong>Urządzenie pomiarowe:</strong>
+                <p><strong>Urządzenie:</strong>
                     <%= lapDetails.device %>
                 </p>
                 <p><strong>Zobacz okrążenie: </strong>
-                    <% if (lapDetails.video_url) { %>
+                    <% if (lapDetails.video_url !=null) { %>
                         <a href="<%= lapDetails.video_url %>" target="_blank">Kliknij aby
                             zobaczyć</a>
                         <% } else { %>
@@ -42,7 +42,7 @@
                             <% } %>
                 </p>
                 <p><strong>Dane z telemetrii:</strong>
-                    <% if (lapDetails.proof_url) { %>
+                    <% if (lapDetails.proof_url !=null) { %>
                         <a href="<%= lapDetails.proof_url %>" target="_blank">Kliknij aby
                             zobaczyć</a>
                         <% } else { %>
@@ -54,15 +54,11 @@
         <p><strong>Zdjęcie pomiaru okrążenia:</strong></p>
         <!-- Display images for filepath variables if available -->
         <div class="mt-3">
-            <% 
-            const imagePath = lapDetails.proof_picture_path;
-            // Check if imagePath is a non-empty string and not the literal "/evidences/null"
-            if (imagePath && typeof imagePath === 'string' && imagePath.trim() !== '' && imagePath.trim() !== '/evidences/null') { 
-            %>
-                <img src="<%= imagePath %>" alt="Lap Image" class="img-fluid" style="max-width: 100%; max-height: 400px;">
-            <% } else { %>
-                Brak obrazu
-            <% } %>
+            <% if (lapDetails.proof_picture_path !=null) { %>
+                <img src="<%= lapDetails.proof_picture_path %>" alt="Lap Image" class="img-fluid" style="max-width: 100%; max-height: 400px;">
+                <% } else { %>
+                    Brak obrazu
+                <% } %>
         </div>
     </div>
 </div>

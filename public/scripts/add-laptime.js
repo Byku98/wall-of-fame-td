@@ -33,6 +33,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const tyreRearManual = document.getElementById("tyreRearManual");
   const noTyreRearCheckbox = document.getElementById("noTyreRearOnList");
 
+  // --- Rider Fields ---
+  const riderSelect = document.getElementById("riderName");
+  const noRiderOnListCheckbox = document.getElementById("noRiderOnList");
+  const riderManualGroup = document.getElementById("riderManualGroup");
+  const riderNameManual = document.getElementById("riderNameManual");
+  const riderSexMaleManual = document.getElementById("riderSexMaleManual");
+  const riderSexFemaleManual = document.getElementById("riderSexFemaleManual");
+  const riderInstagramManual = document.getElementById("riderInstagramManual");
+  const riderFacebookManual = document.getElementById("riderFacebookManual");
+
+  // --- Social Media (Submitter) ---
+  const socialProfileInput = document.getElementById("socialProfile");
+  const socialProfileContainer = socialProfileInput?.closest('.mb-3');
+
   // --- Success View Elements ---
   const successContainer = document.getElementById("successContainer");
   const addAnotherBtn = document.getElementById("addAnotherBtn");
@@ -42,9 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const today = new Date();
   today.setHours(23, 59, 59, 999); // End of today for validation
 
+  let currentRiderNames = []; // To store current rider names for validation
+
   // List of all inputs that should be locked until a track is selected
   const controlsToToggle = addLaptimeForm.querySelectorAll(
-    "input:not(#trackSelect), select:not(#trackSelect), button:not(#trackSelect)"
+    "input:not(#trackSelect), select:not(#trackSelect), button:not(#trackSelect), textarea" // Added textarea to the list
   );
 
   if (!trackSelect || !addLaptimeForm) {
@@ -64,6 +80,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!select) return;
 
     select.innerHTML = `<option value="">${defaultText}</option>`;
+    
+    // FIX: Store rider names for validation when the rider list is loaded
+    if (selectId === "riderName" && dataArray) {
+      currentRiderNames = dataArray.map(item => item[key].toLowerCase());
+    }
+
     if (dataArray && Array.isArray(dataArray)) {
       dataArray.forEach((item) => {
         let value = item[key];
@@ -133,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     // Handle checkboxes
-    [noMotorcycleCheckbox, noTyreFrontCheckbox, noTyreRearCheckbox].forEach(cb => {
+    [noMotorcycleCheckbox, noTyreFrontCheckbox, noTyreRearCheckbox, noRiderOnListCheckbox].forEach(cb => {
       if (cb) cb.disabled = !unlocked;
     });
 
@@ -147,9 +169,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (noTyreFrontCheckbox?.checked) tyreFrontManual.disabled = false;
       if (noTyreRearCheckbox?.checked) tyreRearManual.disabled = false;
+
+      // Rider group
+      const isRiderManual = noRiderOnListCheckbox?.checked;
+      [riderNameManual, riderSexMaleManual, riderSexFemaleManual, riderInstagramManual, riderFacebookManual].forEach(input => {
+        if (input) input.disabled = !isRiderManual;
+      });
+
       validateForm();
     } else {
-      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual, tyreFrontManual, tyreRearManual].forEach(m => {
+      [motorcycleNameManual, motorcycleYearManual, motorcycleTypeManual, tyreFrontManual, tyreRearManual, 
+       riderNameManual, riderSexMaleManual, riderSexFemaleManual, riderInstagramManual, riderFacebookManual].forEach(m => {
         if (m) m.disabled = true;
       });
       submitButton.disabled = true;
@@ -248,6 +278,12 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       toggleFormControls(false);
       ["motorcycle", "tyreFront", "tyreRear", "riderName", "organizerList"].forEach(id => populateSelect(id, [], "", "-- Wybierz --"));
+      
+      // Reset Rider Toggle State
+      if (noRiderOnListCheckbox) {
+        noRiderOnListCheckbox.checked = false;
+        noRiderOnListCheckbox.dispatchEvent(new Event('change'));
+      }
     }
   });
 
@@ -302,6 +338,71 @@ document.addEventListener("DOMContentLoaded", () => {
       validateForm();
     });
   }
+
+  // --- Initialize Rider Toggle ---
+  if (noRiderOnListCheckbox) {
+    noRiderOnListCheckbox.addEventListener("change", () => {
+      const isChecked = noRiderOnListCheckbox.checked;
+
+      // Toggle visibility
+      riderSelect.style.display = isChecked ? "none" : "block";
+      riderManualGroup.style.display = isChecked ? "block" : "none";
+      
+      // Toggle Submitter Social Media (Hide if adding new rider to avoid confusion)
+      if (socialProfileContainer) {
+        socialProfileContainer.style.display = isChecked ? "none" : "block";
+      }
+
+      // Update requirements and disabled state
+      riderSelect.required = !isChecked;
+      riderSelect.value = "";
+
+      [riderNameManual, riderSexMaleManual, riderSexFemaleManual].forEach(input => {
+        if (input) {
+          input.required = isChecked;
+          input.disabled = !isChecked;
+          if (!isChecked) {
+            if (input.type === "radio") input.checked = false;
+            else input.value = "";
+          }
+        }
+      });
+
+      [riderInstagramManual, riderFacebookManual].forEach(input => {
+        if (input) {
+          input.disabled = !isChecked;
+          if (!isChecked) input.value = "";
+        }
+      });
+
+      if (isChecked) riderNameManual.focus();
+      validateForm();
+    });
+  }
+
+  // --- Track Selection Logic ---
+  trackSelect.addEventListener("change", async () => {
+    if (trackSelect.value !== "") {
+      toggleFormControls(true);
+
+      await Promise.all([
+        fetchAndPopulateSelect("/add-laptime/api/motorcycles", "motorcycle", "motorcycle_name", "-- Wybierz motocykl --"),
+        fetchAndPopulateSelect("/add-laptime/api/tyres/front", "tyreFront", "tyre_name", "-- Wybierz oponę (przód) --"),
+        fetchAndPopulateSelect("/add-laptime/api/tyres/rear", "tyreRear", "tyre_name", "-- Wybierz oponę (tył) --"),
+        fetchAndPopulateSelect(`/add-laptime/api/riders/${encodeURIComponent(trackSelect.value)}`, "riderName", "rider_name", "-- Wybierz zawodnika --"),
+        fetchAndPopulateSelect(`/add-laptime/api/organizers/${encodeURIComponent(trackSelect.value)}`, "organizerList", "organizer_name", "-- Wybierz organizatora --")
+      ]);
+    } else {
+      toggleFormControls(false);
+      ["motorcycle", "tyreFront", "tyreRear", "riderName", "organizerList"].forEach(id => populateSelect(id, [], "", "-- Wybierz --"));
+      
+      // Reset Rider Toggle State
+      if (noRiderOnListCheckbox) {
+        noRiderOnListCheckbox.checked = false;
+        noRiderOnListCheckbox.dispatchEvent(new Event('change'));
+      }
+    }
+  });
 
   // --- Form Submission ---
   addLaptimeForm.addEventListener('submit', async (e) => {

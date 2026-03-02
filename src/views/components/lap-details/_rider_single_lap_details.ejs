@@ -18,23 +18,23 @@
                 <p class="mb-0"><strong>Opony:</strong></p>
                 <ul class="mt-0">
                     <li><strong>Przednia:</strong>
-                        <%= lapDetails.tyre_front %>
+                        <%= lapDetails.tyre_front || 'Brak danych'%>
                     </li>
                     <li><strong>Tylna:</strong>
-                        <%= lapDetails.tyre_rear %>
+                        <%= lapDetails.tyre_rear || 'Brak danych'%>
                     </li>
                 </ul>
                 <p><strong>Data Okrążenia:</strong>
                     <%= lapDetails.lap_date %>
                 </p>
                 <p><strong>Organizator:</strong>
-                    <%= lapDetails.organizer || 'Brak' %>
+                    <%= lapDetails.organizer || 'Brak danych' %>
                 </p>
-                <p><strong>Urządzenie:</strong>
+                <p><strong>Urządzenie pomiarowe:</strong>
                     <%= lapDetails.device %>
                 </p>
                 <p><strong>Zobacz okrążenie: </strong>
-                    <% if (lapDetails.video_url !=null) { %>
+                    <% if (lapDetails.video_url) { %>
                         <a href="<%= lapDetails.video_url %>" target="_blank">Kliknij aby
                             zobaczyć</a>
                         <% } else { %>
@@ -42,7 +42,7 @@
                             <% } %>
                 </p>
                 <p><strong>Dane z telemetrii:</strong>
-                    <% if (lapDetails.proof_url !=null) { %>
+                    <% if (lapDetails.proof_url) { %>
                         <a href="<%= lapDetails.proof_url %>" target="_blank">Kliknij aby
                             zobaczyć</a>
                         <% } else { %>

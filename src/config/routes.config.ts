@@ -13,7 +13,8 @@ export const ROUTES = {
     },
     MANAGEMENT: {
       MOTORCYCLE: '/api/management/motorcycle',
-      TYRE: '/api/management/tyres'
+      TYRE: '/api/management/tyres',
+      RIDER: '/api/management/rider'
     },
     LEADERBOARD: {
       FILTER: '/leaderboard/filter'

@@ -433,6 +433,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (noTyreRearCheckbox?.checked) {
       formData.set('tyreRearNameManual', tyreRearManual.value.trim());
     }
+
+    // NEW: Handle manual rider entry
+    if (noRiderOnListCheckbox?.checked) {
+      if (riderNameManual) formData.set('riderNameManual', riderNameManual.value.trim());
+      
+      // Explicitly get the checked radio button for sex
+      // Now setting 'male' or 'female' to match EJS values
+      const riderSex = riderSexMaleManual?.checked ? 'male' :
+                       riderSexFemaleManual?.checked ? 'female' : '';
+      if (riderSex) formData.set('riderSex', riderSex);
+
+      if (riderInstagramManual) formData.set('riderInstagram', riderInstagramManual.value.trim());
+      if (riderFacebookManual) formData.set('riderFacebook', riderFacebookManual.value.trim());
+    }
     
     try {
       submitButton.disabled = true;

@@ -7,7 +7,9 @@ import {
   manageMotorcycle,
   postModifyMotorcycle,
   getManageTyrePage,
-  postManageTyre
+  postManageTyre,
+  // manageRider,
+  // postRejectRider
 } from "../controllers/management.controller";
 
 const router = Router();
@@ -26,22 +28,25 @@ router.get(`${ROUTES.API.LAPS.REJECT}/:id`, getRejectLapPage);
 router.post(`${ROUTES.API.LAPS.REJECT}/:id`, postRejectLap);
 
 /**
- * Routes to manage motorcycles and tyres.
+ * Routes to manage motorcycles.
  * URL: /api/management/motorcycle/:id?token=...&action=approve|delete|modify
- * URL: /api/management/tyre/:tfId?/:trId?token=...&action=approve|delete|modify
- * Note: tfId and trId are optional, but at least one must be present.
  */
-router.get(`${ROUTES.API.MANAGEMENT.MOTORCYCLE}/:id`, manageMotorcycle); // Changed from POST to GET
-
-// NEW: POST route for handling motorcycle modification form submission
+router.get(`${ROUTES.API.MANAGEMENT.MOTORCYCLE}/:id`, manageMotorcycle);
 router.post(`${ROUTES.API.MANAGEMENT.MOTORCYCLE}/:id`, postModifyMotorcycle);
 
 /**
  * Routes to manage tyres.
- * GET /api/management/tyre/:tfId?/:trId??token=...&action=...&nameTf=...&nameTr=...
- * POST /api/management/tyre/:tfId?/:trId? (for modify form submission)
+ * URL: /api/management/tyre/:tfId?/:trId?token=...&action=approve|delete|modify
  */
 router.get(`${ROUTES.API.MANAGEMENT.TYRE}/:tfId?/:trId?`, getManageTyrePage);
 router.post(`${ROUTES.API.MANAGEMENT.TYRE}/:tfId?/:trId?`, postManageTyre);
+
+// NEW: Routes to manage new riders (single endpoint for GET actions)
+/**
+ * Route to manage a new rider (approve/reject).
+ * URL: /api/management/rider/:id?token=...&action=approve|reject
+ */
+// router.get(`${ROUTES.API.MANAGEMENT.RIDER}/:id`, manageRider);
+// router.post(`${ROUTES.API.MANAGEMENT.RIDER}/:id`, postRejectRider);
 
 export default router;

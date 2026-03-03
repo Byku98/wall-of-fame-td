@@ -57,7 +57,7 @@ export const addLaptimeRepository = {
    * @returns {Promise<any[]>} Array of rider objects associated with the track.
    */
   getAllRiders: async (trackName: string) => {
-    const [rows] = await pool.query("select * from riders_all", [trackName]);
+    const [rows] = await pool.query("select * from riders_all where status = true order by rider_name");
     return rows as any[];
   },
 
@@ -161,6 +161,33 @@ export const addLaptimeRepository = {
   },
 
   /**
+   * Inserts a new rider into the pending list with token hash.
+   * @param name Rider's name
+   * @param sex Rider's sex ('M' or 'F')
+   * @param instagram Rider's Instagram handle (optional)
+   * @param facebook Rider's Facebook profile URL (optional)
+   * @param tokenHash The submission token hash
+   * @returns The ID of the new rider.
+   */
+  insertPendingRider: async (name: string, sex: string, instagram: string | null, facebook: string | null, tokenHash: string) => {
+    let connection;
+    try {
+      connection = await pool.getConnection()
+      
+      // 1. Execute the CALL with token parameter and rider-specific data
+      // Assuming a stored procedure named 'insert_new_rider' that takes these parameters
+      await connection.query(`CALL insert_new_rider(?, ?, ?, ?, ?, ?, ?, @o_id)`, [name, sex, null, null, instagram, facebook, tokenHash])
+      
+      // 2. Retrieve the ID from the session variable
+      const [idResult]: any = await connection.query("SELECT @o_id AS insertedId")
+      
+      return idResult && idResult[0] ? idResult[0].insertedId : null
+    } finally {
+      if (connection) connection.release()
+    }
+  },
+
+  /**
    * Inserts a motorcycle into the pending list with token hash.
    * @param name Motorcycle name
    * @param year Motorcycle year
@@ -169,19 +196,19 @@ export const addLaptimeRepository = {
    * @returns The ID of the new motorcycle.
    */
   insertPendingMotorcycle: async (name: string, year: number, type: string, tokenHash: string) => {
-    let connection;
+    let connection
     try {
-      connection = await pool.getConnection();
+      connection = await pool.getConnection()
       
       // 1. Execute the CALL with token parameter
-      await connection.query(`CALL insert_pending_motorcycle(?, ?, ?, ?, @o_id)`, [name, year, type, tokenHash]);
+      await connection.query(`CALL insert_pending_motorcycle(?, ?, ?, ?, @o_id)`, [name, year, type, tokenHash])
       
       // 2. Retrieve the ID from the session variable
-      const [idResult]: any = await connection.query("SELECT @o_id AS insertedId");
+      const [idResult]: any = await connection.query("SELECT @o_id AS insertedId")
       
-      return idResult && idResult[0] ? idResult[0].insertedId : null;
+      return idResult && idResult[0] ? idResult[0].insertedId : null
     } finally {
-      if (connection) connection.release();
+      if (connection) connection.release()
     }
   },
 
@@ -193,26 +220,26 @@ export const addLaptimeRepository = {
    * @returns Object containing the IDs of the inserted/existing tyres.
    */
   insertPendingTyres: async (frontName: string | null, rearName: string | null, tokenHash: string) => {
-    let connection;
+    let connection
     try {
-      connection = await pool.getConnection();
+      connection = await pool.getConnection()
       
       // 1. Execute the CALL with token parameter
-      await connection.query(`CALL insert_pending_tyres(?, ?, ?, @o_tf_id, @o_tr_id)`, [frontName, rearName, tokenHash]);
+      await connection.query(`CALL insert_pending_tyres(?, ?, ?, @o_tf_id, @o_tr_id)`, [frontName, rearName, tokenHash])
       
       // console.log("Tyres insertion procedure executed with params:", { frontName, rearName, tokenHash });
 
       // 2. Retrieve the IDs from the session variables
-      const [idResult]: any = await connection.query("SELECT @o_tf_id AS tfId, @o_tr_id AS trId");
+      const [idResult]: any = await connection.query("SELECT @o_tf_id AS tfId, @o_tr_id AS trId")
       
       // console.log("Tyres insertion procedure output:", idResult);
 
       return {
         tfId: idResult && idResult[0] ? idResult[0].tfId : null,
         trId: idResult && idResult[0] ? idResult[0].trId : null
-      };
+      }
     } finally {
-      if (connection) connection.release();
+      if (connection) connection.release()
     }
   },
 };

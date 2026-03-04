@@ -8,8 +8,8 @@ import {
   postModifyMotorcycle,
   getManageTyrePage,
   postManageTyre,
-  // manageRider,
-  // postRejectRider
+  getManageRiderPage, // Renamed import
+  postRejectRider 
 } from "../controllers/management.controller";
 
 const router = Router();
@@ -43,10 +43,15 @@ router.post(`${ROUTES.API.MANAGEMENT.TYRE}/:tfId?/:trId?`, postManageTyre);
 
 // NEW: Routes to manage new riders (single endpoint for GET actions)
 /**
- * Route to manage a new rider (approve/reject).
- * URL: /api/management/rider/:id?token=...&action=approve|reject
+ * Route to manage a new rider (approve/delete).
+ * GET /api/management/rider/:id?token=...&action=approve|delete
  */
-// router.get(`${ROUTES.API.MANAGEMENT.RIDER}/:id`, manageRider);
-// router.post(`${ROUTES.API.MANAGEMENT.RIDER}/:id`, postRejectRider);
+router.get(`${ROUTES.API.MANAGEMENT.RIDER}/:id`, getManageRiderPage); // Updated function call
+
+/**
+ * Route to post rejection for a new rider with a cause.
+ * POST /api/management/rider/:id?token=...
+ */
+router.post(`${ROUTES.API.MANAGEMENT.RIDER}/:id`, postRejectRider);
 
 export default router;

@@ -145,9 +145,32 @@ export const managementService = {
     );
     if (!dbResult.success) throw new Error(dbResult.message);
 
-    // TODO: Send email notification for tyre approval/rejection
-
     // Return the ID of the first available tyre for consistency, and the contact email
     return { success: true, id: (tfId || trId), contact: contactEmail, currentTfName, currentTrName };
   },
+
+  /**
+   * Manages pending rider (approve/delete) after verifying the token.
+   */
+  managePendingRider: async (riderId: number, token: string, action: "approve" | "delete", rejectionReason?: string) => {
+    const rider = await managementRepository.getPendingRiderWithToken(riderId, token);
+    
+    if (!rider) throw new Error("Nieprawidłowy token lub ID zawodnika.");
+
+    const dbResult = await managementRepository.managePendingRider(riderId, action);
+    
+    if (!dbResult.success) throw new Error(dbResult.message);
+
+    // Send Email based on action
+    if (rider.contact_email) {
+      if (action === "approve") {
+        await mailClient.sendRiderApprovalEmail(rider.contact_email);
+      } else if (action === "delete") {
+        // As per instruction, rejectionReason is not used in the email for now
+        await mailClient.sendRiderRejectionEmail(rider.contact_email, rejectionReason || "Twój profil zawodnika został odrzucony."); 
+      }
+    }
+
+    return { success: true, id: rider.id, contact: rider.contact_email };
+  }
 };

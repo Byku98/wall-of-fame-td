@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const renderTable = (laps) => {
     leaderboardTableBody.innerHTML = laps.length === 0 
-      ? '<tr><td colspan="8" class="text-center">Brak czasów dla wybranego toru.</td></tr>'
+      ? '<tr><td colspan="9" class="text-center">Brak czasów dla wybranego toru.</td></tr>' // Adjusted colspan
       : "";
 
     laps.forEach((lap, index) => {
@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Set Data Attributes
       row.dataset.lapTime = lap.lap_time || "";
       row.dataset.riderName = lap.rider_name || "";
+      row.dataset.organiserName = lap.organiser_name || ""; // Add organiser_name to dataset
       row.dataset.motorcycle = lap.motorcycle || "";
       row.dataset.lapDate = lap.isVirtual ? "" : convertMysqlToDate(lap.lap_date);
       row.dataset.sex = lap.sex_name || "";
@@ -155,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.insertCell().textContent = index + 1;
       row.insertCell().textContent = formatLapTime(lap.lap_time) || MISSING_DATA_TEXT;
       row.insertCell().textContent = lap.isVirtual ? "Twój czas" : (lap.rider_name || MISSING_DATA_TEXT);
+      row.insertCell().textContent = lap.isVirtual ? "" : (lap.organizer_name || MISSING_DATA_TEXT); // Add organiser cell
       // row.insertCell().textContent = lap.isVirtual ? "" : (translate("rider_level", lap.rider_level) || MISSING_DATA_TEXT); // Not needed for now
       row.insertCell().textContent = lap.isVirtual ? "" : (lap.motorcycle || MISSING_DATA_TEXT);
       row.insertCell().textContent = lap.isVirtual ? "" : (lap.tyre_front || MISSING_DATA_TEXT);

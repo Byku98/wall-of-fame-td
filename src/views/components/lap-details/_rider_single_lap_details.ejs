@@ -28,7 +28,13 @@
                     <%= lapDetails.lap_date %>
                 </p>
                 <p><strong>Organizator:</strong>
-                    <%= lapDetails.organizer || 'Brak danych' %>
+                    <% if (lapDetails.url_link) { %>
+                        <a href="<%= lapDetails.url_link %>" target="_blank" rel="noopener noreferrer">
+                            <%= lapDetails.organizer || 'Brak danych' %>
+                        </a>
+                    <% } else { %>
+                        <%= lapDetails.organizer || 'Brak danych' %>
+                    <% } %>
                 </p>
                 <p><strong>Urządzenie pomiarowe:</strong>
                     <%= lapDetails.device %>

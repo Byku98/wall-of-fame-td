@@ -15,6 +15,7 @@ export interface LapDetails {
   video_url: string | null;
   rider_fb: string | null;
   rider_ig: string | null;
+  url_link: string | null;
 }
 
 export interface riderHistory {

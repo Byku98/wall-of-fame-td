@@ -1,28 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>
-        <%= title %>
-    </title>
-    <link rel="stylesheet" href="/styles/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for social media icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Czas Okrążenia - Pszczółki WoF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/images/wof-internal/wof-logo-favicon.ico" type="image/x-icon">
 </head>
-
-<body class="bg-light">
-
-    <!-- Include the shared header -->
-    <%- include('components/header/_header') %>
-
-    <!-- Include the new add laptime form partial, passing all necessary data -->
-    <%- include('components/add-laptime/_laptime_details', { trackList: trackList, }) %>
-
-    <!-- Include scripts -->
-    <%- include('components/add-laptime/_scripts') %>
-
+<body>
+    <%- include('./components/header/_header.ejs') %>
+    <main class="container-fluid px-0">
+        <%- include('./components/add-laptime/_laptime_details.ejs') %>
+    </main>
+    <%- include('./components/add-laptime/_scripts.ejs') %>
 </body>
-
 </html>

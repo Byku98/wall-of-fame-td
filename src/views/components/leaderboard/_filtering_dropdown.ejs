@@ -1,6 +1,6 @@
+<!-- filepath: c:\Users\Byczki\Documents\GitHub\pszczolki-wof-terms\src\views\components\leaderboard\_filtering_dropdown.ejs -->
 <div id="filtersDropdownContainer" class="mb-4 p-3 border rounded collapse fade-collapse">
     <h5>Wybierz filtry</h5>
-    <!-- This is where your new filter inputs will go -->
     <div class="row g-3">
         <div class="col-md-4">
             <label for="motorcycleNameFilter" class="form-label">Motocykl</label>
@@ -54,6 +54,13 @@
             <div class="input-group">
                 <input type="date" class="form-control" id="dateToFilter" placeholder="Data - do">
                 <button class="btn btn-secondary" id="clearFiltersDateTo" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <!-- New: Organizer Filter Section -->
+        <div class="col-12">
+            <label class="form-label">Organizatorzy</label>
+            <div id="organizerCheckboxes">
+                <!-- Organizer checkboxes will be populated by JavaScript -->
             </div>
         </div>
         <!-- <div class="col-12">

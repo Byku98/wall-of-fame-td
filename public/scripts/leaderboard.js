@@ -56,6 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
     all: document.getElementById("sexAll")
   };
 
+  // --- New: Organizer Filter ---
+  const organizerCheckboxesContainer = document.getElementById("organizerCheckboxes");
+  let organizerCheckboxes = []; // To store dynamically created checkboxes
+
   // --- State ---
   let allTrackLapsData = [];
   const MISSING_DATA_TEXT = "Brak danych";
@@ -130,6 +134,38 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /**
+   * Dynamically generates organizer checkboxes.
+   */
+  const populateOrganizerCheckboxes = () => {
+    if (!organizerCheckboxesContainer) return;
+
+    const uniqueOrganizers = [...new Set(allTrackLapsData.map(l => l.organizer_name).filter(Boolean))].sort();
+    organizerCheckboxesContainer.innerHTML = ""; // Clear existing checkboxes
+    organizerCheckboxes = []; // Reset the array
+
+    uniqueOrganizers.forEach(orgName => {
+      const div = document.createElement("div");
+      div.className = "form-check form-check-inline";
+
+      const input = document.createElement("input");
+      input.className = "form-check-input organizer-checkbox";
+      input.type = "checkbox";
+      input.id = `org_${orgName.replace(/\s/g, '_').replace(/[^\w\s]/gi, '')}`;
+      input.value = orgName;
+
+      const label = document.createElement("label");
+      label.className = "form-check-label";
+      label.htmlFor = input.id;
+      label.textContent = orgName;
+
+      div.appendChild(input);
+      div.appendChild(label);
+      organizerCheckboxesContainer.appendChild(div);
+      organizerCheckboxes.push(input); // Store reference to the checkbox
+    });
+  };
+
+  /**
    * Renders the leaderboard table rows.
    */
   const renderTable = (laps) => {
@@ -144,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Set Data Attributes
       row.dataset.lapTime = lap.lap_time || "";
       row.dataset.riderName = lap.rider_name || "";
-      row.dataset.organiserName = lap.organiser_name || ""; // Add organiser_name to dataset
+      row.dataset.organizerName = lap.organizer_name || ""; // Add organizer_name to dataset
       row.dataset.motorcycle = lap.motorcycle || "";
       row.dataset.lapDate = lap.isVirtual ? "" : convertMysqlToDate(lap.lap_date);
       row.dataset.sex = lap.sex_name || "";
@@ -164,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.insertCell().textContent = lap.isVirtual ? "" : convertMysqlToDate(lap.lap_date);
     });
     populateFilterDatalists();
+    populateOrganizerCheckboxes(); // Call this after rendering table
   };
 
   /**
@@ -175,6 +212,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const fasterLimit = fasterThanInput?.value ? getTotalSeconds(parseFlexibleTime(fasterThanInput.value)) : 0;
     const slowerLimit = slowerThanInput?.value ? getTotalSeconds(parseFlexibleTime(slowerThanInput.value)) : 0;
+
+    const selectedOrganizers = organizerCheckboxes.filter(cb => cb.checked).map(cb => cb.value);
 
     rows.forEach(row => {
       if (row.cells.length === 0) return;
@@ -200,6 +239,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (sexRadios.male?.checked && d.sex.toLowerCase() !== "male") show = false;
       if (sexRadios.female?.checked && d.sex.toLowerCase() !== "female") show = false;
+
+      // New: Organizer Filter
+      if (selectedOrganizers.length > 0 && !selectedOrganizers.includes(d.organizerName)) {
+        show = false;
+      }
 
       row.style.display = show ? "" : "none";
     });
@@ -229,7 +273,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   clearFiltersBtn?.addEventListener("click", () => {
-    filtersContainer.querySelectorAll("input").forEach(i => i.type === "checkbox" ? i.checked = false : i.value = "");
+    filtersContainer.querySelectorAll("input").forEach(i => {
+      if (i.type === "checkbox") {
+        i.checked = false;
+      } else {
+        i.value = "";
+      }
+    });
     if (sexRadios.all) sexRadios.all.checked = true;
     filterTableRows();
   });

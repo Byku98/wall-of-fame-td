@@ -2,11 +2,18 @@ name: Deploy to FTP
 on:
   push:
     branches:
-      - "release/*"
+      - "release"
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "release"
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repository

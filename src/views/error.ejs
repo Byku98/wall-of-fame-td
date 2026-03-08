@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Błąd - Pszczółki WoF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/images/wof-internal/wof-logo-favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <%- include('./components/header/_header.ejs') %>
+    <main class="container-fluid mt-4 px-0">
+        <div class="alert alert-danger mx-3" role="alert">
+            <h4 class="alert-heading">Wystąpił błąd!</h4>
+            <p><%= message %></p>
+            <% if (error && error.stack) { %>
+                <hr>
+                <p class="mb-0">Szczegóły błędu:</p>
+                <pre><code><%= error.stack %></code></pre>
+            <% } %>
+        </div>
+        <a href="/" class="btn btn-primary mx-3">Wróć do strony głównej</a>
+    </main>
+</body>
+</html>

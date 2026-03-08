@@ -1,0 +1,7 @@
+/* Hover effect for header navigation buttons */
+.header-nav-btn:hover {
+  color: #eeff00 !important; /* Ensure text stays white or changes to a brighter white */
+  background-color: rgb(255, 251, 2); /* Subtle white background with transparency */
+  border-radius: 0.8rem; /* Slightly rounded corners */
+  transition: background-color 0.5s ease-in-out; /* Smooth transition */
+}

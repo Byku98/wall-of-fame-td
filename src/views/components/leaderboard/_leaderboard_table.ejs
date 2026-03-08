@@ -1,0 +1,74 @@
+<!-- filepath: c:\Users\Byczki\Documents\GitHub\pszczolki-wof-terms\src\views\components\leaderboard\_leaderboard_table.ejs -->
+<div class="table-responsive px-2 px-md-0" id="leaderboardTableContainer"> <!-- Added px-2 for mobile, px-md-0 for larger screens -->
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Czas</th>
+                <th>Zawodnik</th>
+                <th>Organizator</th> <!-- New column for Organiser -->
+                <!-- <th>Doświadczenie</th> -->
+                <th>Motocykl</th>
+                <th>Opona (przód)</th>
+                <th>Opona (tył)</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboardTableBody">
+            <% // Always render the table with data, even if empty, to show "Brak czasów dla wybranego toru." %>
+                <% if (leaderboard.length > 0) { %>
+                    <% leaderboard.forEach((lap, index)=> { %>
+                        <tr class="<%= lap.isVirtual ? 'virtual-lap-row' : '' %>">
+                            <td>
+                                <%= index + 1 %>
+                            </td>
+                            <td>
+                                <%= lap.lap_time %>
+                            </td>
+                            <td>
+                                <% if (lap.isVirtual) { %>
+                                    Twój czas
+                                <% } else { %>
+                                    <%= lap.rider_name || "Brak danych" %>
+                                <% } %>
+                            </td>
+                            <td> <!-- New cell for Organiser -->
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.organiser_name || "Brak danych" %>
+                                <% } %>
+                            </td>
+                            <!-- <td>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.rider_level %>
+                                <% } %>
+                            </td> -->
+                            <td>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.motorcycle || "Brak danych" %>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.tyre_front || "Brak danych" %>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= lap.tyre_rear || "Brak danych" %>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (!lap.isVirtual) { %>
+                                    <%= new Date(lap.lap_date).toLocaleDateString() %>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="9" class="text-center">Brak czasów dla wybranego toru.</td> <!-- Adjusted colspan -->
+                                </tr>
+                            <% } %>
+        </tbody>
+    </table>
+</div>

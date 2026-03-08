@@ -66,12 +66,22 @@ jobs:
       # ==========================================
       # 3️⃣ Wysyłka na FTP (najpierw czyszczenie, potem upload)
       # ==========================================
-      - name: Deploy to FTP (clean then upload)
+      - name: Clean specific files/folders via lftp
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" <<EOF
+          set ssl:verify-certificate no
+          rmdir dist
+          rmdir public
+          rm package.json
+          bye
+          EOF
+
+      - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy/
-          server-dir: /public_html/
-          dangerous-clean-slate: true
+          server-dir: ./

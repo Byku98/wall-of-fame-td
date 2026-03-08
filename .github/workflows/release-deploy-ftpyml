@@ -2,17 +2,17 @@ name: Deploy to FTP
 on:
   push:
     branches:
-      - 'release/*'
+      - "release/*"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -23,17 +23,49 @@ jobs:
       - name: Build project
         run: npm run build --if-present
 
+      # ==========================================
+      # 1️⃣ Generowanie pliku .env
+      # ==========================================
       - name: Generate .env file
         run: |
-          echo "NODE_ENV=production" > .env
-          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-          echo "SECRET_TOKEN=${{ secrets.SECRET_TOKEN }}" >> .env
+          cat > .env <<'EOF'
+          # ==========================================
+          # DATABASE CONFIGURATION
+          # ==========================================
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          # ==========================================
+          # EXTERNAL SERVICES
+          # ==========================================
+          # Discord Webhook URL for notifications
+          LAP_DISCORD_WEBHOOK_URL=${{ secrets.LAP_DISCORD_WEBHOOK_URL }}
+          RIDER_DISCORD_WEBHOOK_URL=${{ secrets.RIDER_DISCORD_WEBHOOK_URL }}
+          EOF
 
-      - name: Upload to FTP
+      # ==========================================
+      # 2️⃣ Przygotowanie paczki do wysyłki
+      # ==========================================
+      - name: Prepare deploy content
+        run: |
+          mkdir deploy
+          cp -r dist deploy/
+          cp -r public deploy/
+          cp package.json deploy/
+          cp .env deploy/
+
+      # ==========================================
+      # 3️⃣ Wysyłka na FTP (najpierw czyszczenie, potem upload)
+      # ==========================================
+      - name: Deploy to FTP (clean then upload)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./dist
+          local-dir: ./deploy
           server-dir: /public_html/
+          delete: true
+          dangerous-clean-slate: true

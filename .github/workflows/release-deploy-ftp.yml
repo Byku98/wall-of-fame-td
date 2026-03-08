@@ -72,7 +72,6 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy
+          local-dir: ./deploy/
           server-dir: /public_html/
-          delete: true
           dangerous-clean-slate: true

@@ -86,3 +86,4 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy/
           server-dir: ./public_html/
+          

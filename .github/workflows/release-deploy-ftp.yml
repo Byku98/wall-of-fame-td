@@ -68,12 +68,17 @@ jobs:
       # ==========================================
       - name: Clean specific files/folders via lftp
         run: |
-          sudo apt-get update && sudo apt-get install -y lftp
-          lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" <<EOF
+          sudo apt-get update -y && sudo apt-get install -y lftp
+          # lftp zwraca 1 gdy coś nie istnieje – ignorujemy kod wyjścia
+          set +e
+          lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" <<'EOF'
           set ssl:verify-certificate no
-          cls -1 dist && rmdir --ignore-fail-on-non-empty dist
-          cls -1 public && rmdir --ignore-fail-on-non-empty public
-          cls -1 package.json && rm package.json
+          set cmd:fail-exit no
+          # jeśli po zalogowaniu od razu jesteś w katalogu z deploymentem, nie rób "cd" na /public_html
+          # cd public_html   # <- dodaj tylko gdy faktycznie taki katalog widzisz w FileZilli
+          cls -1 dist && rmdir -f dist
+          cls -1 public && rmdir -f public
+          cls -1 package.json && rm -f package.json
           bye
           EOF
 

@@ -72,14 +72,11 @@ jobs:
           lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" <<'EOF'
           set ssl:verify-certificate no
           set cmd:fail-exit no
-          
           rm -rf dist
           rm -rf public
           rm -f package.json
-
           bye
           EOF
-        continue-on-error: true
 
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

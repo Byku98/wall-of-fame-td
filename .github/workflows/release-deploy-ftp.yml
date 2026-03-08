@@ -71,9 +71,9 @@ jobs:
           sudo apt-get update && sudo apt-get install -y lftp
           lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" <<EOF
           set ssl:verify-certificate no
-          rmdir dist
-          rmdir public
-          rm package.json
+          cls -1 dist && rmdir --ignore-fail-on-non-empty dist
+          cls -1 public && rmdir --ignore-fail-on-non-empty public
+          cls -1 package.json && rm package.json
           bye
           EOF
 

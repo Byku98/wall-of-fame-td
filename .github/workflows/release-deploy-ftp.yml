@@ -85,4 +85,4 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy/
-          server-dir: ./
+          server-dir: ./public_html

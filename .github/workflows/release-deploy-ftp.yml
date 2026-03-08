@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - "release"
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "release"
+  workflow_dispatch:
 
 jobs:
   deploy:

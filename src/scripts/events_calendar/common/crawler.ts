@@ -2,16 +2,26 @@ import { OrganizerFlag } from './types';
 import { getLinks } from './utils';
 
 function shouldFollowLink(link: string, organizerFlag: OrganizerFlag): boolean {
+  const lower = link.toLowerCase();
+
+  if (/\.(jpg|jpeg|png|webp|svg|gif|pdf|zip)$/i.test(lower)) {
+    return false;
+  }
+
   if (organizerFlag === 'motoekipa') {
-    return link.includes('/produkt/');
+    return lower.includes('/produkt/') || lower.includes('/torowanie/');
   }
 
   if (organizerFlag === 'kirek') {
-    return link.includes('/kirek-');
+    return lower.includes('/kirek-');
   }
 
   if (organizerFlag === '3mm') {
-    return link.includes('-autodrom-pomorze-');
+    return lower.includes('/produkt/') || lower.includes('/track-days/');
+  }
+
+  if (organizerFlag === 'robson') {
+    return lower.includes('/wydarzenia/');
   }
 
   return false;
@@ -23,9 +33,7 @@ export async function crawl(
   depth = 1,
 ): Promise<string[]> {
   const visited = new Set<string>();
-  const toVisit: Array<{ url: string; depth: number }> = [
-    { url: startUrl, depth: 0 },
-  ];
+  const toVisit: Array<{ url: string; depth: number }> = [{ url: startUrl, depth: 0 }];
 
   while (toVisit.length > 0) {
     const current = toVisit.shift();
@@ -37,8 +45,8 @@ export async function crawl(
       continue;
     }
 
-    console.log(`Visiting (${currentDepth}): ${url}`);
     visited.add(url);
+    console.log(`Visiting (${currentDepth}): ${url}`);
 
     try {
       const links = await getLinks(url);

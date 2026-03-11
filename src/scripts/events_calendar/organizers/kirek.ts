@@ -1,6 +1,6 @@
-import { crawl } from '../../common/crawler';
-import { ScrapedEvent } from '../../common/types';
-import { formatDateIsoToPl, getPageContent } from '../../common/utils';
+import { crawl } from '../common/crawler';
+import { ScrapedEvent } from '../common/types';
+import { formatDateIsoToPl, getPageContent } from '../common/utils';
 
 async function getTdKirekData(url: string): Promise<ScrapedEvent | null> {
   const html = await getPageContent(url);
@@ -22,7 +22,6 @@ async function getTdKirekData(url: string): Promise<ScrapedEvent | null> {
   return {
     name,
     date,
-    time,
     link: url,
     organizer: 'Kirek',
     track: 'ODTJ Autodrom Pomorze',

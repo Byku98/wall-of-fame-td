@@ -1,5 +1,5 @@
 import * as cron from 'node-cron';
-import { main as runScraper } from './odtj_autodrom_pomorze/jobs';
+import { main as runScraper } from './jobs';
 
 let isRunning = false;
 

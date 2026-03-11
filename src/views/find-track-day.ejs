@@ -12,34 +12,42 @@
   <%- include('./components/header/_header.ejs') %>
   <main class="container mt-4">
     <h1 class="mb-4 text-center">Kalendarz Track Day</h1>
+
+    <!-- NEW: Track Filter Dropdown -->
+    <div class="mb-3">
+        <label for="trackFilter" class="form-label">Wybierz tor:</label>
+        <select class="form-select" id="trackFilter">
+            <option value="">Wszystkie tory</option>
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+
     <div class="table-responsive">
-      <table class="table table-striped table-hover">
+      <table class="table table-striped table-hover" id="eventsTable">
         <thead>
           <tr>
             <th>Data</th>
             <th>Organizator</th>
-            <th>Wydarzenie</th>
-            <th>Lokalizacja</th>
+            <th>Nazwa</th>
             <th>Link</th>
           </tr>
         </thead>
         <tbody>
-          <% if (events && events.length) { %>
-            <% events.forEach(ev => { %>
-              <tr>
-                <td><%= new Date(ev.date).toLocaleDateString('pl-PL') %></td>
-                <td><%= ev.organizer %></td>
-                <td><%= ev.name %></td>
-                <td><%= ev.location %></td>
+          <% if (events && events.length > 0) { %>
+            <% events.forEach(event => { %>
+              <tr data-track="<%= event.track %>"> <!-- Add data-track attribute for filtering -->
+                <td><%= event.date %></td>
+                <td><%= event.organizer %></td>
+                <td><%= event.name %></td>
                 <td>
-                  <a href="<%= ev.url %>" target="_blank"
-                     class="btn btn-sm btn-outline-primary">Zapisz się</a>
+                  <a href="<%= event.link %>" target="_blank"
+                     class="btn btn-sm btn-outline-primary">Sprawdź dostępne miejsca</a>
                 </td>
               </tr>
-            <% }) %>
+            <% }); %>
           <% } else { %>
             <tr>
-              <td colspan="5" class="text-center">Brak nadchodzących wydarzeń.</td>
+              <td colspan="4" class="text-center">Brak nadchodzących wydarzeń.</td> <!-- Adjusted colspan to 4 -->
             </tr>
           <% } %>
         </tbody>
@@ -47,7 +55,13 @@
     </div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-          crossorigin="anonymous"></script>
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+  <script>
+    // Embed events data directly into the HTML
+    // Ensure events is an array before stringifying
+    window.allEvents = JSON.parse('<%- JSON.stringify(events || []) %>');
+  </script>
+  <script src="/client_scripts/find-track-day.js"></script> <!-- NEW: Include JavaScript file -->
 </body>
 </html>

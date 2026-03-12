@@ -4,15 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const landing_route_1 = __importDefault(require("./landing.route"));
+const routes_config_1 = require("../config/routes.config");
+// Import your specific route modules
 const leaderboard_route_1 = __importDefault(require("./leaderboard.route"));
-// import aboutRoutes from "./about.routes";
-// import contactRoutes from "./contact.routes";
-// (you can add more as your app grows)
+const add_laptime_route_1 = __importDefault(require("./add-laptime.route"));
+const management_route_1 = __importDefault(require("./management.route"));
+const find_track_day_route_1 = __importDefault(require("./find-track-day.route"));
+const privacy_policy_route_1 = __importDefault(require("./privacy-policy.route"));
 const router = (0, express_1.Router)();
-// Mount sub-routes
-router.use("/", landing_route_1.default); // landing page at "/"
-router.use("/", leaderboard_route_1.default); // router.use("/about", aboutRoutes);
-// router.use("/contact", contactRoutes);
+// Redirect root to leaderboard
+router.get(routes_config_1.ROUTES.PAGES.ROOT, (req, res) => res.redirect(routes_config_1.ROUTES.PAGES.LEADERBOARD));
+// Mount other specific route modules
+// These modules should define their own full paths (e.g., /leaderboard, /add-laptime)
+router.use(leaderboard_route_1.default);
+router.use(add_laptime_route_1.default);
+router.use(management_route_1.default);
+router.use(find_track_day_route_1.default);
+router.use(privacy_policy_route_1.default);
 exports.default = router;
 //# sourceMappingURL=pages.route.js.map

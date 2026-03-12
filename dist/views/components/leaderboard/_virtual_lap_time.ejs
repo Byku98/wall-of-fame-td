@@ -1,32 +1,14 @@
-<div id="virtualLapTimeContainer" class="mb-4 p-3 border rounded collapse fade-collapse">
+<div id="virtualLapTimeContainer" class="mb-4 p-3 border rounded collapse fade-collapse mx-2 mx-md-0"> <!-- Added mx-2 for mobile, mx-md-0 for larger screens -->
     <h5 class="text-center">Wprowadź swój czas</h5>
     <div class="row g-3 justify-content-center">
-        <div class="col-md-4 text-center">
-            <label for="fasterThanMinutes" class="form-label">(MM:SS.mm)</label>
-            <div class="input-group">
-                <select class="form-select" id="virtualMinutes">
-                    <% for (let i=0; i <=3; i++) { %>
-                        <option value="<%= String(i).padStart(2, '0') %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
-                <span class="input-group-text">:</span>
-                <select class="form-select" id="virtualSeconds">
-                    <% for (let i=0; i <=59; i++) { %>
-                        <option value="<%= String(i).padStart(2, '0') %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
-                <span class="input-group-text">.</span>
-                <select class="form-select" id="virtualMiliSeconds">
-                    <% for (let i=0; i <=99; i++) { %>
-                        <option value="<%= String(i).padStart(2, '0') %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
+        <div class="col-12 col-md-6 text-center">
+            <label for="virtualLapInput" class="form-label">Zobacz na którym miejscu jesteś</label>
+            <input type="text" class="form-control text-center" id="virtualLapInput" 
+                placeholder="np. 1:05.120, 58.454 lub 45"
+                pattern="([0-5]?\d:)?([0-5]?\d)(\.\d{1,3})?" 
+                title="Format: MM:SS.mmm, SS.mmm lub SS (np. 1:05.12, 45)">
+            <div class="form-text text-muted mt-2">
+                Podaj czas w formacie minuty:sekundy.milisekundy lub same sekundy (np. 1:05.12, 45).
             </div>
         </div>
         <div class="col-12 d-flex justify-content-center">

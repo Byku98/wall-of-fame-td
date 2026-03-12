@@ -7,27 +7,11 @@ async function renderLeaderboardPage(req, res) {
     try {
         const trackList = await leaderboard_service_1.leaderboardService.getAllTracks();
         let leaderboard = [];
-        let trackId_selected = null;
-        // Determine the trackId to use for initial load
-        let trackIdToLoad;
-        // 1. Check if a trackId is provided in the query string
-        if (req.query.trackId) {
-            const parsedTrackId = parseInt(req.query.trackId, 10);
-            if (!isNaN(parsedTrackId)) {
-                trackIdToLoad = parsedTrackId;
-            }
-        }
-        // 2. If no trackId from query, use the first track from the trackList as default
-        // if (!trackIdToLoad && trackList.length > 0) {
-        // trackIdToLoad = (trackList[0] as any).track_id; // Assuming track_id is on the first item
-        // }
-        // console.log(trackList);
         const dynamicContent = {
             title: "Wall of Fame - Leaderbaord",
             logo: "/images/wof-internal/wof-logo-big.png",
             trackList,
             leaderboard,
-            selectedTrackId: trackId_selected
         };
         res.render("leaderboard", dynamicContent);
     }

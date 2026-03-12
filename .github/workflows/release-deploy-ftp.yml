@@ -2,11 +2,18 @@ name: Deploy to FTP
 on:
   push:
     branches:
-      - "release/*"
+      - "release"
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "release"
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repository
@@ -59,13 +66,24 @@ jobs:
       # ==========================================
       # 3️⃣ Wysyłka na FTP (najpierw czyszczenie, potem upload)
       # ==========================================
-      - name: Deploy to FTP (clean then upload)
+      - name: Clean specific files/folders via lftp
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y lftp
+          lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" <<'EOF'
+          set ssl:verify-certificate no
+          set cmd:fail-exit no
+          rm -rf dist
+          rm -rf public
+          rm -f package.json
+          bye
+          EOF
+
+      - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy
-          server-dir: /public_html/
-          delete: true
-          dangerous-clean-slate: true
+          local-dir: ./deploy/
+          server-dir: ./
+          

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Main Table Elements ---
   const trackSelect = document.getElementById("trackSelect");
-  const filterButton = document.getElementById("filterLeaderboard");
+  // Removed: const filterButton = document.getElementById("filterLeaderboard");
   const leaderboardTableBody = document.getElementById("leaderboardTableBody");
 
   // --- Filter Dropdown Elements ---
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Validates that 'faster' time is actually faster (smaller) than 'slower' time.
    * This means the 'fasterThanInput' (upper bound) should be a numerically larger time
-   * than 'slowerThanInput' (lower bound) if both are used to define a range.
+   * than 'slowerThanInput' (lower bound) to define a valid range.
    */
   const validateLapTimeRange = () => {
     const fasterRaw = fasterThanInput?.value.trim(); // This is the upper bound (e.g., 50s)
@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
       input.type = "checkbox";
       input.id = `org_${orgName.replace(/\s/g, '_').replace(/[^\w\s]/gi, '')}`;
       input.value = orgName;
+      // input.addEventListener("change", filterTableRows); // Removed event listener
 
       const label = document.createElement("label");
       label.className = "form-check-label";
@@ -169,6 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
    * Renders the leaderboard table rows.
    */
   const renderTable = (laps) => {
+    if (!trackSelect.value) { // NEW: Check if a track is selected
+      leaderboardTableBody.innerHTML = '<tr><td colspan="9" class="text-center">Wybierz tor</td></tr>';
+      return;
+    }
+
     leaderboardTableBody.innerHTML = laps.length === 0 
       ? '<tr><td colspan="9" class="text-center">Brak czasów dla wybranego toru.</td></tr>' // Adjusted colspan
       : "";
@@ -254,14 +260,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
 
   // --- Data Fetching ---
-  filterButton?.addEventListener("click", async () => {
-    if (!trackSelect.value) return;
-    try {
-      const res = await fetch(`/leaderboard/filter?trackName=${encodeURIComponent(trackSelect.value)}`);
-      allTrackLapsData = await res.json();
+  // Removed: filterButton?.addEventListener("click", async () => {
+  //   if (!trackSelect.value) return;
+  //   try {
+  //     const res = await fetch(`/leaderboard/filter?trackName=${encodeURIComponent(trackSelect.value)}`);
+  //     allTrackLapsData = await res.json();
+  //     renderTable(allTrackLapsData);
+  //   } catch (e) {
+  //     console.error("Fetch error:", e);
+  //   }
+  // });
+
+  // NEW: Track Selection Logic (immediate filtering)
+  trackSelect?.addEventListener("change", async () => {
+    const selectedTrack = trackSelect.value;
+    if (selectedTrack) {
+      try {
+        const res = await fetch(`/leaderboard/filter?trackName=${encodeURIComponent(selectedTrack)}`);
+        allTrackLapsData = await res.json();
+        renderTable(allTrackLapsData);
+      } catch (e) {
+        console.error("Fetch error:", e);
+      }
+    } else {
+      // If "Wybierz Tor" is selected, clear table or show all
+      allTrackLapsData = []; // Or fetch all data if that's the desired behavior
       renderTable(allTrackLapsData);
-    } catch (e) {
-      console.error("Fetch error:", e);
     }
   });
 
@@ -344,5 +368,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   toggleFiltersBtn?.addEventListener("click", () => { filterCollapse.toggle(); virtualCollapse.hide(); });
   virtualLapBtn?.addEventListener("click", () => { virtualCollapse.toggle(); filterCollapse.hide(); });
+
+  // Initial fetch for the default track
+  if (trackSelect?.value) {
+    trackSelect.dispatchEvent(new Event('change'));
+  }
 
 });

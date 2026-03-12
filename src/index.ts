@@ -4,6 +4,7 @@ import path from "path";
 import pagesRoute from "./routes/pages.route";
 import { ROUTES } from "./config/routes.config";
 import { MOTORCYCLE_TYPES } from "./config/add-laptime.enums"; // NEW
+import './scripts/events_calendar/scheduler'; // This line will execute the scheduler's top-level code
 
 const app = express();
 
@@ -40,5 +41,5 @@ app.use('/utils', express.static(path.join(__dirname, "./utils")));
 app.use("/", pagesRoute);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

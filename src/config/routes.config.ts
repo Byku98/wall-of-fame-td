@@ -24,6 +24,8 @@ export const ROUTES = {
     ROOT: '/',
     LEADERBOARD: '/leaderboard',
     ADD_LAPTIME: '/add-laptime',
-    LAP_DETAILS: '/lap-details'
+    LAP_DETAILS: '/lap-details',
+    FIND_TRACK_DAY: '/find-track-day',
+    PRIVACY_POLICY: '/privacy-policy'
   }
 };

@@ -1,28 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
     const trackFilter = document.getElementById("trackFilter");
-    const eventsTable = document.getElementById("eventsTable");
-    const tableBody = eventsTable ? eventsTable.querySelector("tbody") : null;
-
+    const eventsContainer = document.getElementById("eventsContainer");
+    const noEventsMessage = document.getElementById("noEventsMessage"); // NEW: Get the no events message element
+    
     // Access the globally embedded events data
     const allEvents = window.allEvents || []; 
 
-    console.log("find-track-day.js loaded."); // Debugging line
-    console.log("trackFilter element:", trackFilter); // Debugging line
-    console.log("eventsTable element:", eventsTable); // Debugging line
-    console.log("tableBody element:", tableBody); // Debugging line
-    console.log("allEvents data:", allEvents); // Debugging line
-
-    if (!trackFilter || !eventsTable || !tableBody) {
-        console.error("Required elements for find-track-day.js not found. Cannot populate filter or table.");
+    if (!trackFilter || !eventsContainer) { // Removed tableBody from check
+        console.error("Required elements for find-track-day.js not found.");
         return;
     }
 
     const populateTrackFilter = () => {
-        console.log("populateTrackFilter called."); // Debugging line
-        // Use allEvents directly to get unique tracks
         const uniqueTracks = [...new Set(allEvents.map(event => event.track))].filter(Boolean).sort();
         
-        // Clear existing options before populating
         trackFilter.innerHTML = '<option value="">Wszystkie tory</option>';
 
         uniqueTracks.forEach(track => {
@@ -31,32 +22,35 @@ document.addEventListener("DOMContentLoaded", () => {
             option.textContent = track;
             trackFilter.appendChild(option);
         });
-        console.log("Track filter populated with unique tracks:", uniqueTracks); // Debugging line
     };
 
-    const filterTable = () => {
-        console.log("filterTable called."); // Debugging line
+    const filterEvents = () => {
         const selectedTrack = trackFilter.value;
-        const rows = tableBody.querySelectorAll("tr");
+        const eventCards = eventsContainer.querySelectorAll(".event-card-col");
+        let visibleCardsCount = 0;
 
-        rows.forEach(row => {
-            // Ensure we only process actual data rows, not the colspan row
-            if (row.querySelector('td[colspan="4"]')) { // Check for the "Brak nadchodzących wydarzeń." row
-                row.style.display = "none"; // Always hide this row when filtering
-                return;
-            }
-
-            const rowTrack = row.dataset.track;
-            if (selectedTrack === "" || rowTrack === selectedTrack) {
-                row.style.display = "";
+        eventCards.forEach(card => {
+            const cardTrack = card.dataset.track;
+            if (selectedTrack === "" || cardTrack === selectedTrack) {
+                card.style.display = "block"; // Show the card
+                visibleCardsCount++;
             } else {
-                row.style.display = "none";
+                card.style.display = "none"; // Hide the card
             }
         });
+
+        // Show/hide the "Brak nadchodzących wydarzeń." message based on visible cards
+        if (noEventsMessage) {
+            if (visibleCardsCount === 0) {
+                noEventsMessage.style.display = "block";
+            } else {
+                noEventsMessage.style.display = "none";
+            }
+        }
     };
 
     // Initial population and filtering
     populateTrackFilter();
-    trackFilter.addEventListener("change", filterTable);
-    filterTable(); // Apply initial filter (show all)
+    trackFilter.addEventListener("change", filterEvents);
+    filterEvents(); // Apply initial filter (show all)
 });

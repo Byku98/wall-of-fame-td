@@ -4,7 +4,8 @@ import { ROUTES } from "../config/routes.config";
 import leaderboardRoute from "./leaderboard.route";
 import addLaptimeRoute from "./add-laptime.route";
 import managementRoute from "./management.route";
-import findTrackDayRoute from "./find-track-day.route"; // <-- Import the specific route file
+import findTrackDayRoute from "./find-track-day.route";
+import renderPrivacyPolicyPage from "./privacy-policy.route";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.get(ROUTES.PAGES.ROOT, (req, res) => res.redirect(ROUTES.PAGES.LEADERBOAR
 router.use(leaderboardRoute);
 router.use(addLaptimeRoute);
 router.use(managementRoute);
-router.use(findTrackDayRoute); // <-- Mount the find-track-day route module
+router.use(findTrackDayRoute);
+router.use(renderPrivacyPolicyPage);
 
 export default router;

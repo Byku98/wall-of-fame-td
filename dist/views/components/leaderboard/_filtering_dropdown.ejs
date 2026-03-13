@@ -1,0 +1,119 @@
+<!-- filepath: c:\Users\Byczki\Documents\GitHub\pszczolki-wof-terms\src\views\components\leaderboard\_filtering_dropdown.ejs -->
+<div id="filtersDropdownContainer" class="mb-4 p-3 border rounded collapse fade-collapse mx-2 mx-md-0"> <!-- Added mx-2 for mobile, mx-md-0 for larger screens -->
+    <h5>Wybierz filtry</h5>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label for="motorcycleNameFilter" class="form-label">Motocykl</label>
+            <input type="text" class="form-control" id="motorcycleNameFilter" placeholder="Motocykl"
+                list="motorcycleSuggestions">
+            <datalist id="motorcycleSuggestions">
+                <!-- Options will be populated by JavaScript -->
+            </datalist>
+        </div>
+        <div class="col-md-4">
+            <label for="tyreFrontFilter" class="form-label">Opona - przód</label>
+            <input type="text" class="form-control" id="tyreFrontFilter" placeholder="Opona - przód"
+                list="tyreFrontSuggestions">
+            <datalist id="tyreFrontSuggestions">
+                <!-- Options will be populated by JavaScript -->
+            </datalist>
+        </div>
+        <div class="col-md-4">
+            <label for="tyreRearFilter" class="form-label">Opona - tył</label>
+            <input type="text" class="form-control" id="tyreRearFilter" placeholder="Opona - tył"
+                list="tyreRearSuggestions">
+            <datalist id="tyreRearSuggestions">
+                <!-- Options will be populated by JavaScript -->
+            </datalist>
+        </div>
+        <div class="col-md-3">
+            <label for="fasterThanInput" class="form-label">Szybciej niż</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="fasterThanInput" 
+                    placeholder="np. 1.05.12 lub 45,4">
+                <button class="btn btn-secondary" id="clearFiltersFasterThan" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="slowerThanInput" class="form-label">Wolniej niż</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="slowerThanInput" 
+                    placeholder="np. 1.05.12 lub 45,4">
+                <button class="btn btn-secondary" id="clearFiltersSlowerThan" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="dateFromFilter" class="form-label">Data - od</label>
+            <div class="input-group">
+                <input type="date" class="form-control" id="dateFromFilter" placeholder="Data - od">
+                <button class="btn btn-secondary" id="clearFiltersDateFrom" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="dateToFilter" class="form-label">Data - do</label>
+            <div class="input-group">
+                <input type="date" class="form-control" id="dateToFilter" placeholder="Data - do">
+                <button class="btn btn-secondary" id="clearFiltersDateTo" style="width: 28%;">Wyczyść</button>
+            </div>
+        </div>
+        <!-- New: Organizer Filter Section -->
+        <div class="col-12">
+            <label class="form-label">Organizatorzy</label>
+            <div id="organizerCheckboxes">
+                <!-- Organizer checkboxes will be populated by JavaScript -->
+            </div>
+        </div>
+        <!-- <div class="col-12">
+            <label class="form-label">Doświadczenie</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="expFreshman" value="freshman">
+                    <label class="form-check-label" for="expFreshman">Świeżak</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="expBeginner" value="beginner">
+                    <label class="form-check-label" for="expBeginner">Początkujący</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="expMedium" value="medium">
+                    <label class="form-check-label" for="expMedium">Średniozaawansowany</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="expAdvanced" value="advanced">
+                    <label class="form-check-label" for="expAdvanced">Zaawansowany</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="expSemipro" value="semipro">
+                    <label class="form-check-label" for="expSemipro">Półprofesjonalny</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="expProfessional" value="professional">
+                    <label class="form-check-label" for="expProfessional">Zawodowiec</label>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-12">
+            <label class="form-label">Płeć</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sexAll" name="gender" value="allGenders" checked>
+                    <label class="form-check-label" for="sexAll">Wszyscy</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sexMale" name="gender" value="male">
+                    <label class="form-check-label" for="sexMale">Mężczyzna</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sexFemale" name="gender" value="female">
+                    <label class="form-check-label" for="sexFemale">Kobieta</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-center">
+            <button class="btn btn-primary me-2" id="applyFiltersDropdown" style="width: 120px;">Pokaż</button>
+            <button class="btn btn-secondary" id="clearFiltersDropdown" style="width: 120px;">Wyczyść</button>
+        </div>
+    </div>
+</div>

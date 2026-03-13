@@ -1,0 +1,68 @@
+.event-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    /* Gradient background: Darker on the right, lighter on the left */
+    background: linear-gradient(to right, #ffffff 0%, #afafaf 100%); /* Darker from right to left */
+    color: #343a40; /* Darker text for readability on lighter background */
+    border-color: #dee2e6; /* Light border */
+}
+
+.event-card:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+    background: linear-gradient(to right, #23272b 0%, #6a6f74 100%); /* Even darker gradient on hover */
+    border-color: #007bff; /* Highlight border on hover */
+    color: #f8f9fa !important; /* NEW: White text on hover */
+}
+
+.event-card .card-title {
+    font-weight: bold;
+    color: #007bff !important; /* Primary blue for title */
+}
+
+.event-card:hover .card-title { /* NEW: Ensure title is white on hover */
+    color: #ffffff !important;
+}
+
+.event-card .card-subtitle {
+    font-size: 0.9rem;
+    color: #1f1f1f !important; /* Muted text for subtitle */
+}
+
+.event-card:hover .card-subtitle { /* NEW: Ensure subtitle is white on hover */
+    color: #adb5bd !important;
+}
+
+.event-card .card-text {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: #000000 !important; /* Slightly lighter text for content */
+}
+
+.event-card:hover .card-text { /* NEW: Ensure card text is white on hover */
+    color: #e9ecef !important;
+}
+
+.event-card .card-text strong {
+    color: #111111 !important; /* White for strong text */
+}
+
+.event-card:hover .card-text strong { /* NEW: Ensure strong text is white on hover */
+    color: #ffffff !important;
+}
+
+.event-card .btn-outline-primary { /* Changed from .btn-outline-primary to .btn-primary */
+    background-color: #007bff; /* Filled background */
+    color: #fff; /* White text */
+    border-color: #007bff;
+}
+
+.event-card .btn-outline-primary:hover { /* Changed from .btn-outline-primary to .btn-primary */
+    background-color: #0056b3; /* Darker blue on hover */
+    color: #fff; /* White text on hover */
+}
+
+.organizer-logo {
+    max-width: 90%; /* Ensure logo fits within its container */
+    max-height: 90%; /* Ensure logo fits within its container */
+    object-fit: contain; /* Scale image down to fit, maintaining aspect ratio */
+}

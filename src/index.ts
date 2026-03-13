@@ -4,7 +4,6 @@ import path from "path";
 import pagesRoute from "./routes/pages.route";
 import { ROUTES } from "./config/routes.config";
 import { MOTORCYCLE_TYPES } from "./config/add-laptime.enums"; // NEW
-import './scripts/events_calendar/scheduler'; // This line will execute the scheduler's top-level code
 
 const app = express();
 

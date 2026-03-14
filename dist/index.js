@@ -9,7 +9,6 @@ const path_1 = __importDefault(require("path"));
 const pages_route_1 = __importDefault(require("./routes/pages.route"));
 const routes_config_1 = require("./config/routes.config");
 const add_laptime_enums_1 = require("./config/add-laptime.enums"); // NEW
-require("./scripts/events_calendar/scheduler"); // This line will execute the scheduler's top-level code
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 // Set view engine

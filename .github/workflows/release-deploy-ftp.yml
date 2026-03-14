@@ -93,7 +93,3 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy/
           server-dir: ./
-<<<<<<< HEAD
-=======
-          
->>>>>>> feature/create-callendar

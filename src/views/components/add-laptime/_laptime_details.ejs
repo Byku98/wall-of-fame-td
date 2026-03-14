@@ -265,18 +265,12 @@
             </div>
         </div>
 
-        <!-- Captcha Placeholder -->
+        <!-- Captcha (Cloudflare Turnstile) -->
         <div class="mb-3">
             <label for="captcha" class="form-label">Weryfikacja (Captcha)</label>
-            <div id="captchaPlaceholder" class="border p-3 bg-light text-muted">
-                <!-- Here you would integrate your actual Captcha solution (e.g., reCAPTCHA) -->
-                <p>Miejsce na Captcha (np. reCAPTCHA)</p>
-                <input type="text" class="form-control" id="captcha" name="captcha" placeholder="Wprowadź kod z obrazka"
-                    required disabled>
-            </div>
+            <div class="cf-turnstile" data-sitekey="<%= process.env.TURNSTILE_SITE_KEY || 'YOUR_SITE_KEY_HERE' %>"></div>
             <div class="form-text text-muted">
-                <i class="fas fa-info-circle me-1"></i> Wprowadź tekst widoczny na obrazku, aby potwierdzić, że nie
-                jesteś robotem.
+                <i class="fas fa-info-circle me-1"></i> Potwierdź, że nie jesteś robotem.
             </div>
         </div>
 
@@ -296,3 +290,5 @@
         </div>
     </div>
 </div>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>

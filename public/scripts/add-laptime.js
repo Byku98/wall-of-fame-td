@@ -448,6 +448,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (riderFacebookManual) formData.set('riderFacebook', riderFacebookManual.value.trim());
     }
     
+    // Get Turnstile token
+    const turnstileToken = turnstile.getResponse();
+    if (!turnstileToken) {
+        alert('Proszę ukończyć weryfikację captcha.');
+        return;
+    }
+    formData.set('captcha', turnstileToken);  // Add token to form data
+
     try {
       submitButton.disabled = true;
       submitButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Wysyłanie...';

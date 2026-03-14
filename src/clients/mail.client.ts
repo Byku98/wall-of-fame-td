@@ -27,7 +27,7 @@ export const mailClient = {
         <div style="font-family: sans-serif; line-height: 1.6;">
           <h2>Cześć!</h2>
           <p>Mamy świetną wiadomość! Twoje okrążenie został zweryfikowane i zatwierdzone.</p>
-          <p>Możesz go teraz zobaczyć na oficjalnej tablicy wyników.</p>
+          <p>Możesz go teraz zobaczyć na oficjalnej tablicy wyników: ${process.env.BASE_URL}</p>
           <br>
           <p>Pozdrawiamy,<br>Zespół Pszczółki Wall of Fame</p>
         </div>

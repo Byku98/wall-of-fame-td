@@ -1,6 +1,18 @@
 import { Request, Response } from "express";
 import { addLaptimeService } from "../services/add-laptime.service";
+import fetch from 'node-fetch';
+
 // import { ROUTES } from "../config/routes.config";
+
+const verifyTurnstile = async (token: string, secret: string): Promise<boolean> => {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `secret=${secret}&response=${token}`,
+    });
+    const data: { success: boolean } = await response.json() as { success: boolean };
+    return data.success;
+};
 
 export async function getAddLaptime(req: Request, res: Response) {
   try {
@@ -93,6 +105,21 @@ export async function postAddLaptime(req: Request, res: Response) {
 
     if (!file) {
       return res.status(400).json({ success: false, message: 'Brak pliku zdjęcia' });
+    }
+
+    const secret = process.env.TURNSTILE_SECRET_KEY;
+    if (!secret) {
+        console.error('TURNSTILE_SECRET_KEY not set');
+        return res.status(500).json({ success: false, message: 'Server configuration error.' });
+    }
+
+    if (!req.body.captcha || typeof req.body.captcha !== 'string') {
+        return res.status(400).json({ success: false, message: 'Invalid captcha token.' });
+    }
+
+    const isValid = await verifyTurnstile(req.body.captcha, secret);
+    if (!isValid) {
+        return res.status(400).json({ success: false, message: 'Nieprawidłowa weryfikacja captcha.' });
     }
 
     const result = await addLaptimeService.saveLaptime(req.body, file.buffer, file.originalname);

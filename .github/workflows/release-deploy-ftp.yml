@@ -45,6 +45,13 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           DB_NAME=${{ secrets.DB_NAME }}
           # ==========================================
+          # MAIL SENDER SETTINGS
+          # ==========================================
+          MAIL_USER=${{ secrets.MAIL_NOTIFY_USER }}
+          MAIL_CLIENT_ID=${{ secrets.MAIL_CLIENT_ID }}
+          MAIL_CLIENT_SECRET=${{ secrets.MAIL_CLIENT_SECRET  }}
+          MAIL_REFRESH_TOKEN=${{ secrets.MAIL_REFRESH_TOKEN }}
+          # ==========================================
           # EXTERNAL SERVICES
           # ==========================================
           # Discord Webhook URL for notifications
@@ -86,4 +93,7 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy/
           server-dir: ./
+<<<<<<< HEAD
+=======
           
+>>>>>>> feature/create-callendar

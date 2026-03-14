@@ -37,6 +37,11 @@ jobs:
         run: |
           cat > .env <<'EOF'
           # ==========================================
+          # APPLICATION SETTINGS
+          # ==========================================
+          # Base URL used for generating activation/validation links
+          BASE_URL=https://dev1.pszczolki.com.pl/
+          # ==========================================
           # DATABASE CONFIGURATION
           # ==========================================
           DB_HOST=${{ secrets.DB_HOST }}
@@ -93,7 +98,3 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy/
           server-dir: ./
-<<<<<<< HEAD
-=======
-          
->>>>>>> feature/create-callendar

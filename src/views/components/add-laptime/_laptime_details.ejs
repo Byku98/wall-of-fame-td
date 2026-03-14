@@ -1,0 +1,298 @@
+<div class="container py-5">
+    <div id="formHeader">
+        <h1>Dodaj Czas Okrążenia</h1>
+        <p>Wypełnij poniższe pola, aby dodać nowy czas okrążenia do bazy danych.</p>
+    </div>
+
+    <form id="addLaptimeForm">
+
+        <!-- Track Selection -->
+        <div class="mb-3">
+            <label for="trackSelect" class="form-label">Wybierz Tor</label>
+            <select class="form-select" id="trackSelect" name="trackName" required>
+                <option value="">-- Wybierz tor --</option>
+                <% if (typeof trackList !=='undefined' && trackList.length> 0) { %>
+                    <% trackList.forEach(track=> { %>
+                        <option value="<%= track.track_name %>">
+                            <%= track.track_name %>
+                        </option>
+                        <% }) %>
+                            <% } %>
+            </select>
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz tor, na którym został uzyskany czas.
+            </div>
+        </div>
+
+        <!-- Organizer Selection -->
+        <div class="mb-3">
+            <label for="organizer" class="form-label">Organizator</label>
+            <select class="form-select" id="organizerList" name="organizer" required disabled>
+                <option value="">-- Wybierz organizatora --</option>
+                <!-- Options will be populated dynamically by JavaScript -->
+            </select>
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz organizatora u którego zrobiłeś wynik.
+            </div>
+        </div>
+
+        <!-- Rider Name / New Rider Input -->
+        <div class="mb-3">
+            <label for="riderName" class="form-label">Zawodnik</label>
+            
+            <!-- Existing Dropdown Selection -->
+            <select class="form-select mb-2" id="riderName" name="riderName" required disabled>
+                <option value="">-- Wybierz zawodnika --</option>
+            </select>
+
+            <!-- New Rider Manual Input Group (Hidden by default) -->
+            <div id="riderManualGroup" style="display: none;">
+                <div class="mb-2">
+                    <input type="text" class="form-control" id="riderNameManual" name="riderNameManual" 
+                        placeholder="Nazwa użytkownika / Pseudonim" disabled>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Płeć: <span class="text-danger"></span></label>
+                    <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="riderSexMaleManual">Mężczyzna</label>
+                            <input class="form-check-input" type="radio" name="riderSexManual" id="riderSexMaleManual" value="male" disabled>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="riderSexFemaleManual">Kobieta</label>
+                            <input class="form-check-input" type="radio" name="riderSexManual" id="riderSexFemaleManual" value="female" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                    <input type="url" class="form-control" id="riderInstagramManual" name="riderInstagramManual" placeholder="Link do profilu Instagram" disabled>
+                </div>
+                <div class="input-group mb-2">
+                    <span class="input-group-text"><i class="fab fa-facebook"></i></span>
+                    <input type="url" class="form-control" id="riderFacebookManual" name="riderFacebookManual" placeholder="Link do profilu Facebook" disabled>
+                </div>
+            </div>
+
+            <!-- Toggle Checkbox for New Rider -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noRiderOnList" disabled>
+                <label class="form-check-label text-muted small" for="noRiderOnList">
+                    Nie ma mnie na liście - dodaj nowego zawodnika
+                </label>
+            </div>
+
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz zawodnika z listy. Jeśli zawodnika nie ma na liście, zaznacz opcję "Nie ma mnie na liście - dodaj nowego zawodnika".
+                <br>
+                <span class="badge bg-info me-1">Info</span> Jeśli zawodnik jest znany tylko z pseudonimu, podanie linków do mediów społecznościowych ułatwi weryfikację.
+            </div>
+        </div>
+
+        <!-- Social Media Profile (Existing, now for Lap Submitter) -->
+        <div class="mb-3">
+            <label for="socialProfile" class="form-label">Link do Profilu Społecznościowego (Opcjonalnie)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-link"></i></span>
+                <input type="url" class="form-control" id="socialProfile" name="socialProfile" placeholder="np. https://facebook.com/TwojProfil" disabled>
+            </div>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj link do dowolnego profilu społecznościowego, aby ułatwić weryfikację.
+            </div>
+        </div>
+
+        <!-- Contact Email (MOVED HERE) -->
+        <div class="mb-3">
+            <label for="contactEmail" class="form-label">Dane kontaktowe</label>
+            <input type="email" class="form-control" id="contactEmail" name="contactEmail" placeholder="np. jan.kowalski@gmail.com" disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj swój adres e-mail. Poinformujemy Cię o statusie zgłoszenia.
+            </div>
+        </div>
+
+        <!-- Lap Time (Single Text Input) -->
+        <div class="mb-3">
+            <label for="lapTime" class="form-label">Czas Okrążenia</label>
+            <!-- Removed pattern attribute to allow flexible JS parsing -->
+            <input type="text" class="form-control" id="lapTime" name="lapTime" 
+                placeholder="np. 1.05.120, 58.454 lub 45" 
+                title="Użyj cyfr i dowolnych separatorów" required disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Podaj czas okrążenia (np. 1:05.12, 45.0). Możesz użyć kropki, przecinka lub dwukropka.
+            </div>
+        </div>
+
+        <!-- Device Selection -->
+        <div class="mb-3">
+            <label for="device" class="form-label">Urządzenie Pomiarowe</label>
+            <select class="form-select" id="deviceSelect" name="device" required disabled>
+                <option value="">-- Wybierz urządzenie --</option>
+                <% if (typeof devicesList !== 'undefined' && devicesList.length> 0) { %>
+                    <% devicesList.forEach(device=> { %>
+                        <option value="<%= device.device_name %>">
+                            <%= device.device_name %>
+                        </option>
+                        <% }) %>
+                            <% } %>
+            </select>
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz urządzenie, które mierzyło czas.
+            </div>
+        </div>
+
+        <!-- Device lap record URL (shown when specific devices are selected) -->
+        <div class="mb-3" id="deviceRecordedLapContainer" style="display: none;">
+            <label for="deviceRecordedLap" class="form-label">Link do zapisu przejazdu z urządzenia</label>
+            <input type="url" class="form-control" id="deviceRecordedLap" name="deviceRecordedLap"
+                placeholder="https://www.racebox.pro/webapp/..." disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj link do zapisu przejazdu z urządzenia.
+            </div>
+        </div>
+
+        <!-- YouTube lap record -->
+        <div class="mb-3">
+            <label for="youtubeProof" class="form-label">Link do nagrania przejazdu</label>
+            <input type="url" class="form-control" id="youtubeProof" name="youtubeProof"
+                placeholder="https://www.youtube.com/watch?v=..." disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Podaj link do filmu z Twojego przejazdu.
+            </div>
+        </div>
+
+        <!-- Date Picker -->
+        <div class="mb-3">
+            <label for="lapDate" class="form-label">Data Okrążenia</label>
+            <input type="date" class="form-control" id="lapDate" name="lapDate" required disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz datę, kiedy okrążenie zostało wykonane.
+            </div>
+        </div>
+
+        <!-- Motorcycle -->
+        <div class="mb-3">
+            <label for="motorcycle" class="form-label">Motocykl</label>
+            
+            <!-- Dropdown Selection -->
+            <select class="form-select mb-2" id="motorcycle" name="motorcycle" required disabled>
+                <option value="">-- Wybierz motocykl --</option>
+            </select>
+
+            <!-- Manual Input Group (Hidden by default) -->
+            <div id="motorcycleManualGroup" style="display: none;">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="motorcycleNameManual" name="motorcycleNameManual" 
+                            placeholder="Marka i Model (np. Honda CBR 600RR)">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" id="motorcycleYearManual" name="motorcycleYearManual" 
+                            placeholder="Rok produkcji" min="1900" max="2099">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="motorcycleTypeManual" name="motorcycleTypeManual">
+                            <option value="">-- Typ --</option>
+                            <% if (typeof MOTORCYCLE_TYPES !== 'undefined') { %>
+                                <% MOTORCYCLE_TYPES.forEach(type => { %>
+                                    <option value="<%= type %>"><%= type %></option>
+                                <% }) %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Checkbox -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noMotorcycleOnList" disabled>
+                <label class="form-check-label text-muted small" for="noMotorcycleOnList">
+                    Mojego motocykla nie ma na liście
+                </label>
+            </div>
+
+            <div class="form-text text-muted">
+                <span class="badge bg-danger me-1">Wymagane</span> Wybierz markę i model motocykla lub wprowadź go ręcznie.
+            </div>
+        </div>
+
+        <!-- Tyre Front -->
+        <div class="mb-3">
+            <label for="tyreFront" class="form-label">Opona (przód)</label>
+            <select class="form-select mb-2" id="tyreFront" name="tyreFront" disabled>
+                <option value="">-- Wybierz oponę (przód) --</option>
+            </select>
+            <input type="text" class="form-control mb-2" id="tyreFrontManual" name="tyreFrontNameManual" 
+                placeholder="Wprowadź producenta i model opony przedniej" style="display: none;">
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noTyreFrontOnList" disabled>
+                <label class="form-check-label text-muted small" for="noTyreFrontOnList">
+                    Mojej opony nie ma na liście
+                </label>
+            </div>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Wybierz markę i model opony przedniej.
+            </div>
+        </div>
+
+        <!-- Tyre Rear -->
+        <div class="mb-3">
+            <label for="tyreRear" class="form-label">Opona (tył)</label>
+            <select class="form-select mb-2" id="tyreRear" name="tyreRear" disabled>
+                <option value="">-- Wybierz oponę (tył) --</option>
+            </select>
+            <input type="text" class="form-control mb-2" id="tyreRearManual" name="tyreRearNameManual" 
+                placeholder="Wprowadź markę i model opony tylnej" style="display: none;">
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="noTyreRearOnList" disabled>
+                <label class="form-check-label text-muted small" for="noTyreRearOnList">
+                    Mojej opony nie ma na liście
+                </label>
+            </div>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Wybierz markę i model opony tylnej.
+            </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+            <label for="proofImage" class="form-label">Zdjęcie laptimera</label>
+            <input type="file" class="form-control" id="proofImage" name="proofImage" accept="image/*"
+                disabled>
+            <div class="form-text text-muted">
+                <span class="badge bg-secondary me-1">Opcjonalne</span> Prześlij zdjęcie laptimera jako dowód. Nie jest wymagane jeżeli posiadasz udokumentowany przejazd na platformie RaceBox, RaceChrono, LapTrophy itp.
+            </div>
+        </div>
+
+        <!-- Captcha Placeholder -->
+        <div class="mb-3">
+            <label for="captcha" class="form-label">Weryfikacja (Captcha)</label>
+            <div id="captchaPlaceholder" class="border p-3 bg-light text-muted">
+                <!-- Here you would integrate your actual Captcha solution (e.g., reCAPTCHA) -->
+                <p>Miejsce na Captcha (np. reCAPTCHA)</p>
+                <input type="text" class="form-control" id="captcha" name="captcha" placeholder="Wprowadź kod z obrazka"
+                    required disabled>
+            </div>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle me-1"></i> Wprowadź tekst widoczny na obrazku, aby potwierdzić, że nie
+                jesteś robotem.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" disabled>Dodaj Czas</button>
+    </form>
+
+    <!-- NEW: Success Message Container -->
+    <div id="successContainer" class="text-center py-5" style="display: none;">
+        <div class="mb-4">
+            <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+        </div>
+        <h2 class="mb-3">Sukces!</h2>
+        <p class="lead mb-4">Twój czas okrążenia został pomyślnie dodany.</p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a href="<%= ROUTES.PAGES.LEADERBOARD %>" class="btn btn-primary btn-lg px-4">Przeglądaj wyniki</a>
+            <button type="button" id="addAnotherBtn" class="btn btn-primary btn-lg px-4">Dodaj kolejny czas</button>
+        </div>
+    </div>
+</div>

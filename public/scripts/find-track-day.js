@@ -26,24 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const filterEvents = () => {
         const selectedTrack = trackFilter.value;
-<<<<<<< HEAD
-        const eventCards = eventsContainer.querySelectorAll(".event-card-col");
-        let visibleCardsCount = 0;
-
-        eventCards.forEach(card => {
-            const cardTrack = card.dataset.track;
-            if (selectedTrack === "" || cardTrack === selectedTrack) {
-                card.style.display = "block"; // Show the card
-                visibleCardsCount++;
-            } else {
-                card.style.display = "none"; // Hide the card
-            }
-        });
-
-        // Show/hide the "Brak nadchodzących wydarzeń." message based on visible cards
-        if (noEventsMessage) {
-            if (visibleCardsCount === 0) {
-=======
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Normalize to start of day for accurate comparison
         
@@ -82,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show/hide the "Brak nadchodzących wydarzeń." message only if no future events are visible
         if (noEventsMessage) {
             if (futureVisibleCount === 0) {
->>>>>>> main
                 noEventsMessage.style.display = "block";
             } else {
                 noEventsMessage.style.display = "none";

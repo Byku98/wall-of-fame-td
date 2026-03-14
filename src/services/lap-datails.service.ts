@@ -17,15 +17,15 @@ export const lapDetailsService = {
     );
 
     // List all rows with their indexes for debugging
-    rows.forEach((row: LapDetails, index: number) => {
-      console.log(`Row ${index}:`, row);
-    });
+    // rows.forEach((row: LapDetails, index: number) => {
+    //    console.log(`Row ${index}:`, row);
+    // });
 
     return rows[0] || null; // Return the first object or null if no rows
   },
 
   getRiderLapHistory: async (riderName: string, trackName: string): Promise<riderHistory[]> => {
-    console.log("Fetching rider lap history for:", riderName, "in track ", trackName);
+    // console.log("Fetching rider lap history for:", riderName, "in track ", trackName);
 
     const rows = await leaderboardRepository.getRiderLapHistory(riderName, trackName);
 

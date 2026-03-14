@@ -39,20 +39,36 @@ const formatLapTime = (timeString) => {
     if (!timeString || typeof timeString !== "string")
         return "";
     const timeParts = timeString.split(":");
-    if (timeParts.length < 1 || timeParts.length > 3)
-        return "";
-    // Extract safely with defaults
-    const hours = parseInt(timeParts[0] ?? "0", 10) || 0;
-    const minutes = parseInt(timeParts[1] ?? "0", 10) || 0;
-    const secondsAndMs = timeParts[2] ?? timeParts[1] ?? timeParts[0];
-    if (!secondsAndMs)
-        return "";
-    // Format
+    let hours = 0;
+    let minutes = 0;
+    let secondsAndMs = "";
+    // Handle different formats based on number of colons
+    if (timeParts.length === 3) {
+        // Format: HH:MM:SS.mmm
+        hours = parseInt(timeParts[0], 10) || 0;
+        minutes = parseInt(timeParts[1], 10) || 0;
+        secondsAndMs = timeParts[2];
+    }
+    else if (timeParts.length === 2) {
+        // Format: MM:SS.mmm
+        minutes = parseInt(timeParts[0], 10) || 0;
+        secondsAndMs = timeParts[1];
+    }
+    else {
+        // Format: SS.mmm
+        secondsAndMs = timeParts[0];
+    }
+    // Final Formatting
     if (hours > 0) {
         return `${hours}:${String(minutes).padStart(2, "0")}:${secondsAndMs}`;
     }
     if (minutes > 0) {
         return `${minutes}:${secondsAndMs}`;
+    }
+    // Remove leading zero from seconds if it's like "05.12" -> "5.12" 
+    // but keep it if it's just "0.12"
+    if (secondsAndMs.startsWith("0") && secondsAndMs.length > 1 && secondsAndMs[1] !== ".") {
+        return secondsAndMs.substring(1);
     }
     return secondsAndMs;
 };

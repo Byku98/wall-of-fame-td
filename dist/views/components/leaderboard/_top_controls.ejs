@@ -1,8 +1,8 @@
 <!-- Top controls -->
-<div class="d-flex align-items-center gap-3 mb-4">
+<div class="d-flex flex-wrap align-items-center gap-3 mb-4 px-2 px-md-0"> <!-- Added px-2 for mobile, px-md-0 for larger screens -->
 
   <!-- Track dropdown -->
-  <select class="form-select w-auto" id="trackSelect">
+  <select class="form-select flex-grow-1" id="trackSelect">
     <% if (typeof trackList !=='undefined' && trackList.length> 0) { %>
       <% trackList.forEach(track=> { %>
         <option value="<%= track.track_name %>">
@@ -11,14 +11,11 @@
         <% }) %>
           <% } %>
   </select>
-
-  <!-- Filter button (locked for now) -->
-  <button class="btn btn-primary" id="filterLeaderboard">Pokaż tor</button>
-
+  
   <!-- New button for extended filters -->
-  <button class="btn btn-secondary" id="toggleFiltersDropdown">Filtry</button>
+  <button class="btn btn-primary flex-grow-1" id="toggleFiltersDropdown">Filtruj</button>
 
-  <!-- Check it out button (locked for now) -->
-  <button class="btn btn-danger" id="virtualLapTime">Sprawdź się</button>
+  <!-- Check it out button -->
+  <button class="btn btn-warning flex-grow-1" id="virtualLapTime">Sprawdź się</button>
 
 </div>

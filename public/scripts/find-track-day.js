@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const filterEvents = () => {
         const selectedTrack = trackFilter.value;
+<<<<<<< HEAD
         const eventCards = eventsContainer.querySelectorAll(".event-card-col");
         let visibleCardsCount = 0;
 
@@ -42,6 +43,46 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show/hide the "Brak nadchodzących wydarzeń." message based on visible cards
         if (noEventsMessage) {
             if (visibleCardsCount === 0) {
+=======
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize to start of day for accurate comparison
+        
+        const eventCards = eventsContainer.querySelectorAll(".event-card-col");
+        let futureVisibleCount = 0; // Count only future visible events for the "no events" message
+
+        eventCards.forEach(card => {
+            const cardTrack = card.dataset.track;
+            const eventIndex = Array.from(eventCards).indexOf(card);
+            const event = allEvents[eventIndex];
+            
+            // Parse date in DD.MM.YYYY format (e.g., "28.02.2026")
+            const [day, month, year] = event.date.split('.');
+            const eventDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day)); // Month is 0-based
+            
+            const matchesTrack = selectedTrack === "" || cardTrack === selectedTrack;
+            const isFuture = eventDate >= today;
+            
+            if (matchesTrack && isFuture) {
+                // Future event: show normally
+                card.style.display = "block";
+                card.style.opacity = "1";
+                card.style.pointerEvents = "auto"; // Allow interactions
+                futureVisibleCount++;
+            } else if (matchesTrack && !isFuture) {
+                // Past event: show grayed out and frozen
+                card.style.display = "block";
+                card.style.opacity = "0.5"; // Gray out
+                card.style.pointerEvents = "none"; // Freeze (disable clicks)
+            } else {
+                // Doesn't match track: hide
+                card.style.display = "none";
+            }
+        });
+
+        // Show/hide the "Brak nadchodzących wydarzeń." message only if no future events are visible
+        if (noEventsMessage) {
+            if (futureVisibleCount === 0) {
+>>>>>>> main
                 noEventsMessage.style.display = "block";
             } else {
                 noEventsMessage.style.display = "none";

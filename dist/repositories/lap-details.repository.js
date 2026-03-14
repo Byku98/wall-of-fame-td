@@ -8,7 +8,7 @@ exports.leaderboardRepository = {
         return rows; // Cast to typed array to enforce interface
     },
     getRiderLapHistory: async (riderName, trackName) => {
-        const [rows] = await leaderboard_database_config_1.pool.query("SELECT * FROM rider_laptimes_all where rider_name = ? and track_name = ? order by lap_time asc", [riderName, trackName]);
+        const [rows] = await leaderboard_database_config_1.pool.query("SELECT * FROM rider_laptimes_all where rider_name = ? and track_name = ? and status = 'approved' order by lap_time asc", [riderName, trackName]);
         return rows; // Cast to typed array
     },
 };

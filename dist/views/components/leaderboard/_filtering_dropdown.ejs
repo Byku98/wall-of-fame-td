@@ -1,6 +1,6 @@
-<div id="filtersDropdownContainer" class="mb-4 p-3 border rounded collapse fade-collapse">
+<!-- filepath: c:\Users\Byczki\Documents\GitHub\pszczolki-wof-terms\src\views\components\leaderboard\_filtering_dropdown.ejs -->
+<div id="filtersDropdownContainer" class="mb-4 p-3 border rounded collapse fade-collapse mx-2 mx-md-0"> <!-- Added mx-2 for mobile, mx-md-0 for larger screens -->
     <h5>Wybierz filtry</h5>
-    <!-- This is where your new filter inputs will go -->
     <div class="row g-3">
         <div class="col-md-4">
             <label for="motorcycleNameFilter" class="form-label">Motocykl</label>
@@ -27,44 +27,18 @@
             </datalist>
         </div>
         <div class="col-md-3">
-            <label for="fasterThanMinutes" class="form-label">Szybciej niż (MM:SS)</label>
+            <label for="fasterThanInput" class="form-label">Szybciej niż</label>
             <div class="input-group">
-                <select class="form-select" id="fasterThanMinutes">
-                    <% for (let i=0; i <=3; i++) { %>
-                        <option value="<%= i %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
-                <span class="input-group-text">:</span>
-                <select class="form-select" id="fasterThanSeconds">
-                    <% for (let i=0; i <=59; i++) { %>
-                        <option value="<%= i %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
+                <input type="text" class="form-control" id="fasterThanInput" 
+                    placeholder="np. 1.05.12 lub 45,4">
                 <button class="btn btn-secondary" id="clearFiltersFasterThan" style="width: 28%;">Wyczyść</button>
             </div>
         </div>
         <div class="col-md-3">
-            <label for="slowerThanMinutes" class="form-label">Wolniej niż (MM:SS)</label>
+            <label for="slowerThanInput" class="form-label">Wolniej niż</label>
             <div class="input-group">
-                <select class="form-select" id="slowerThanMinutes">
-                    <% for (let i=0; i <=3; i++) { %>
-                        <option value="<%= i %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
-                <span class="input-group-text">:</span>
-                <select class="form-select" id="slowerThanSeconds">
-                    <% for (let i=0; i <=59; i++) { %>
-                        <option value="<%= i %>">
-                            <%= String(i).padStart(2, '0' ) %>
-                        </option>
-                        <% } %>
-                </select>
+                <input type="text" class="form-control" id="slowerThanInput" 
+                    placeholder="np. 1.05.12 lub 45,4">
                 <button class="btn btn-secondary" id="clearFiltersSlowerThan" style="width: 28%;">Wyczyść</button>
             </div>
         </div>
@@ -82,7 +56,14 @@
                 <button class="btn btn-secondary" id="clearFiltersDateTo" style="width: 28%;">Wyczyść</button>
             </div>
         </div>
+        <!-- New: Organizer Filter Section -->
         <div class="col-12">
+            <label class="form-label">Organizatorzy</label>
+            <div id="organizerCheckboxes">
+                <!-- Organizer checkboxes will be populated by JavaScript -->
+            </div>
+        </div>
+        <!-- <div class="col-12">
             <label class="form-label">Doświadczenie</label>
             <div>
                 <div class="form-check form-check-inline">
@@ -108,27 +89,6 @@
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="expProfessional" value="professional">
                     <label class="form-check-label" for="expProfessional">Zawodowiec</label>
-                </div>
-            </div>
-        </div>
-        <!-- <div class="col-12">
-            <label class="form-label">Dokładność pomiaru</label>
-            <div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="accVeryHigh" value="very_high">
-                    <label class="form-check-label" for="accVeryHigh">Bardzo Wysoka</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="accHigh" value="high">
-                    <label class="form-check-label" for="accHigh">Wysoka</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="accMedium" value="medium">
-                    <label class="form-check-label" for="accMedium">Średnia</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="accLow" value="low">
-                    <label class="form-check-label" for="accLow">Niska</label>
                 </div>
             </div>
         </div> -->

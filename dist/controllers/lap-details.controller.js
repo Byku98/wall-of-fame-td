@@ -7,12 +7,12 @@ const formatters_1 = require("../utils/formatters");
 const getLapDetails = async (req, res) => {
     // Destructure parameters to match leaderboard.service.ts::getLapDetails signature
     const { lapTime, riderName, motorcycle, lap_date, trackName } = req.params;
-    console.log("Fetching lap details for:", {
-        lapTime,
-        riderName,
-        motorcycle,
-        lap_date,
-    });
+    // console.log("Fetching lap details for:", {
+    //   lapTime,
+    //   riderName,
+    //   motorcycle,
+    //   lap_date,
+    // });
     let lapDetails = null;
     let riderHistory = null;
     // First try: Fetch and process lapDetails

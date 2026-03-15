@@ -5,7 +5,8 @@ import leaderboardRoute from "./leaderboard.route";
 import addLaptimeRoute from "./add-laptime.route";
 import managementRoute from "./management.route";
 import findTrackDayRoute from "./find-track-day.route";
-import renderPrivacyPolicyPage from "./privacy-policy.route";
+import privacyPolicyRoute from "./privacy-policy.route";  // RENAMED: Use consistent naming (router, not function)
+import cookiesRequiredRoute from "./cookies-required.route";  // NEW: Import the router
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.use(leaderboardRoute);
 router.use(addLaptimeRoute);
 router.use(managementRoute);
 router.use(findTrackDayRoute);
-router.use(renderPrivacyPolicyPage);
+router.use(privacyPolicyRoute);  // UPDATED: Use the router
+router.use(cookiesRequiredRoute);  // NEW: Mount the cookies-required router
 
 export default router;

@@ -4,14 +4,19 @@ import path from "path";
 import pagesRoute from "./routes/pages.route";
 import { ROUTES } from "./config/routes.config";
 import { MOTORCYCLE_TYPES } from "./config/add-laptime.enums"; // NEW
+import { cookieConsentMiddleware } from './middlewares/cookie-consent.middleware';  // NEW: Add this import
 
 const app = express();
-
+const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3000
 
 // Set view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// Middleware
+app.use(cookieParser());
+app.use(cookieConsentMiddleware);  // NEW: Add this line after cookieParser
 
 // NEW: Global middleware to make ROUTES available in all EJS templates
 app.use((req, res, next) => {

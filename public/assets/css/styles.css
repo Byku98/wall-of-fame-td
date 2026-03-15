@@ -5,3 +5,92 @@
   border-radius: 0.8rem; /* Slightly rounded corners */
   transition: background-color 0.5s ease-in-out; /* Smooth transition */
 }
+
+/* Cookie Banner Styles */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f8f9fa; /* Light gray background */
+  border-top: 2px solid #007bff; /* Blue accent */
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+}
+
+.cookie-banner button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cookie-banner button:first-of-type {
+  background-color: #28a745; /* Green for accept */
+  color: white;
+}
+
+.cookie-banner button:first-of-type:hover {
+  background-color: #218838;
+}
+
+.cookie-banner button:last-of-type {
+  background-color: #dc3545; /* Red for reject */
+  color: white;
+}
+
+.cookie-banner button:last-of-type:hover {
+  background-color: #c82333;
+}
+
+/* Cookie Rejection Page Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.cookie-required-container {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 90%;
+}
+
+.cookie-required-container h1 {
+  color: #dc3545; /* Red for emphasis */
+  margin-bottom: 20px;
+}
+
+.cookie-required-container p {
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.cookie-required-container a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.cookie-required-container a:hover {
+  background-color: #0056b3;
+}

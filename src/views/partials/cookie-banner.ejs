@@ -1,0 +1,19 @@
+<div id="cookie-banner" class="cookie-banner">
+  Ta strona używa plików cookies.
+
+  <button onclick="acceptCookies()">Rozumiem</button>
+  <button onclick="rejectCookies()">Nie zgadzam się</button>
+</div>
+
+<script>
+function acceptCookies() {
+  document.cookie = "cookieConsent=accepted; path=/; max-age=31536000";
+  location.reload();
+}
+
+function rejectCookies() {
+  document.cookie = "cookieConsent=rejected; path=/; max-age=31536000";
+  window.location.href = "/cookies-required";
+}
+</script>
+<% } %>

@@ -26,6 +26,7 @@ export const ROUTES = {
     ADD_LAPTIME: '/add-laptime',
     LAP_DETAILS: '/lap-details',
     FIND_TRACK_DAY: '/find-track-day',
-    PRIVACY_POLICY: '/privacy-policy'
+    PRIVACY_POLICY: '/privacy-policy',
+    COOKIES_REQUIRED: '/cookies-required'
   }
 };
